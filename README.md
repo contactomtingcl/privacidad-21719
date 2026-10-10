@@ -15,7 +15,8 @@ En construcción (entrega: 28 de octubre de 2026). Avance actual:
 | Corpus legal indexado por artículo y verificador de citas | Listo |
 | Guardia de datos sintéticos | Lista |
 | Detección y enmascarado de RUT, correos, teléfonos y fechas | Listo |
-| Inventario: perfilado de planillas y cálculo de edades | Primera versión (sin IA) |
+| Inventario: perfilado de planillas y cálculo de edades | Listo |
+| Inventario con IA: columnas ambiguas y registro de actividad (11 campos del DS 662) | Primera versión ([resultados de la demo](resultados/inventario_demo.md)) |
 | Canal de reporte (QR o enlace) | Pendiente |
 | Motor de reglas y relojes legales | Pendiente |
 | Registro de evidencia | Pendiente |
