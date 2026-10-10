@@ -14,7 +14,8 @@ En construcción (entrega: 28 de octubre de 2026). Avance actual:
 | --- | --- |
 | Corpus legal indexado por artículo y verificador de citas | Listo |
 | Guardia de datos sintéticos | Lista |
-| Inventario de datos | Pendiente |
+| Detección y enmascarado de RUT, correos, teléfonos y fechas | Listo |
+| Inventario: perfilado de planillas y cálculo de edades | Primera versión (sin IA) |
 | Canal de reporte (QR o enlace) | Pendiente |
 | Motor de reglas y relojes legales | Pendiente |
 | Registro de evidencia | Pendiente |
@@ -28,6 +29,8 @@ pip install -e ".[dev]"
 pytest -q                                   # pruebas
 python -m ora_privacidad.corpus             # resumen del corpus legal
 python -m ora_privacidad.corpus --verificar # comprueba que el índice está al día
+python -m ora_privacidad.sinteticos         # regenera los datos de la demo
+python -m ora_privacidad.inventario data/sinteticos/comercial-los-robles/paseo_fin_de_anio.xlsx --referencia 2026-10-10
 ```
 
 ## Corpus legal
@@ -52,6 +55,8 @@ Convenciones del proyecto para datos sintéticos:
 - **RUT:** cuerpo entre 50.000.000 y 59.999.999, con dígito verificador válido. Es una convención interna para reconocer los datos de prueba; un RUT fuera de ese tramo se trata como posiblemente real.
 - **Correo:** dominios reservados por los RFC 2606 y 6761 (`example.com`, `example.org`, `example.net`, `.example`, `.test`, `.invalid`).
 - **Móvil:** `+56 9 0000 XXXX`.
+
+Los datos de la demo son de **Comercial Los Robles**, una empresa mediana ficticia de 120 trabajadores (`data/sinteticos/comercial-los-robles/`): la planilla del paseo de fin de año (84 hijos e hijas, 61 menores de 14 años, con alergias), la nómina de remuneraciones, la base de clientes para publicidad y los proveedores con los datos que reciben. El generador es determinista: la misma semilla produce los mismos datos.
 
 Límites conocidos: la guardia detecta RUT escritos con guion y no puede reconocer nombres o direcciones reales; por eso los generadores de datos usan listas cerradas de nombres ficticios.
 

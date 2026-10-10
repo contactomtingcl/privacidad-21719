@@ -1,0 +1,206 @@
+# Categorías de datos personales que reconoce el inventario.
+#
+# - palabras: términos que, en el encabezado de una columna, indican la categoría.
+#   Se comparan sin tildes ni mayúsculas, como palabras o frases completas.
+# - sensible: true (dato sensible por definición legal), false, o "revisar" cuando
+#   depende del contexto y debe decidirlo una persona.
+# - especial: categorías con reglas propias en la ley ("financiero", "menores").
+# - fundamento: cita al texto legal. Las pruebas verifican que cada fragmento
+#   aparece literalmente en el artículo citado del corpus.
+
+version: 1
+
+categorias:
+  identificador_nacional:
+    etiqueta: Identificador nacional (RUT o RUN)
+    palabras: [rut, run, cedula, cedula de identidad, carnet, dni, pasaporte]
+    sensible: false
+    fundamento:
+      norma: ley-19628
+      articulo: "2"
+      fragmento: cualquier información vinculada o referida a una persona natural identificada o identificable
+
+  nombre:
+    etiqueta: Nombre
+    palabras: [nombre, nombres, apellido, apellidos, nombre completo]
+    sensible: false
+    fundamento:
+      norma: ley-19628
+      articulo: "2"
+      fragmento: cualquier información vinculada o referida a una persona natural identificada o identificable
+
+  correo:
+    etiqueta: Correo electrónico
+    palabras: [correo, email, e mail, mail, correo electronico]
+    sensible: false
+    fundamento:
+      norma: ley-19628
+      articulo: "2"
+      fragmento: cualquier información vinculada o referida a una persona natural identificada o identificable
+
+  telefono:
+    etiqueta: Teléfono
+    palabras: [telefono, celular, fono, movil, whatsapp]
+    sensible: false
+    fundamento:
+      norma: ley-19628
+      articulo: "2"
+      fragmento: cualquier información vinculada o referida a una persona natural identificada o identificable
+
+  direccion:
+    etiqueta: Dirección o comuna
+    palabras: [direccion, domicilio, calle, comuna, ciudad]
+    sensible: false
+    fundamento:
+      norma: ley-19628
+      articulo: "2"
+      fragmento: cualquier información vinculada o referida a una persona natural identificada o identificable
+
+  fecha_nacimiento:
+    etiqueta: Fecha de nacimiento
+    palabras: [fecha de nacimiento, fecha nacimiento, nacimiento, f nac, fnac, cumpleanos]
+    sensible: false
+    fundamento:
+      norma: ley-19628
+      articulo: "16 quater"
+      fragmento: se consideran niños o niñas a los menores de catorce años
+
+  edad:
+    etiqueta: Edad
+    palabras: [edad]
+    sensible: false
+    fundamento:
+      norma: ley-19628
+      articulo: "16 quater"
+      fragmento: se consideran niños o niñas a los menores de catorce años
+
+  laboral:
+    etiqueta: Datos laborales y previsionales
+    palabras: [cargo, area, departamento, fecha de ingreso, fecha ingreso, contrato, jefatura,
+               afp, prevision social]
+    sensible: false
+    fundamento:
+      norma: ley-19628
+      articulo: "2"
+      fragmento: cualquier información vinculada o referida a una persona natural identificada o identificable
+
+  parentesco:
+    etiqueta: Parentesco o relación familiar
+    palabras: [parentesco, hijo, hija, hijos, apoderado, apoderada, carga familiar, cargas]
+    sensible: false
+    fundamento:
+      norma: ley-19628
+      articulo: "2"
+      fragmento: cualquier información vinculada o referida a una persona natural identificada o identificable
+
+  salud:
+    etiqueta: Salud
+    palabras: [salud, alergia, alergias, enfermedad, enfermedades, diagnostico, medicamento,
+               medicamentos, condicion medica, condiciones medicas, discapacidad, licencia medica,
+               licencias medicas, grupo sanguineo, embarazo, patologia, tratamiento medico]
+    sensible: true
+    fundamento:
+      norma: ley-19628
+      articulo: "2"
+      fragmento: los datos relativos a la salud
+
+  prevision_salud:
+    etiqueta: Previsión de salud (Isapre o Fonasa)
+    palabras: [isapre, fonasa, prevision de salud, prevision]
+    sensible: revisar
+    fundamento:
+      norma: ley-19628
+      articulo: "2"
+      fragmento: los datos relativos a la salud
+
+  financiero:
+    etiqueta: Datos económicos o financieros
+    palabras: [sueldo, sueldo base, remuneracion, renta, banco, cuenta, numero de cuenta,
+               cuenta bancaria, tarjeta, deuda, credito, monto, monto compras]
+    sensible: revisar
+    especial: [financiero]
+    fundamento:
+      norma: ley-19628
+      articulo: "14 sexies"
+      fragmento: datos relativos a obligaciones de carácter económico, financiero, bancario o comercial
+
+  afiliacion_sindical:
+    etiqueta: Afiliación sindical o gremial
+    palabras: [sindicato, sindical, afiliado sindicato, afiliacion sindical, gremio, gremial]
+    sensible: true
+    fundamento:
+      norma: ley-19628
+      articulo: "2"
+      fragmento: la afiliación política, sindical o gremial
+
+  afiliacion_politica:
+    etiqueta: Afiliación política
+    palabras: [partido, partido politico, militancia, afiliacion politica]
+    sensible: true
+    fundamento:
+      norma: ley-19628
+      articulo: "2"
+      fragmento: la afiliación política, sindical o gremial
+
+  religion:
+    etiqueta: Creencias religiosas
+    palabras: [religion, credo, creencia religiosa, iglesia]
+    sensible: true
+    fundamento:
+      norma: ley-19628
+      articulo: "2"
+      fragmento: las creencias religiosas
+
+  origen_etnico:
+    etiqueta: Origen étnico o racial
+    palabras: [etnia, pueblo originario, origen etnico, raza]
+    sensible: true
+    fundamento:
+      norma: ley-19628
+      articulo: "2"
+      fragmento: que revelen el origen étnico o racial
+
+  vida_sexual:
+    etiqueta: Vida sexual, orientación sexual o identidad de género
+    palabras: [orientacion sexual, identidad de genero, vida sexual]
+    sensible: true
+    fundamento:
+      norma: ley-19628
+      articulo: "2"
+      fragmento: a la orientación sexual y a la identidad de género
+
+  biometrico:
+    etiqueta: Datos biométricos
+    palabras: [huella, huella digital, biometrico, iris, reconocimiento facial]
+    sensible: true
+    fundamento:
+      norma: ley-19628
+      articulo: "16 ter"
+      fragmento: tales como la huella digital, el iris, los rasgos de la mano o faciales y la voz
+
+  geolocalizacion:
+    etiqueta: Geolocalización
+    palabras: [latitud, longitud, ubicacion, gps, geolocalizacion, coordenadas]
+    sensible: false
+    fundamento:
+      norma: ley-19628
+      articulo: "16 sexies"
+      fragmento: El tratamiento de los datos personales de geolocalización del titular
+
+  imagen:
+    etiqueta: Imagen o fotografía
+    palabras: [foto, fotografia, imagen]
+    sensible: false
+    fundamento:
+      norma: ley-19628
+      articulo: "2"
+      fragmento: cualquier información vinculada o referida a una persona natural identificada o identificable
+
+  preferencias_comerciales:
+    etiqueta: Preferencias y comportamiento de compra
+    palabras: [acepta publicidad, ultima compra, fecha ultima compra, preferencias, segmento]
+    sensible: false
+    fundamento:
+      norma: ley-19628
+      articulo: "8"
+      fragmento: Si el tratamiento se realiza exclusivamente con fines de mercadotecnia
