@@ -1,0 +1,3993 @@
+{
+  "fecha": "2026-10-10 22:30 UTC",
+  "modelos": "`claude-sonnet-5-5` para incidentes; `claude-haiku-5-5` para solicitudes y columnas",
+  "incidentes": {
+    "metricas": {
+      "base": {
+        "casos": 50,
+        "casos_totalmente_correctos_pct": 58.0,
+        "exactitud_por_deber_pct": {
+          "aviso_agencia": 74.0,
+          "aviso_titulares": 80.0,
+          "reporte_anci": 90.0
+        },
+        "deberes_detectados": "61/76",
+        "deberes_detectados_pct": 80.3,
+        "deberes_omitidos": 15,
+        "alarmas_de_mas": 6
+      },
+      "ia_sola": {
+        "casos": 50,
+        "casos_totalmente_correctos_pct": 18.0,
+        "exactitud_por_deber_pct": {
+          "aviso_agencia": 24.0,
+          "aviso_titulares": 38.0,
+          "reporte_anci": 40.0
+        },
+        "deberes_detectados": "74/76",
+        "deberes_detectados_pct": 97.4,
+        "deberes_omitidos": 2,
+        "alarmas_de_mas": 2
+      },
+      "ia_motor": {
+        "casos": 50,
+        "casos_totalmente_correctos_pct": 92.0,
+        "exactitud_por_deber_pct": {
+          "aviso_agencia": 96.0,
+          "aviso_titulares": 98.0,
+          "reporte_anci": 96.0
+        },
+        "deberes_detectados": "75/76",
+        "deberes_detectados_pct": 98.7,
+        "deberes_omitidos": 1,
+        "alarmas_de_mas": 3
+      }
+    },
+    "costo_usd": {
+      "ia_sola": 0.7068,
+      "ia_motor": 0.3103
+    },
+    "casos": [
+      {
+        "id": "inc-01",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "financieros"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-02",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-03",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "base": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "si"
+        }
+      },
+      {
+        "id": "inc-04",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-05",
+        "esperado": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-06",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-07",
+        "esperado": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        }
+      },
+      {
+        "id": "inc-08",
+        "esperado": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        }
+      },
+      {
+        "id": "inc-09",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-10",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "menores_14"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-11",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        }
+      },
+      {
+        "id": "inc-12",
+        "esperado": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        }
+      },
+      {
+        "id": "inc-13",
+        "esperado": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "revisar"
+        },
+        "ia_motor_error": "respuesta_invalida",
+        "categorias_ia": null,
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        }
+      },
+      {
+        "id": "inc-14",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "financieros"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-15",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        }
+      },
+      {
+        "id": "inc-16",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        }
+      },
+      {
+        "id": "inc-17",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-18",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-19",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        }
+      },
+      {
+        "id": "inc-20",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "revisar"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "revisar"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles",
+          "menores_14"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-21",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-22",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "no"
+        }
+      },
+      {
+        "id": "inc-23",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "si"
+        }
+      },
+      {
+        "id": "inc-24",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-25",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        }
+      },
+      {
+        "id": "inc-26",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "revisar"
+        }
+      },
+      {
+        "id": "inc-27",
+        "esperado": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        }
+      },
+      {
+        "id": "inc-28",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-29",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-30",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "financieros"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-31",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-32",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-33",
+        "esperado": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "revisar"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "financieros"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-34",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "no"
+        }
+      },
+      {
+        "id": "inc-35",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        }
+      },
+      {
+        "id": "inc-36",
+        "esperado": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        }
+      },
+      {
+        "id": "inc-37",
+        "esperado": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        }
+      },
+      {
+        "id": "inc-38",
+        "esperado": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-39",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-40",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "financieros"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-41",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "revisar"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "revisar"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "revisar"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-42",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-43",
+        "esperado": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        }
+      },
+      {
+        "id": "inc-44",
+        "esperado": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "revisar"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "revisar"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        }
+      },
+      {
+        "id": "inc-45",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-46",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-47",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "financieros"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-48",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles",
+          "menores_14"
+        ],
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "no"
+        }
+      },
+      {
+        "id": "inc-49",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "sin_respuesta",
+          "aviso_titulares": "sin_respuesta",
+          "reporte_anci": "sin_respuesta"
+        }
+      },
+      {
+        "id": "inc-50",
+        "esperado": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        }
+      }
+    ]
+  },
+  "solicitudes": {
+    "metricas": {
+      "base": {
+        "casos": 50,
+        "clasificacion_correcta_pct": 84.0,
+        "ambiguos_detectados": "0/10",
+        "confirmaciones_innecesarias": 0,
+        "plazo_respuesta_correcto": "40/43",
+        "plazo_respuesta_correcto_pct": 93.0,
+        "plazo_bloqueo_correcto": "4/4"
+      },
+      "ia_sola": {
+        "casos": 50,
+        "clasificacion_correcta_pct": 90.0,
+        "ambiguos_detectados": "8/10",
+        "confirmaciones_innecesarias": 20,
+        "plazo_respuesta_correcto": "28/43",
+        "plazo_respuesta_correcto_pct": 65.1,
+        "plazo_bloqueo_correcto": "1/4"
+      },
+      "ia_motor": {
+        "casos": 50,
+        "clasificacion_correcta_pct": 84.0,
+        "ambiguos_detectados": "7/10",
+        "confirmaciones_innecesarias": 10,
+        "plazo_respuesta_correcto": "42/43",
+        "plazo_respuesta_correcto_pct": 97.7,
+        "plazo_bloqueo_correcto": "4/4"
+      }
+    },
+    "costo_usd": {
+      "ia_sola": 0.0186,
+      "ia_motor": 0.0126
+    },
+    "casos": [
+      {
+        "id": "sol-01",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-01",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-01",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-01",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-01",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-02",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-01",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-01",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-01",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-01",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-03",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "vence_respuesta": "2027-01-02",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-02",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion",
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": false,
+          "vence_respuesta": "2027-01-02",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Quiere que dejemos de enviarle correos publicitarios, o prefiere que eliminemos también sus datos de contacto de nuestra base?",
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion",
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-04",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-02",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-02",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-02",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-02",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-05",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-06",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": "2026-12-08"
+        }
+      },
+      {
+        "id": "sol-07",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion",
+            "bloqueo"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": "2026-12-09"
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion",
+            "oposicion",
+            "bloqueo"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": "2026-12-09"
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion",
+            "bloqueo"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": "2026-12-09"
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion",
+            "bloqueo"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": "2026-12-08"
+        }
+      },
+      {
+        "id": "sol-08",
+        "esperado": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-09",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": true,
+          "vence_respuesta": "2027-01-06",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-06",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-06",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-10",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-06",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-06",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-06",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-06",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-11",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-08",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-08",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-08",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-12",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "vence_respuesta": "2027-01-08",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-08",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion",
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": false,
+          "vence_respuesta": "2027-01-08",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Quiere que dejemos de usar sus datos para enviarle comunicaciones, o que eliminemos por completo sus datos de nuestras listas?",
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-13",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-08",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-08",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-08",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-08",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-14",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-15",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-16",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-17",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-10",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-10",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-10",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-10",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-18",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso",
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-10",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso",
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-10",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso",
+            "portabilidad",
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": "2027-01-10",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso",
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-10",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-19",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "bloqueo"
+          ],
+          "requiere_confirmacion": true,
+          "vence_respuesta": "2027-01-22",
+          "vence_bloqueo": "2026-12-28"
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "oposicion",
+            "bloqueo"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": "2027-01-22",
+          "vence_bloqueo": "2026-12-28"
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "bloqueo"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": false,
+          "vence_respuesta": "2027-01-22",
+          "vence_bloqueo": "2026-12-28"
+        },
+        "pregunta_confirmacion": "¿Me puede indicar cuál es la fecha de nacimiento correcta para corregirla? Así registramos su solicitud de corrección junto con la suspensión temporal del uso de sus datos.",
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "bloqueo"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": "2026-12-28"
+        }
+      },
+      {
+        "id": "sol-20",
+        "esperado": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-21",
+        "esperado": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-22",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-13",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-13",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-13",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Podría confirmarnos que usted es familiar de don Pedro Soto y enviarnos un documento que acredite su relación (por ejemplo, el certificado de defunción o de parentesco)? Así podremos tramitar la eliminación de su cuenta y datos.",
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-13",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-23",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Quiere que dejemos de usar sus datos para enviarle ofertas por WhatsApp, o prefiere que además borremos sus datos de contacto?",
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-24",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-25",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-26",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-15",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-15",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-15",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Quiere que eliminemos todos sus datos personales que tenemos en nuestro sistema?",
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-27",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "vence_respuesta": "2027-01-15",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-15",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion",
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": false,
+          "vence_respuesta": "2027-01-15",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Quieres que dejemos de enviarte correos y mensajes, o que eliminemos todos tus datos de nuestros registros?",
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-28",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-15",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-15",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-15",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Quiere que actualicemos su número de teléfono en nuestros registros por el nuevo que nos indica?",
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-15",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-29",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso",
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso",
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso",
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-30",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Quiere que le enviemos sus datos directamente a la nueva empresa de seguros que contrató? Si es así, ¿nos puede indicar qué datos quiere que se transfieran (por ejemplo, datos de su póliza o todos sus datos personales) y el nombre de la empresa?",
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-31",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Quiere que dejemos de usar sus fotos del evento en nuestras redes sociales, o que además las borremos de nuestros sistemas?",
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-32",
+        "esperado": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-33",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-17",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-17",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-17",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-17",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-34",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "bloqueo"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-29",
+          "vence_bloqueo": "2027-01-04"
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "bloqueo"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-29",
+          "vence_bloqueo": "2027-01-04"
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "bloqueo"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": "2027-01-29",
+          "vence_bloqueo": "2027-01-04"
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "bloqueo"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": "2027-01-01"
+        }
+      },
+      {
+        "id": "sol-35",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-20",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-20",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-20",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-20",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-36",
+        "esperado": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": "2027-01-20",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-37",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "acceso"
+          ],
+          "requiere_confirmacion": true,
+          "vence_respuesta": "2027-01-20",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso",
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-20",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "acceso"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-20",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Qué datos son los que quiere corregir y cuál es el dato correcto que debemos registrar?",
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "acceso"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-20",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-38",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-39",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Quiere que dejemos de usar sus datos para llamarlo con fines de venta, o prefiere que además borremos sus datos de nuestra base?",
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-40",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Quiere que le entreguemos una copia de todos sus datos en un formato electrónico estructurado, para que pueda usarla en otro sistema o enviarla a otra organización?",
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-41",
+        "esperado": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-42",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-27",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-27",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-27",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Quiere que borremos todos los datos de Martina o solo su nombre de la planilla del paseo?",
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-27",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-43",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-27",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-27",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-27",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Quiere que le informemos qué hacemos con sus huellas digitales, para qué se usan, cuánto tiempo se guardan y a quién se entregan?",
+        "ia_sola": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-44",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-45",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion",
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-46",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso",
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "acceso"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-47",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": true,
+          "vence_respuesta": "2027-02-03",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-02-03",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Quiere corregir o actualizar algún dato suyo que tengamos registrado? Si es así, cuéntenos cuál y cuál es el dato correcto.",
+        "ia_sola": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-48",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "vence_respuesta": "2027-02-03",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion",
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": false,
+          "vence_respuesta": "2027-02-03",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Quiere que eliminemos todos sus datos de nuestra base, o solo que dejemos de usarlos para algún fin en particular, como publicidad?",
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-02-03",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-49",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "bloqueo"
+          ],
+          "requiere_confirmacion": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": "2026-12-14"
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "bloqueo"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": "2026-12-14"
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "bloqueo"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": "2026-12-14"
+        },
+        "pregunta_confirmacion": "¿Podría indicarnos a qué solicitud acompaña el bloqueo? Por ejemplo, si lo pide mientras corregimos un dato, mientras eliminamos sus datos o mientras revisamos que dejemos de usarlos para algún fin.",
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "bloqueo"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-50",
+        "esperado": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_sola": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      }
+    ]
+  },
+  "columnas": {
+    "metricas": {
+      "base": {
+        "casos": 50,
+        "exactitud_pct": 44.0,
+        "sensibles_detectadas": "4/11",
+        "sensibles_detectadas_pct": 36.4,
+        "falsos_sensibles": 2,
+        "trampas_acertadas": "0/5",
+        "sin_clasificar": 23
+      },
+      "ia_sola": {
+        "casos": 50,
+        "exactitud_pct": 94.0,
+        "sensibles_detectadas": "11/11",
+        "sensibles_detectadas_pct": 100.0,
+        "falsos_sensibles": 1,
+        "trampas_acertadas": "3/5",
+        "sin_clasificar": 0
+      },
+      "ia_motor": {
+        "casos": 50,
+        "exactitud_pct": 88.0,
+        "sensibles_detectadas": "11/11",
+        "sensibles_detectadas_pct": 100.0,
+        "falsos_sensibles": 2,
+        "trampas_acertadas": "0/5",
+        "sin_clasificar": 0
+      }
+    },
+    "costo_usd": {
+      "ia_sola": 0.0027,
+      "ia_motor": 0.0017
+    },
+    "casos": [
+      {
+        "planilla": "col-a",
+        "columna": "Nombre niño/a",
+        "esperado": "nombre",
+        "trampa": false,
+        "base": "nombre",
+        "ia_sola": "nombre",
+        "ia_motor": "nombre"
+      },
+      {
+        "planilla": "col-a",
+        "columna": "Obs.",
+        "esperado": "salud",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "salud",
+        "ia_motor": "salud"
+      },
+      {
+        "planilla": "col-a",
+        "columna": "Dieta",
+        "esperado": "salud",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "salud",
+        "ia_motor": "salud"
+      },
+      {
+        "planilla": "col-a",
+        "columna": "Seguro",
+        "esperado": "prevision_salud",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "prevision_salud",
+        "ia_motor": "prevision_salud"
+      },
+      {
+        "planilla": "col-a",
+        "columna": "F. nac.",
+        "esperado": "fecha_nacimiento",
+        "trampa": false,
+        "base": "fecha_nacimiento",
+        "ia_sola": "fecha_nacimiento",
+        "ia_motor": "fecha_nacimiento"
+      },
+      {
+        "planilla": "col-a",
+        "columna": "Quién retira",
+        "esperado": "parentesco",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "parentesco",
+        "ia_motor": "parentesco"
+      },
+      {
+        "planilla": "col-a",
+        "columna": "Contacto emergencia",
+        "esperado": "telefono",
+        "trampa": false,
+        "base": "telefono",
+        "ia_sola": "telefono",
+        "ia_motor": "telefono"
+      },
+      {
+        "planilla": "col-a",
+        "columna": "Comuna",
+        "esperado": "direccion",
+        "trampa": false,
+        "base": "direccion",
+        "ia_sola": "direccion",
+        "ia_motor": "direccion"
+      },
+      {
+        "planilla": "col-a",
+        "columna": "Pertenece a pueblo originario",
+        "esperado": "origen_etnico",
+        "trampa": false,
+        "base": "origen_etnico",
+        "ia_sola": "origen_etnico",
+        "ia_motor": "origen_etnico"
+      },
+      {
+        "planilla": "col-a",
+        "columna": "Monto pagado",
+        "esperado": "financiero",
+        "trampa": false,
+        "base": "financiero",
+        "ia_sola": "financiero",
+        "ia_motor": "financiero"
+      },
+      {
+        "planilla": "col-b",
+        "columna": "Cliente",
+        "esperado": "nombre",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "nombre",
+        "ia_motor": "nombre"
+      },
+      {
+        "planilla": "col-b",
+        "columna": "Mail",
+        "esperado": "correo",
+        "trampa": false,
+        "base": "correo",
+        "ia_sola": "correo",
+        "ia_motor": "correo"
+      },
+      {
+        "planilla": "col-b",
+        "columna": "Fono",
+        "esperado": "telefono",
+        "trampa": false,
+        "base": "telefono",
+        "ia_sola": "telefono",
+        "ia_motor": "telefono"
+      },
+      {
+        "planilla": "col-b",
+        "columna": "Raza",
+        "esperado": "no_personal",
+        "trampa": true,
+        "base": "origen_etnico",
+        "ia_sola": "no_personal",
+        "ia_motor": "origen_etnico"
+      },
+      {
+        "planilla": "col-b",
+        "columna": "Nombre mascota",
+        "esperado": "no_personal",
+        "trampa": true,
+        "base": "nombre",
+        "ia_sola": "no_personal",
+        "ia_motor": "nombre"
+      },
+      {
+        "planilla": "col-b",
+        "columna": "Deuda pendiente",
+        "esperado": "financiero",
+        "trampa": false,
+        "base": "financiero",
+        "ia_sola": "financiero",
+        "ia_motor": "financiero"
+      },
+      {
+        "planilla": "col-b",
+        "columna": "Última visita",
+        "esperado": "preferencias_comerciales",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "no_personal",
+        "ia_motor": "no_personal"
+      },
+      {
+        "planilla": "col-b",
+        "columna": "Acepta ofertas",
+        "esperado": "preferencias_comerciales",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "preferencias_comerciales",
+        "ia_motor": "preferencias_comerciales"
+      },
+      {
+        "planilla": "col-b",
+        "columna": "Diagnóstico",
+        "esperado": "no_personal",
+        "trampa": true,
+        "base": "salud",
+        "ia_sola": "salud",
+        "ia_motor": "salud"
+      },
+      {
+        "planilla": "col-b",
+        "columna": "Dirección despacho",
+        "esperado": "direccion",
+        "trampa": false,
+        "base": "direccion",
+        "ia_sola": "direccion",
+        "ia_motor": "direccion"
+      },
+      {
+        "planilla": "col-c",
+        "columna": "R.U.N.",
+        "esperado": "identificador_nacional",
+        "trampa": false,
+        "base": "identificador_nacional",
+        "ia_sola": "identificador_nacional",
+        "ia_motor": "identificador_nacional"
+      },
+      {
+        "planilla": "col-c",
+        "columna": "Postulante",
+        "esperado": "nombre",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "nombre",
+        "ia_motor": "nombre"
+      },
+      {
+        "planilla": "col-c",
+        "columna": "Pretensión de renta",
+        "esperado": "financiero",
+        "trampa": false,
+        "base": "financiero",
+        "ia_sola": "financiero",
+        "ia_motor": "financiero"
+      },
+      {
+        "planilla": "col-c",
+        "columna": "Discapacidad (Ley 21.015)",
+        "esperado": "salud",
+        "trampa": false,
+        "base": "salud",
+        "ia_sola": "salud",
+        "ia_motor": "salud"
+      },
+      {
+        "planilla": "col-c",
+        "columna": "Hijos",
+        "esperado": "parentesco",
+        "trampa": false,
+        "base": "parentesco",
+        "ia_sola": "parentesco",
+        "ia_motor": "parentesco"
+      },
+      {
+        "planilla": "col-c",
+        "columna": "Sindicalizado en trabajo anterior",
+        "esperado": "afiliacion_sindical",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "afiliacion_sindical",
+        "ia_motor": "afiliacion_sindical"
+      },
+      {
+        "planilla": "col-c",
+        "columna": "Fecha nacimiento",
+        "esperado": "fecha_nacimiento",
+        "trampa": false,
+        "base": "fecha_nacimiento",
+        "ia_sola": "fecha_nacimiento",
+        "ia_motor": "fecha_nacimiento"
+      },
+      {
+        "planilla": "col-c",
+        "columna": "Cargo al que postula",
+        "esperado": "laboral",
+        "trampa": false,
+        "base": "laboral",
+        "ia_sola": "laboral",
+        "ia_motor": "laboral"
+      },
+      {
+        "planilla": "col-c",
+        "columna": "Antecedentes médicos",
+        "esperado": "salud",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "salud",
+        "ia_motor": "salud"
+      },
+      {
+        "planilla": "col-c",
+        "columna": "Militancia",
+        "esperado": "afiliacion_politica",
+        "trampa": false,
+        "base": "afiliacion_politica",
+        "ia_sola": "afiliacion_politica",
+        "ia_motor": "afiliacion_politica"
+      },
+      {
+        "planilla": "col-d",
+        "columna": "Razón social",
+        "esperado": "persona_juridica",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "persona_juridica",
+        "ia_motor": "persona_juridica"
+      },
+      {
+        "planilla": "col-d",
+        "columna": "RUT",
+        "esperado": "persona_juridica",
+        "trampa": true,
+        "base": "identificador_nacional",
+        "ia_sola": "identificador_nacional",
+        "ia_motor": "identificador_nacional"
+      },
+      {
+        "planilla": "col-d",
+        "columna": "Contacto",
+        "esperado": "nombre",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "nombre",
+        "ia_motor": "nombre"
+      },
+      {
+        "planilla": "col-d",
+        "columna": "Producto",
+        "esperado": "no_personal",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "no_personal",
+        "ia_motor": "no_personal"
+      },
+      {
+        "planilla": "col-d",
+        "columna": "Precio unitario",
+        "esperado": "no_personal",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "no_personal",
+        "ia_motor": "no_personal"
+      },
+      {
+        "planilla": "col-d",
+        "columna": "Bodega",
+        "esperado": "no_personal",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "no_personal",
+        "ia_motor": "no_personal"
+      },
+      {
+        "planilla": "col-d",
+        "columna": "Ubicación bodega",
+        "esperado": "no_personal",
+        "trampa": true,
+        "base": "geolocalizacion",
+        "ia_sola": "no_personal",
+        "ia_motor": "geolocalizacion"
+      },
+      {
+        "planilla": "col-d",
+        "columna": "Patente camión",
+        "esperado": "no_personal",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "no_personal",
+        "ia_motor": "no_personal"
+      },
+      {
+        "planilla": "col-d",
+        "columna": "Chofer",
+        "esperado": "nombre",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "nombre",
+        "ia_motor": "nombre"
+      },
+      {
+        "planilla": "col-d",
+        "columna": "Celular chofer",
+        "esperado": "telefono",
+        "trampa": false,
+        "base": "telefono",
+        "ia_sola": "telefono",
+        "ia_motor": "telefono"
+      },
+      {
+        "planilla": "col-e",
+        "columna": "Trabajador",
+        "esperado": "nombre",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "nombre",
+        "ia_motor": "nombre"
+      },
+      {
+        "planilla": "col-e",
+        "columna": "Huella (plantilla)",
+        "esperado": "biometrico",
+        "trampa": false,
+        "base": "biometrico",
+        "ia_sola": "biometrico",
+        "ia_motor": "biometrico"
+      },
+      {
+        "planilla": "col-e",
+        "columna": "Hora entrada",
+        "esperado": "laboral",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "laboral",
+        "ia_motor": "laboral"
+      },
+      {
+        "planilla": "col-e",
+        "columna": "Coordenadas marcaje",
+        "esperado": "geolocalizacion",
+        "trampa": false,
+        "base": "geolocalizacion",
+        "ia_sola": "geolocalizacion",
+        "ia_motor": "geolocalizacion"
+      },
+      {
+        "planilla": "col-e",
+        "columna": "Foto marcaje",
+        "esperado": "imagen",
+        "trampa": false,
+        "base": "imagen",
+        "ia_sola": "imagen",
+        "ia_motor": "imagen"
+      },
+      {
+        "planilla": "col-e",
+        "columna": "Turno",
+        "esperado": "laboral",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "laboral",
+        "ia_motor": "laboral"
+      },
+      {
+        "planilla": "col-e",
+        "columna": "Motivo ausencia",
+        "esperado": "salud",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "salud",
+        "ia_motor": "salud"
+      },
+      {
+        "planilla": "col-e",
+        "columna": "Embarazada",
+        "esperado": "salud",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "salud",
+        "ia_motor": "salud"
+      },
+      {
+        "planilla": "col-e",
+        "columna": "Departamento",
+        "esperado": "laboral",
+        "trampa": false,
+        "base": "laboral",
+        "ia_sola": "laboral",
+        "ia_motor": "laboral"
+      },
+      {
+        "planilla": "col-e",
+        "columna": "Orientación",
+        "esperado": "vida_sexual",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "vida_sexual",
+        "ia_motor": "vida_sexual"
+      }
+    ]
+  },
+  "segundos": 148.2,
+  "costo_total_usd": 1.0527
+}
