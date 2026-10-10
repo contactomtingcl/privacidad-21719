@@ -7,9 +7,12 @@ on:
       tarea:
         description: "Qué ejecutar"
         required: true
-        default: prueba_conexion
+        default: ia.prueba_conexion
         type: choice
-        options: [prueba_conexion]
+        options: [ia.prueba_conexion, inventario.demo_ia]
+
+permissions:
+  contents: write
 
 jobs:
   ia:
@@ -24,4 +27,15 @@ jobs:
       - name: Ejecutar
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python -m ora_privacidad.ia.${{ inputs.tarea }}
+          TAREA: ${{ inputs.tarea }}
+        run: python -m "ora_privacidad.$TAREA"
+      - name: Guardar resultados en el repositorio
+        if: ${{ hashFiles('resultados/**') != '' }}
+        env:
+          TAREA: ${{ inputs.tarea }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add resultados
+          git diff --cached --quiet || git commit -m "Resultados: $TAREA [skip ci]"
+          git push

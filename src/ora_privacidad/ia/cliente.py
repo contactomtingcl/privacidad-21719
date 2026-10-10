@@ -67,6 +67,7 @@ class ClienteIA:
         sistema: str,
         mensajes: list[dict[str, Any]],
         herramientas: list[dict[str, Any]] | None = None,
+        forzar_herramienta: str | None = None,
         max_tokens: int = 1024,
         proposito: str = "",
     ) -> RespuestaIA:
@@ -79,6 +80,8 @@ class ClienteIA:
         }
         if herramientas:
             kwargs["tools"] = herramientas
+        if forzar_herramienta:
+            kwargs["tool_choice"] = {"type": "tool", "name": forzar_herramienta}
         r = self._api.messages.create(**kwargs)
         latencia = int((time.perf_counter() - inicio) * 1000)
 
