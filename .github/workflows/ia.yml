@@ -9,7 +9,7 @@ on:
         required: true
         default: ia.prueba_conexion
         type: choice
-        options: [ia.prueba_conexion, inventario.demo_ia]
+        options: [ia.prueba_conexion, inventario.demo_ia, evaluacion]
 
 permissions:
   contents: write

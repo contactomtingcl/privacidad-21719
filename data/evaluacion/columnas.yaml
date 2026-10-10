@@ -1,0 +1,80 @@
+# Set etiquetado: columnas de planillas (50 casos en 5 planillas).
+# Todos los valores son ficticios. "esperado" es una clave del catálogo
+# (data/categorias.yaml), "no_personal" o "persona_juridica".
+# Las columnas con "categorica: true" tienen pocos valores distintos que se repiten
+# en muchas filas; la evaluación las replica a 30 filas.
+# Las columnas marcadas como "trampa" tienen un encabezado que engaña a una regla
+# por palabras clave (por ejemplo, "Raza" de una mascota no es origen étnico).
+version: 1
+etiquetado_por: Etiquetas redactadas con asistencia de IA (Claude) a partir del texto legal citado. Pendientes de revisión del autor y de un abogado.
+
+planillas:
+  - id: col-a
+    descripcion: Inscripción de los hijos e hijas de los trabajadores en un taller deportivo de verano.
+    columnas:
+      - {nombre: "Nombre niño/a", esperado: nombre, valores: ["Tomás Rojas Díaz", "Emilia Soto Pérez", "Agustín Muñoz Silva", "Josefa Tapia Castro", "Lucas Reyes Flores"]}
+      - {nombre: "Obs.", categorica: true, esperado: salud, nota: Observaciones con enfermedades, valores: ["Asma", "Ninguna", "Ninguna", "Usa inhalador", "Ninguna", "Diabetes tipo 1", "Ninguna"]}
+      - {nombre: "Dieta", categorica: true, esperado: salud, nota: Celiaquía e intolerancias son datos de salud, valores: ["Normal", "Sin gluten (celíaco)", "Normal", "Sin lactosa", "Normal", "Normal"]}
+      - {nombre: "Seguro", categorica: true, esperado: prevision_salud, valores: ["Fonasa", "Isapre", "Fonasa", "Fonasa", "Isapre"]}
+      - {nombre: "F. nac.", esperado: fecha_nacimiento, valores: ["03/05/2016", "21/11/2017", "14/02/2015", "30/08/2018", "09/01/2016"]}
+      - {nombre: "Quién retira", categorica: true, esperado: parentesco, valores: ["Abuela", "Madre", "Padre", "Tío", "Madre", "Padre"]}
+      - {nombre: "Contacto emergencia", esperado: telefono, valores: ["+56 9 0000 0101", "+56 9 0000 0102", "+56 9 0000 0103", "+56 9 0000 0104"]}
+      - {nombre: "Comuna", categorica: true, esperado: direccion, valores: ["Cabrero", "Los Ángeles", "Yumbel", "Cabrero", "Laja"]}
+      - {nombre: "Pertenece a pueblo originario", categorica: true, esperado: origen_etnico, valores: ["No", "Sí", "No", "No", "No", "No"]}
+      - {nombre: "Monto pagado", categorica: true, esperado: financiero, valores: ["15000", "15000", "0", "15000", "7500"]}
+
+  - id: col-b
+    descripcion: Base de clientes de una veterinaria y tienda de mascotas, usada para agendar controles y enviar ofertas.
+    columnas:
+      - {nombre: "Cliente", esperado: nombre, valores: ["Camila Fuentes Araya", "Diego Torres Vega", "Paula Castillo Reyes", "Martín Pizarro Soto"]}
+      - {nombre: "Mail", esperado: correo, valores: ["camila.fuentes@clientes.example", "diego.torres@clientes.example", "paula.c@clientes.example"]}
+      - {nombre: "Fono", esperado: telefono, valores: ["+56 9 0000 0105", "+56 9 0000 0106", "+56 9 0000 0107"]}
+      - {nombre: "Raza", categorica: true, esperado: no_personal, trampa: true, nota: Raza de la mascota, no de la persona, valores: ["Labrador", "Poodle", "Quiltro", "Pastor alemán", "Quiltro", "Beagle"]}
+      - {nombre: "Nombre mascota", categorica: true, esperado: no_personal, trampa: true, valores: ["Toby", "Luna", "Canela", "Rocky", "Mía"]}
+      - {nombre: "Deuda pendiente", categorica: true, esperado: financiero, valores: ["0", "12500", "0", "38000", "0"]}
+      - {nombre: "Última visita", esperado: preferencias_comerciales, nota: Historial de servicios del cliente, valores: ["2026-09-14", "2026-10-02", "2026-07-30", "2026-08-21"]}
+      - {nombre: "Acepta ofertas", categorica: true, esperado: preferencias_comerciales, valores: ["Sí", "No", "Sí", "Sí", "No", "Sí"]}
+      - {nombre: "Diagnóstico", categorica: true, esperado: no_personal, trampa: true, nota: Diagnóstico de la mascota, no de la persona, valores: ["Otitis", "Control sano", "Sarna", "Control sano", "Vacuna anual"]}
+      - {nombre: "Dirección despacho", esperado: direccion, valores: ["Los Aromos 123", "Pasaje El Roble 45", "Av. Principal 900"]}
+
+  - id: col-c
+    descripcion: Registro de postulantes a cargos de vendedor y bodeguero.
+    columnas:
+      - {nombre: "R.U.N.", esperado: identificador_nacional, valores: ["50.104.729-5", "50.209.458-0", "50.314.187-6", "50.418.916-3"]}
+      - {nombre: "Postulante", esperado: nombre, valores: ["Fernanda Vásquez Mora", "Ignacio Sepúlveda Lagos", "Bárbara Contreras Paz"]}
+      - {nombre: "Pretensión de renta", esperado: financiero, valores: ["850000", "700000", "1100000", "650000"]}
+      - {nombre: "Discapacidad (Ley 21.015)", categorica: true, esperado: salud, valores: ["No", "No", "Sí", "No", "No", "No"]}
+      - {nombre: "Hijos", categorica: true, esperado: parentesco, valores: ["2", "0", "1", "0", "3"]}
+      - {nombre: "Sindicalizado en trabajo anterior", categorica: true, esperado: afiliacion_sindical, valores: ["Sí", "No", "No", "Sí", "No"]}
+      - {nombre: "Fecha nacimiento", esperado: fecha_nacimiento, valores: ["12/03/1990", "28/07/1985", "05/11/1998"]}
+      - {nombre: "Cargo al que postula", categorica: true, esperado: laboral, valores: ["Vendedor", "Bodeguero", "Vendedor", "Vendedor"]}
+      - {nombre: "Antecedentes médicos", categorica: true, esperado: salud, valores: ["Operado de rodilla en 2020", "Ninguno", "Hipertensión controlada", "Ninguno"]}
+      - {nombre: "Militancia", categorica: true, esperado: afiliacion_politica, valores: ["No", "No", "Sí", "No", "No"]}
+
+  - id: col-d
+    descripcion: Registro de ventas y despachos a empresas clientes de una ferretería mayorista.
+    columnas:
+      - {nombre: "Razón social", esperado: persona_juridica, valores: ["Ferretería El Sauce SpA", "Comercial Laja Ltda.", "Constructora Biobío SpA"]}
+      - {nombre: "RUT", esperado: persona_juridica, trampa: true, nota: RUT de la empresa cliente, no de una persona, valores: ["50.523.645-9", "50.628.374-4", "50.733.103-3"]}
+      - {nombre: "Contacto", esperado: nombre, valores: ["Rodrigo Álvarez Cid", "Macarena Gutiérrez Ríos", "Esteban Carrasco Lillo"]}
+      - {nombre: "Producto", categorica: true, esperado: no_personal, valores: ["Taladro", "Martillo", "Cemento 25 kg", "Taladro", "Clavos 2 pulgadas"]}
+      - {nombre: "Precio unitario", categorica: true, esperado: no_personal, valores: ["45990", "8990", "5490", "45990", "1990"]}
+      - {nombre: "Bodega", categorica: true, esperado: no_personal, valores: ["Bodega 1", "Bodega 2", "Bodega 1", "Bodega 3"]}
+      - {nombre: "Ubicación bodega", categorica: true, esperado: no_personal, trampa: true, nota: Coordenadas de una bodega, no de una persona, valores: ["-37.0333,-72.4000", "-37.4697,-72.3537", "-37.0333,-72.4000"]}
+      - {nombre: "Patente camión", categorica: true, esperado: no_personal, nota: Vehículo de la empresa, valores: ["KLMN12", "PQRS34", "KLMN12"]}
+      - {nombre: "Chofer", esperado: nombre, valores: ["Gonzalo Espinoza Ruiz", "Pablo Hernández Vera"]}
+      - {nombre: "Celular chofer", esperado: telefono, valores: ["+56 9 0000 0108", "+56 9 0000 0109"]}
+
+  - id: col-e
+    descripcion: Control de asistencia de trabajadores con reloj biométrico y aplicación móvil, y encuesta interna de diversidad.
+    columnas:
+      - {nombre: "Trabajador", esperado: nombre, valores: ["Valentina Morales Paz", "Cristóbal Fuentes Ortiz", "Isidora Rojas Vidal"]}
+      - {nombre: "Huella (plantilla)", esperado: biometrico, valores: ["a8f3c91e07b2", "4be27d10c9aa", "f01c9e3b7a65"]}
+      - {nombre: "Hora entrada", esperado: laboral, valores: ["08:02", "07:58", "08:15", "08:00"]}
+      - {nombre: "Coordenadas marcaje", esperado: geolocalizacion, valores: ["-37.0331,-72.4012", "-37.0329,-72.4008", "-37.0335,-72.4010"]}
+      - {nombre: "Foto marcaje", esperado: imagen, valores: ["img_0001.jpg", "img_0002.jpg", "img_0003.jpg"]}
+      - {nombre: "Turno", categorica: true, esperado: laboral, valores: ["Mañana", "Tarde", "Mañana", "Noche"]}
+      - {nombre: "Motivo ausencia", categorica: true, esperado: salud, nota: Incluye licencias médicas, valores: ["Licencia médica", "Vacaciones", "Permiso administrativo", "Licencia médica", "Vacaciones"]}
+      - {nombre: "Embarazada", categorica: true, esperado: salud, valores: ["No", "No", "Sí", "No", "No"]}
+      - {nombre: "Departamento", categorica: true, esperado: laboral, valores: ["Ventas", "Bodega", "Administración", "Ventas"]}
+      - {nombre: "Orientación", categorica: true, esperado: vida_sexual, nota: Encuesta de diversidad, valores: ["Heterosexual", "Gay", "Prefiere no decir", "Heterosexual", "Bisexual"]}

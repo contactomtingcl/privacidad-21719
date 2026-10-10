@@ -1,0 +1,277 @@
+# Set etiquetado: mensajes de titulares que llegan por el canal (50 casos). Todo es ficticio.
+#
+# - es_solicitud: si el mensaje ejerce un derecho del art. 4 de la Ley 19.628.
+# - derechos: interpretación principal (acceso, rectificacion, supresion, oposicion,
+#   portabilidad, bloqueo).
+# - alternativas: otras lecturas razonables del mismo mensaje; también se aceptan.
+# - requiere_confirmacion: el mensaje admite lecturas con respuestas distintas, o le falta
+#   lo que exige el art. 11 (qué datos o qué tratamiento, la causal o la corrección precisa).
+#   El sistema debe preguntarle al titular qué quiso decir; el plazo corre igual.
+# - vence_respuesta y vence_bloqueo: plazos del art. 11 calculados a mano
+#   (30 días corridos; 2 días hábiles sin fines de semana ni feriados).
+version: 1
+etiquetado_por: Etiquetas redactadas con asistencia de IA (Claude) a partir del texto legal citado. Pendientes de revisión del autor y de un abogado.
+
+casos:
+  - id: sol-01
+    ingreso: 2026-12-02
+    texto: Quiero saber qué datos míos tienen y para qué los usan.
+    esperado: {es_solicitud: true, derechos: [acceso], requiere_confirmacion: false, vence_respuesta: 2027-01-01}
+
+  - id: sol-02
+    ingreso: 2026-12-02
+    texto: Por favor borren todos mis datos, ya no soy cliente de ustedes.
+    esperado: {es_solicitud: true, derechos: [supresion], requiere_confirmacion: false, vence_respuesta: 2027-01-01}
+
+  - id: sol-03
+    ingreso: 2026-12-03
+    texto: No quiero que me lleguen más correos.
+    esperado: {es_solicitud: true, derechos: [oposicion], alternativas: [[supresion]], requiere_confirmacion: true, vence_respuesta: 2027-01-02}
+    nota: Puede querer dejar de recibir publicidad (oposición) o que borren sus datos (supresión).
+
+  - id: sol-04
+    ingreso: 2026-12-03
+    texto: Mi dirección está mal, ahora vivo en Los Aromos 1234, Cabrero.
+    esperado: {es_solicitud: true, derechos: [rectificacion], requiere_confirmacion: false, vence_respuesta: 2027-01-02}
+
+  - id: sol-05
+    ingreso: 2026-12-04
+    texto: Necesito una copia de mis datos en Excel para llevármelos a otra empresa.
+    esperado: {es_solicitud: true, derechos: [portabilidad], requiere_confirmacion: false, vence_respuesta: 2027-01-03}
+
+  - id: sol-06
+    ingreso: 2026-12-04
+    texto: Dejen de llamarme para ofrecerme tarjetas, por favor.
+    esperado: {es_solicitud: true, derechos: [oposicion], requiere_confirmacion: false, vence_respuesta: 2027-01-03}
+
+  - id: sol-07
+    ingreso: 2026-12-04
+    texto: Pedí que borraran mis datos y mientras lo revisan no quiero que los sigan usando.
+    esperado: {es_solicitud: true, derechos: [supresion, bloqueo], requiere_confirmacion: false, vence_respuesta: 2027-01-03, vence_bloqueo: 2026-12-09}
+
+  - id: sol-08
+    ingreso: 2026-12-07
+    texto: El producto me llegó roto, quiero la devolución de mi plata.
+    esperado: {es_solicitud: false, derechos: [], requiere_confirmacion: false}
+
+  - id: sol-09
+    ingreso: 2026-12-07
+    texto: ¿Por qué me rechazaron el crédito? ¿Lo decidió un computador?
+    esperado: {es_solicitud: true, derechos: [acceso], requiere_confirmacion: true, vence_respuesta: 2027-01-06}
+    nota: Pide la lógica de una posible decisión automatizada (art. 5 letra f); puede querer además oponerse a ella (art. 8 bis).
+
+  - id: sol-10
+    ingreso: 2026-12-07
+    texto: Soy la mamá de Tomás, de 8 años. Quiero que borren la foto de él que subieron al Instagram de la empresa.
+    esperado: {es_solicitud: true, derechos: [supresion], alternativas: [[oposicion]], requiere_confirmacion: false, vence_respuesta: 2027-01-06}
+
+  - id: sol-11
+    ingreso: 2026-12-09
+    texto: Mi apellido aparece como Gonzales y es González, con zeta.
+    esperado: {es_solicitud: true, derechos: [rectificacion], requiere_confirmacion: false, vence_respuesta: 2027-01-08}
+
+  - id: sol-12
+    ingreso: 2026-12-09
+    texto: Sáquenme de sus listas.
+    esperado: {es_solicitud: true, derechos: [oposicion], alternativas: [[supresion]], requiere_confirmacion: true, vence_respuesta: 2027-01-08}
+
+  - id: sol-13
+    ingreso: 2026-12-09
+    texto: Quiero ver las grabaciones de las cámaras donde salgo, del día 3 de diciembre en la tarde.
+    esperado: {es_solicitud: true, derechos: [acceso], requiere_confirmacion: false, vence_respuesta: 2027-01-08}
+
+  - id: sol-14
+    ingreso: 2026-12-10
+    texto: Al final no quedé en el trabajo, así que quiero que eliminen mi currículum.
+    esperado: {es_solicitud: true, derechos: [supresion], requiere_confirmacion: false, vence_respuesta: 2027-01-09}
+
+  - id: sol-15
+    ingreso: 2026-12-10
+    texto: Hola, quiero cambiar mi correo registrado a nuevo.correo@personas.example
+    esperado: {es_solicitud: true, derechos: [rectificacion], requiere_confirmacion: false, vence_respuesta: 2027-01-09}
+
+  - id: sol-16
+    ingreso: 2026-12-10
+    texto: Retiro mi consentimiento para que usen mis datos en publicidad.
+    esperado: {es_solicitud: true, derechos: [oposicion], alternativas: [[supresion]], requiere_confirmacion: false, vence_respuesta: 2027-01-09}
+    nota: Revocar el consentimiento para marketing tiene el mismo efecto práctico que oponerse a ese tratamiento.
+
+  - id: sol-17
+    ingreso: 2026-12-11
+    texto: ¿Me pueden decir a qué empresas les han pasado mis datos?
+    esperado: {es_solicitud: true, derechos: [acceso], requiere_confirmacion: false, vence_respuesta: 2027-01-10}
+
+  - id: sol-18
+    ingreso: 2026-12-11
+    texto: Quiero que me manden todos mis datos y que después los borren.
+    esperado: {es_solicitud: true, derechos: [acceso, supresion], alternativas: [[portabilidad, supresion]], requiere_confirmacion: false, vence_respuesta: 2027-01-10}
+
+  - id: sol-19
+    ingreso: 2026-12-23
+    texto: Exijo que dejen de usar mi información hasta que corrijan mi fecha de nacimiento, que está mala.
+    esperado: {es_solicitud: true, derechos: [rectificacion, bloqueo], requiere_confirmacion: true, vence_respuesta: 2027-01-22, vence_bloqueo: 2026-12-28}
+    nota: Falta la fecha correcta, que el art. 11 letra d exige para rectificar.
+
+  - id: sol-20
+    ingreso: 2026-12-14
+    texto: Me llegó un correo de ustedes con la boleta de otra persona, con su nombre y dirección.
+    esperado: {es_solicitud: false, derechos: [], requiere_confirmacion: false}
+    nota: No es una solicitud sino el aviso de un incidente; va al flujo de incidentes.
+
+  - id: sol-21
+    ingreso: 2026-12-14
+    texto: Necesito un certificado de antigüedad laboral para el banco.
+    esperado: {es_solicitud: false, derechos: [], requiere_confirmacion: false}
+
+  - id: sol-22
+    ingreso: 2026-12-14
+    texto: Soy hijo de don Pedro Soto, que falleció el mes pasado. Quiero que eliminen su cuenta y sus datos.
+    esperado: {es_solicitud: true, derechos: [supresion], requiere_confirmacion: false, vence_respuesta: 2027-01-13}
+    nota: Los herederos pueden ejercer los derechos (art. 4).
+
+  - id: sol-23
+    ingreso: 2026-12-15
+    texto: No me manden más WhatsApp con ofertas.
+    esperado: {es_solicitud: true, derechos: [oposicion], requiere_confirmacion: false, vence_respuesta: 2027-01-14}
+
+  - id: sol-24
+    ingreso: 2026-12-15
+    texto: Quiero que borren mi historial de compras, pero que mantengan mi cuenta activa.
+    esperado: {es_solicitud: true, derechos: [supresion], requiere_confirmacion: false, vence_respuesta: 2027-01-14}
+
+  - id: sol-25
+    ingreso: 2026-12-15
+    texto: Quiero que me expliquen cómo consiguieron mi número, yo nunca se los di.
+    esperado: {es_solicitud: true, derechos: [acceso], alternativas: [[acceso, oposicion]], requiere_confirmacion: false, vence_respuesta: 2027-01-14}
+
+  - id: sol-26
+    ingreso: 2026-12-16
+    texto: Bórrenme de su sistema.
+    esperado: {es_solicitud: true, derechos: [supresion], requiere_confirmacion: false, vence_respuesta: 2027-01-15}
+
+  - id: sol-27
+    ingreso: 2026-12-16
+    texto: Quiero darme de baja.
+    esperado: {es_solicitud: true, derechos: [oposicion], alternativas: [[supresion]], requiere_confirmacion: true, vence_respuesta: 2027-01-15}
+    nota: Puede ser la baja de un servicio, de las ofertas o de todos sus datos.
+
+  - id: sol-28
+    ingreso: 2026-12-16
+    texto: El teléfono que tienen es el antiguo, el nuevo es +56 9 0000 1234.
+    esperado: {es_solicitud: true, derechos: [rectificacion], requiere_confirmacion: false, vence_respuesta: 2027-01-15}
+
+  - id: sol-29
+    ingreso: 2026-12-17
+    texto: ¿Siguen guardando mis datos después de que cerré la cuenta en 2024? Si es así, quiero que los borren.
+    esperado: {es_solicitud: true, derechos: [acceso, supresion], requiere_confirmacion: false, vence_respuesta: 2027-01-16}
+
+  - id: sol-30
+    ingreso: 2026-12-17
+    texto: Envíen directamente mis datos a la nueva empresa de seguros que contraté.
+    esperado: {es_solicitud: true, derechos: [portabilidad], requiere_confirmacion: false, vence_respuesta: 2027-01-16}
+
+  - id: sol-31
+    ingreso: 2026-12-17
+    texto: No autorizo que usen mis fotos del evento en sus redes sociales.
+    esperado: {es_solicitud: true, derechos: [oposicion], alternativas: [[supresion]], requiere_confirmacion: false, vence_respuesta: 2027-01-16}
+
+  - id: sol-32
+    ingreso: 2026-12-18
+    texto: Felicitaciones por la buena atención de la sucursal de Cabrero.
+    esperado: {es_solicitud: false, derechos: [], requiere_confirmacion: false}
+
+  - id: sol-33
+    ingreso: 2026-12-18
+    texto: Quisiera saber si ustedes tienen datos míos.
+    esperado: {es_solicitud: true, derechos: [acceso], requiere_confirmacion: false, vence_respuesta: 2027-01-17}
+
+  - id: sol-34
+    ingreso: 2026-12-30
+    texto: Pido la suspensión temporal del uso de mis datos mientras resuelven mi solicitud de rectificación de domicilio, que ahora es Pasaje El Roble 45.
+    esperado: {es_solicitud: true, derechos: [rectificacion, bloqueo], requiere_confirmacion: false, vence_respuesta: 2027-01-29, vence_bloqueo: 2027-01-04}
+
+  - id: sol-35
+    ingreso: 2026-12-21
+    texto: Les pido que no usen mis compras para hacerme perfiles ni recomendaciones.
+    esperado: {es_solicitud: true, derechos: [oposicion], requiere_confirmacion: false, vence_respuesta: 2027-01-20}
+
+  - id: sol-36
+    ingreso: 2026-12-21
+    texto: Hay un error en mi boleta, me cobraron dos veces el mismo producto.
+    esperado: {es_solicitud: false, derechos: [], requiere_confirmacion: false}
+    nota: Reclamo de cobro, no de datos personales.
+
+  - id: sol-37
+    ingreso: 2026-12-21
+    texto: Quiero que corrijan mis datos y además que me manden todo lo que tienen de mí.
+    esperado: {es_solicitud: true, derechos: [rectificacion, acceso], requiere_confirmacion: true, vence_respuesta: 2027-01-20}
+    nota: No dice qué dato corregir ni cómo.
+
+  - id: sol-38
+    ingreso: 2026-12-22
+    texto: Mi exesposa sigue apareciendo como contacto de emergencia en mi ficha, sáquenla por favor.
+    esperado: {es_solicitud: true, derechos: [rectificacion], alternativas: [[supresion]], requiere_confirmacion: false, vence_respuesta: 2027-01-21}
+
+  - id: sol-39
+    ingreso: 2026-12-22
+    texto: Ya les dije tres veces que no me llamen más para venderme cosas. Si siguen, voy a reclamar a la Agencia.
+    esperado: {es_solicitud: true, derechos: [oposicion], requiere_confirmacion: false, vence_respuesta: 2027-01-21}
+
+  - id: sol-40
+    ingreso: 2026-12-22
+    texto: Necesito todos mis datos en un formato que pueda abrir en otro sistema.
+    esperado: {es_solicitud: true, derechos: [portabilidad], requiere_confirmacion: false, vence_respuesta: 2027-01-21}
+
+  - id: sol-41
+    ingreso: 2026-12-28
+    texto: Quiero cancelar mi suscripción mensual al club de descuentos.
+    esperado: {es_solicitud: false, derechos: [], requiere_confirmacion: false}
+    nota: Término de un contrato; no ejerce un derecho sobre sus datos.
+
+  - id: sol-42
+    ingreso: 2026-12-28
+    texto: Por favor eliminen los datos de mi hija Martina, de 10 años, de la planilla del paseo.
+    esperado: {es_solicitud: true, derechos: [supresion], requiere_confirmacion: false, vence_respuesta: 2027-01-27}
+
+  - id: sol-43
+    ingreso: 2026-12-28
+    texto: ¿Qué hacen con las huellas digitales que nos piden para marcar la asistencia?
+    esperado: {es_solicitud: true, derechos: [acceso], requiere_confirmacion: false, vence_respuesta: 2027-01-27}
+
+  - id: sol-44
+    ingreso: 2026-12-29
+    texto: Me opongo a que usen mi información para las estadísticas internas de la empresa.
+    esperado: {es_solicitud: true, derechos: [oposicion], requiere_confirmacion: true, vence_respuesta: 2027-01-28}
+    nota: Si la base es el interés legítimo, el art. 11 pide fundamentar brevemente la oposición.
+
+  - id: sol-45
+    ingreso: 2026-12-29
+    texto: Saquen mi correo de la lista de ofertas, pero sigan mandándome las boletas.
+    esperado: {es_solicitud: true, derechos: [oposicion], requiere_confirmacion: false, vence_respuesta: 2027-01-28}
+
+  - id: sol-46
+    ingreso: 2026-12-29
+    texto: Mi nombre está mal escrito, es Ignacia y no Ignacio. Y quiero saber a quién más le mandaron mis datos, para que también lo corrijan.
+    esperado: {es_solicitud: true, derechos: [rectificacion, acceso], requiere_confirmacion: false, vence_respuesta: 2027-01-28}
+
+  - id: sol-47
+    ingreso: 2027-01-04
+    texto: ¿Cómo puedo actualizar mis datos?
+    esperado: {es_solicitud: true, derechos: [rectificacion], requiere_confirmacion: true, vence_respuesta: 2027-02-03}
+    nota: Quiere rectificar pero no dice qué dato.
+
+  - id: sol-48
+    ingreso: 2027-01-04
+    texto: No quiero estar en su base de datos.
+    esperado: {es_solicitud: true, derechos: [supresion], alternativas: [[oposicion]], requiere_confirmacion: true, vence_respuesta: 2027-02-03}
+
+  - id: sol-49
+    ingreso: 2026-12-10
+    texto: Quiero que bloqueen mis datos.
+    esperado: {es_solicitud: true, derechos: [bloqueo], requiere_confirmacion: true, vence_respuesta: 2027-01-09, vence_bloqueo: 2026-12-14}
+    nota: El bloqueo temporal acompaña a una rectificación, supresión u oposición (art. 11); hay que preguntar cuál.
+
+  - id: sol-50
+    ingreso: 2027-01-05
+    texto: Hola
+    esperado: {es_solicitud: false, derechos: [], requiere_confirmacion: false}
