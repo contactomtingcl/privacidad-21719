@@ -18,3 +18,46 @@ class TestCosto(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class _ErrorSolicitud(Exception):
+    pass
+
+
+class _APIFalsa:
+    """Imita anthropic.Anthropic().messages: rechaza tool_choice forzado una vez."""
+
+    def __init__(self):
+        self.llamadas = []
+        self.messages = self
+
+    def create(self, **kw):
+        self.llamadas.append(kw)
+        if "tool_choice" in kw:
+            raise _ErrorSolicitud('tool_choice: type "tool" and "any" are not supported')
+        from types import SimpleNamespace as N
+
+        bloque = N(type="tool_use", name="x", input={"ok": True})
+        return N(model=kw["model"], content=[bloque], usage=N(input_tokens=10, output_tokens=5))
+
+
+class TestReintentoSinEleccionForzada(unittest.TestCase):
+    def test_reintenta_con_instruccion_y_recuerda_el_modelo(self):
+        from ora_privacidad.ia.cliente import ClienteIA
+
+        cliente = ClienteIA.__new__(ClienteIA)
+        cliente._api = _APIFalsa()
+        cliente._registro = None
+        cliente._sin_eleccion_forzada = set()
+        args = dict(
+            modelo="claude-sonnet-5-5",
+            sistema="S",
+            mensajes=[{"role": "user", "content": "hola"}],
+            herramientas=[{"name": "x"}],
+            forzar_herramienta="x",
+        )
+        r = cliente.llamar(**args)
+        self.assertEqual(r.bloques_herramienta, [{"nombre": "x", "entrada": {"ok": True}}])
+        self.assertIn("«x»", cliente._api.llamadas[1]["system"])
+        cliente.llamar(**args)  # la segunda vez ya no intenta forzar
+        self.assertEqual(len(cliente._api.llamadas), 3)

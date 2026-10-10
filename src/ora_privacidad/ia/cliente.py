@@ -34,6 +34,13 @@ def costo_usd(modelo: str, tokens_entrada: int, tokens_salida: int) -> float:
     return round((tokens_entrada * entrada + tokens_salida * salida) / 1_000_000, 8)
 
 
+def _con_instruccion(sistema: str, herramienta: str) -> str:
+    return (
+        f"{sistema}\n\nResponde únicamente llamando a la herramienta «{herramienta}», "
+        "sin texto adicional."
+    )
+
+
 @dataclass
 class RespuestaIA:
     modelo: str
@@ -59,6 +66,7 @@ class ClienteIA:
 
         self._api = anthropic.Anthropic()
         self._registro = registro
+        self._sin_eleccion_forzada: set[str] = set()  # modelos que rechazan tool_choice forzado
 
     def llamar(
         self,
@@ -80,9 +88,22 @@ class ClienteIA:
         }
         if herramientas:
             kwargs["tools"] = herramientas
-        if forzar_herramienta:
+        if forzar_herramienta and modelo not in self._sin_eleccion_forzada:
             kwargs["tool_choice"] = {"type": "tool", "name": forzar_herramienta}
-        r = self._api.messages.create(**kwargs)
+        elif forzar_herramienta:
+            kwargs["system"] = _con_instruccion(sistema, forzar_herramienta)
+        try:
+            r = self._api.messages.create(**kwargs)
+        except Exception as e:
+            # Algunos modelos no aceptan obligar el uso de una herramienta: se reintenta una
+            # vez pidiéndolo en las instrucciones. Si aun así no la usa, quien llama recibe
+            # una respuesta sin bloque de herramienta y deja el caso pendiente.
+            if not (forzar_herramienta and "tool_choice" in str(e)):
+                raise
+            self._sin_eleccion_forzada.add(modelo)
+            kwargs.pop("tool_choice", None)
+            kwargs["system"] = _con_instruccion(sistema, forzar_herramienta)
+            r = self._api.messages.create(**kwargs)
         latencia = int((time.perf_counter() - inicio) * 1000)
 
         texto = "".join(b.text for b in r.content if b.type == "text")
