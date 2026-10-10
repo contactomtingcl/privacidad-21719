@@ -1,0 +1,2 @@
+{"modelo": "claude-haiku-5-5", "tokens_entrada": 1125, "tokens_salida": 114, "costo_usd": 0.0001695, "latencia_ms": 1451, "proposito": "inventario: clasificar columnas ambiguas", "fecha": "2026-10-10T20:03:59+00:00"}
+{"modelo": "claude-haiku-5-5", "tokens_entrada": 1825, "tokens_salida": 435, "costo_usd": 0.0004, "latencia_ms": 2052, "proposito": "inventario: clasificar columnas ambiguas", "fecha": "2026-10-10T20:04:01+00:00"}

@@ -1,0 +1,881 @@
+[
+  {
+    "archivo": "paseo_fin_de_anio.xlsx",
+    "descripcion_usuario": "Planilla que pidió Recursos Humanos a los trabajadores para organizar el paseo de fin de año con sus hijos e hijas. La comparte con el proveedor Eventos Laja SpA.",
+    "tipo_datos": {
+      "valor": [
+        "Correo electrónico",
+        "Datos laborales y previsionales",
+        "Fecha de nacimiento",
+        "Identificador nacional (RUT o RUN)",
+        "Nombre",
+        "Salud",
+        "Teléfono"
+      ],
+      "origen": "calculado",
+      "nota": "Incluye datos sensibles: Salud. Incluye datos de 84 menores de 18 años",
+      "citas": []
+    },
+    "ambito_territorial": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "bases_de_datos": {
+      "valor": [
+        "paseo_fin_de_anio.xlsx"
+      ],
+      "origen": "calculado",
+      "nota": null,
+      "citas": []
+    },
+    "categorias_titulares": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "fines": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "fuente": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "base_licitud": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "destinatarios": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "transferencias_internacionales": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "plazo_supresion": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "decisiones_automatizadas": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "columnas": [
+      {
+        "nombre": "Nombre trabajador",
+        "categoria": "nombre",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «nombre»",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "RUT trabajador",
+        "categoria": "identificador_nacional",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «rut»; 100% de los valores tiene formato de rut",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Área",
+        "categoria": "laboral",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «area»",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Nombre hijo/a",
+        "categoria": "nombre",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «nombre»; El encabezado indica datos de hijos o hijas",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "RUT hijo/a",
+        "categoria": "identificador_nacional",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «rut»; 100% de los valores tiene formato de rut; El encabezado indica datos de hijos o hijas",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Fecha de nacimiento hijo/a",
+        "categoria": "fecha_nacimiento",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «fecha de nacimiento»; 100% de los valores tiene formato de fecha; El encabezado indica datos de hijos o hijas",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Alergias o condiciones médicas",
+        "categoria": "salud",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «condiciones medicas»",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Celular apoderado",
+        "categoria": "telefono",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «celular»; 100% de los valores tiene formato de telefono",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Correo apoderado",
+        "categoria": "correo",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «correo»; 100% de los valores tiene formato de correo",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Talla polera",
+        "categoria": "no_personal",
+        "origen": "ia",
+        "justificacion": "La talla de polera (valores como S, M, L o números) sirve para encargar prendas y no identifica ni describe directamente a una persona natural.",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      }
+    ],
+    "alertas": [
+      {
+        "nivel": "media",
+        "mensaje": "IA no disponible para proponer la actividad (BadRequestError)",
+        "cita": null
+      },
+      {
+        "nivel": "alta",
+        "mensaje": "La planilla tiene datos sensibles (salud). Requieren consentimiento expreso del titular, salvo excepción legal.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "16"
+        }
+      },
+      {
+        "nivel": "alta",
+        "mensaje": "Hay datos de 61 niños o niñas menores de 14 años: se requiere consentimiento de sus padres o representantes legales, y ante una filtración hay que avisar a cada titular a través de ellos.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "16 quater"
+        }
+      },
+      {
+        "nivel": "alta",
+        "mensaje": "Hay 13 adolescentes menores de 16 años con datos sensibles: requieren consentimiento de sus padres o representantes legales.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "16 quater"
+        }
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «ambito_territorial» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «categorias_titulares» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «fines» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «fuente» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «base_licitud» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «destinatarios» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «transferencias_internacionales» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «plazo_supresion» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «decisiones_automatizadas» quedó pendiente de completar.",
+        "cita": null
+      }
+    ],
+    "citas_rechazadas": [],
+    "costo_ia_usd": 0.00017,
+    "validada": false
+  },
+  {
+    "archivo": "nomina_trabajadores.xlsx",
+    "descripcion_usuario": "Nómina para calcular y pagar remuneraciones y cotizaciones. La procesa el proveedor Remuneraciones del Sur SpA.",
+    "tipo_datos": {
+      "valor": [
+        "Afiliación sindical o gremial",
+        "Datos económicos o financieros",
+        "Datos laborales y previsionales",
+        "Identificador nacional (RUT o RUN)",
+        "Nombre",
+        "Previsión de salud (Isapre o Fonasa)",
+        "Salud"
+      ],
+      "origen": "calculado",
+      "nota": "Incluye datos sensibles: Afiliación sindical o gremial, Salud",
+      "citas": []
+    },
+    "ambito_territorial": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "bases_de_datos": {
+      "valor": [
+        "nomina_trabajadores.xlsx"
+      ],
+      "origen": "calculado",
+      "nota": null,
+      "citas": []
+    },
+    "categorias_titulares": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "fines": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "fuente": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "base_licitud": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "destinatarios": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "transferencias_internacionales": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "plazo_supresion": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "decisiones_automatizadas": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "columnas": [
+      {
+        "nombre": "Nombre completo",
+        "categoria": "nombre",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «nombre completo»",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "RUT",
+        "categoria": "identificador_nacional",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «rut»; 100% de los valores tiene formato de rut",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Cargo",
+        "categoria": "laboral",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «cargo»",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Área",
+        "categoria": "laboral",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «area»",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Fecha de ingreso",
+        "categoria": "laboral",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «fecha de ingreso»; 100% de los valores tiene formato de fecha",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Sueldo base",
+        "categoria": "financiero",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «sueldo base»",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Banco",
+        "categoria": "financiero",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «banco»",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Número de cuenta",
+        "categoria": "financiero",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «numero de cuenta»",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "AFP",
+        "categoria": "laboral",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «afp»",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Previsión de salud",
+        "categoria": "prevision_salud",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «prevision de salud»",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Afiliado sindicato",
+        "categoria": "afiliacion_sindical",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «afiliado sindicato»",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Días de licencia médica último año",
+        "categoria": "salud",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «licencia medica»",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      }
+    ],
+    "alertas": [
+      {
+        "nivel": "media",
+        "mensaje": "IA no disponible para proponer la actividad (BadRequestError)",
+        "cita": null
+      },
+      {
+        "nivel": "alta",
+        "mensaje": "La planilla tiene datos sensibles (afiliación sindical o gremial, salud). Requieren consentimiento expreso del titular, salvo excepción legal.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "16"
+        }
+      },
+      {
+        "nivel": "informativa",
+        "mensaje": "Contiene datos económicos o financieros: ante una filtración hay que avisar también a cada titular.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "14 sexies"
+        }
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «ambito_territorial» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «categorias_titulares» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «fines» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «fuente» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «base_licitud» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «destinatarios» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «transferencias_internacionales» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «plazo_supresion» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «decisiones_automatizadas» quedó pendiente de completar.",
+        "cita": null
+      }
+    ],
+    "citas_rechazadas": [],
+    "costo_ia_usd": 0.0,
+    "validada": false
+  },
+  {
+    "archivo": "clientes_marketing.csv",
+    "descripcion_usuario": "Base de clientes para enviar ofertas y publicidad por correo y celular. Las campañas las envía el proveedor Publicidad Austral SpA.",
+    "tipo_datos": {
+      "valor": [
+        "Correo electrónico",
+        "Datos económicos o financieros",
+        "Dirección o comuna",
+        "Nombre",
+        "Preferencias y comportamiento de compra",
+        "Teléfono"
+      ],
+      "origen": "calculado",
+      "nota": "Sin datos sensibles",
+      "citas": []
+    },
+    "ambito_territorial": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "bases_de_datos": {
+      "valor": [
+        "clientes_marketing.csv"
+      ],
+      "origen": "calculado",
+      "nota": null,
+      "citas": []
+    },
+    "categorias_titulares": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "fines": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "fuente": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "base_licitud": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "destinatarios": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "transferencias_internacionales": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "plazo_supresion": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "decisiones_automatizadas": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "columnas": [
+      {
+        "nombre": "Nombre",
+        "categoria": "nombre",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «nombre»",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Correo",
+        "categoria": "correo",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «correo»; 100% de los valores tiene formato de correo",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Celular",
+        "categoria": "telefono",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «celular»; 100% de los valores tiene formato de telefono",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Comuna",
+        "categoria": "direccion",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «comuna»",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Fecha última compra",
+        "categoria": "preferencias_comerciales",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «fecha ultima compra»; 100% de los valores tiene formato de fecha",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Monto compras 2026",
+        "categoria": "financiero",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «monto compras»",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Acepta publicidad",
+        "categoria": "preferencias_comerciales",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «acepta publicidad»",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      }
+    ],
+    "alertas": [
+      {
+        "nivel": "media",
+        "mensaje": "IA no disponible para proponer la actividad (BadRequestError)",
+        "cita": null
+      },
+      {
+        "nivel": "informativa",
+        "mensaje": "Contiene datos económicos o financieros: ante una filtración hay que avisar también a cada titular.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "14 sexies"
+        }
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «ambito_territorial» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «categorias_titulares» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «fines» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «fuente» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «base_licitud» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «destinatarios» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «transferencias_internacionales» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «plazo_supresion» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «decisiones_automatizadas» quedó pendiente de completar.",
+        "cita": null
+      }
+    ],
+    "citas_rechazadas": [],
+    "costo_ia_usd": 0.0,
+    "validada": false
+  },
+  {
+    "archivo": "proveedores.csv",
+    "descripcion_usuario": "Registro de proveedores y de sus personas de contacto comerciales.",
+    "tipo_datos": {
+      "valor": [
+        "Correo electrónico",
+        "Nombre",
+        "Teléfono"
+      ],
+      "origen": "calculado",
+      "nota": "Sin datos sensibles",
+      "citas": []
+    },
+    "ambito_territorial": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "bases_de_datos": {
+      "valor": [
+        "proveedores.csv"
+      ],
+      "origen": "calculado",
+      "nota": null,
+      "citas": []
+    },
+    "categorias_titulares": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "fines": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "fuente": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "base_licitud": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "destinatarios": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "transferencias_internacionales": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "plazo_supresion": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "decisiones_automatizadas": {
+      "valor": null,
+      "origen": "pendiente",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "citas": []
+    },
+    "columnas": [
+      {
+        "nombre": "Razón social",
+        "categoria": "persona_juridica",
+        "origen": "ia",
+        "justificacion": "Los valores tienen forma de razón social de empresas (con sufijos como SpA, Ltda., S.A.), por lo que identifican personas jurídicas.",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "RUT empresa",
+        "categoria": "persona_juridica",
+        "origen": "ia",
+        "justificacion": "Aunque tiene formato de RUT, el encabezado indica que corresponde a la empresa proveedora, por lo que identifica una persona jurídica y no una persona natural.",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Servicio",
+        "categoria": "no_personal",
+        "origen": "ia",
+        "justificacion": "Describe el servicio que presta el proveedor (por ejemplo, 'Mantención de equipos'), sin datos de personas naturales.",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Datos que recibe",
+        "categoria": "no_personal",
+        "origen": "ia",
+        "justificacion": "Describe el tipo de información que el proveedor recibe de la organización, sin identificar a una persona natural.",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Contacto",
+        "categoria": "nombre",
+        "origen": "ia",
+        "justificacion": "Los valores tienen forma de nombre y apellidos de una persona natural, la persona de contacto comercial del proveedor.",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Correo contacto",
+        "categoria": "correo",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «correo»; 100% de los valores tiene formato de correo",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Celular contacto",
+        "categoria": "telefono",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «celular»; 100% de los valores tiene formato de telefono",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      }
+    ],
+    "alertas": [
+      {
+        "nivel": "media",
+        "mensaje": "IA no disponible para proponer la actividad (BadRequestError)",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «ambito_territorial» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «categorias_titulares» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «fines» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «fuente» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «base_licitud» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «destinatarios» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «transferencias_internacionales» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «plazo_supresion» quedó pendiente de completar.",
+        "cita": null
+      },
+      {
+        "nivel": "media",
+        "mensaje": "El campo «decisiones_automatizadas» quedó pendiente de completar.",
+        "cita": null
+      }
+    ],
+    "citas_rechazadas": [],
+    "costo_ia_usd": 0.0004,
+    "validada": false
+  }
+]
