@@ -1,6 +1,6 @@
 import unittest
 
-from ora_privacidad.ia import costo_usd
+from privacidad.ia import costo_usd
 
 
 class TestCosto(unittest.TestCase):
@@ -43,7 +43,7 @@ class _APIFalsa:
 
 class TestReintentoSinEleccionForzada(unittest.TestCase):
     def test_reintenta_con_instruccion_y_recuerda_el_modelo(self):
-        from ora_privacidad.ia.cliente import ClienteIA
+        from privacidad.ia.cliente import ClienteIA
 
         cliente = ClienteIA.__new__(ClienteIA)
         cliente._api = _APIFalsa()

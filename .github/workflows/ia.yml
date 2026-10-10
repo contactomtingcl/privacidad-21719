@@ -28,7 +28,7 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           TAREA: ${{ inputs.tarea }}
-        run: python -m "ora_privacidad.$TAREA"
+        run: python -m "privacidad.$TAREA"
       - name: Guardar resultados en el repositorio
         if: ${{ hashFiles('resultados/**') != '' }}
         env:

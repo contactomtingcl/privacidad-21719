@@ -3,7 +3,7 @@ requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ora-privacidad"
+name = "privacidad-21719"
 version = "0.1.0"
 description = "Cumplimiento operativo de la Ley 21.719 para empresas medianas y municipios."
 readme = "README.md"

@@ -1,6 +1,6 @@
 """Prueba de conexión con la API de Claude. No envía ningún dato personal.
 
-python -m ora_privacidad.ia.prueba_conexion
+python -m privacidad.ia.prueba_conexion
 """
 
 from __future__ import annotations

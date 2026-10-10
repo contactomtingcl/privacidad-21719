@@ -4,10 +4,10 @@ from datetime import date
 from pathlib import Path
 from types import SimpleNamespace
 
-from ora_privacidad import guardia
-from ora_privacidad.inventario import leer_planilla, perfilar_dataframe
-from ora_privacidad.inventario.actividad import construir_actividad, forma, muestras_seguras
-from ora_privacidad.sinteticos import comercial_los_robles
+from privacidad import guardia
+from privacidad.inventario import leer_planilla, perfilar_dataframe
+from privacidad.inventario.actividad import construir_actividad, forma, muestras_seguras
+from privacidad.sinteticos import comercial_los_robles
 
 REF = date(2026, 10, 10)
 DESCRIPCION = "Planilla de Recursos Humanos para organizar el paseo de fin de año."

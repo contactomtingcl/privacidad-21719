@@ -1,4 +1,4 @@
-"""Regenera los datos de la demo: python -m ora_privacidad.sinteticos"""
+"""Regenera los datos de la demo: python -m privacidad.sinteticos"""
 
 from pathlib import Path
 

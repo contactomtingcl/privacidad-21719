@@ -1,8 +1,10 @@
-# ORA Privacidad
+# Privacidad 21.719
+
+> Nombre de trabajo; el nombre definitivo se decide antes de la entrega.
 
 Cumplimiento operativo de la Ley 21.719 para empresas medianas y municipios. Proyecto para el Desafío 1 de **ProductIA 2026** (Soho).
 
-ORA Privacidad sabe qué datos personales tiene una organización, recibe en minutos los reportes de titulares, trabajadores y proveedores, decide plazos y deberes legales con reglas verificables y deja la evidencia armada.
+Privacidad 21.719 sabe qué datos personales tiene una organización, recibe en minutos los reportes de titulares, trabajadores y proveedores, decide plazos y deberes legales con reglas verificables y deja la evidencia armada.
 
 > **Principio de diseño:** la IA interpreta, el motor de reglas decide y la persona valida. Ningún plazo ni deber legal depende de la respuesta de un modelo de IA.
 
@@ -28,10 +30,10 @@ Requiere Python 3.12 o superior.
 ```bash
 pip install -e ".[dev]"
 pytest -q                                   # pruebas
-python -m ora_privacidad.corpus             # resumen del corpus legal
-python -m ora_privacidad.corpus --verificar # comprueba que el índice está al día
-python -m ora_privacidad.sinteticos         # regenera los datos de la demo
-python -m ora_privacidad.inventario data/sinteticos/comercial-los-robles/paseo_fin_de_anio.xlsx --referencia 2026-10-10
+python -m privacidad.corpus             # resumen del corpus legal
+python -m privacidad.corpus --verificar # comprueba que el índice está al día
+python -m privacidad.sinteticos         # regenera los datos de la demo
+python -m privacidad.inventario data/sinteticos/comercial-los-robles/paseo_fin_de_anio.xlsx --referencia 2026-10-10
 ```
 
 ## Corpus legal
@@ -49,7 +51,7 @@ El texto que el sistema muestra al usuario sale siempre de `data/normas/`, nunca
 
 ## Datos: solo sintéticos
 
-Las bases del concurso (sección 11) prohíben usar datos reales. La guardia (`src/ora_privacidad/guardia.py`) se ejecuta antes de procesar cualquier dato y rechaza lo que podría ser real, sin mostrar el valor completo en los mensajes de error.
+Las bases del concurso (sección 11) prohíben usar datos reales. La guardia (`src/privacidad/guardia.py`) se ejecuta antes de procesar cualquier dato y rechaza lo que podría ser real, sin mostrar el valor completo en los mensajes de error.
 
 Convenciones del proyecto para datos sintéticos:
 
@@ -63,7 +65,7 @@ Límites conocidos: la guardia detecta RUT escritos con guion y no puede reconoc
 
 ## Trabajo previo y uso de IA
 
-- **Trabajo previo del autor:** el concepto de enrutamiento de alertas viene de ORA IA (oraialert.com) y la arquitectura "la IA interpreta, el motor decide, la persona valida" viene del [Motor de Ejecutabilidad](https://github.com/contactomtingcl/motor-ejecutabilidad) (Claude Impact Lab 2026). El código de este repositorio se escribe desde cero durante ProductIA, a partir del 10 de octubre de 2026.
+- **Trabajo previo del autor:** el diseño se inspira en la experiencia previa del autor con sistemas de enrutamiento de alertas y con la arquitectura "la IA interpreta, el motor decide, la persona valida" de su proyecto [Motor de Ejecutabilidad](https://github.com/contactomtingcl/motor-ejecutabilidad) (Claude Impact Lab 2026). No se reutiliza código de otros proyectos: todo el código de este repositorio se escribe desde cero durante ProductIA, a partir del 10 de octubre de 2026, y es de autoría individual.
 - **Uso de IA en el desarrollo:** el código se escribe con asistencia de Claude (Anthropic) bajo dirección y revisión del autor. La declaración completa de uso de IA (modelos, prompts, datos y supervisión humana) se publicará en `docs/`.
 
 ## Licencia

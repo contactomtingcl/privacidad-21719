@@ -1,4 +1,4 @@
-"""Perfila una planilla: python -m ora_privacidad.inventario ARCHIVO [--referencia AAAA-MM-DD]"""
+"""Perfila una planilla: python -m privacidad.inventario ARCHIVO [--referencia AAAA-MM-DD]"""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ _SENSIBLE = {True: "SENSIBLE", False: "", "revisar": "revisar"}
 
 
 def main() -> int:
-    p = argparse.ArgumentParser(prog="python -m ora_privacidad.inventario")
+    p = argparse.ArgumentParser(prog="python -m privacidad.inventario")
     p.add_argument("archivo", type=Path)
     p.add_argument(
         "--referencia",

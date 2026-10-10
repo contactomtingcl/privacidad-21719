@@ -1,6 +1,6 @@
 import unittest
 
-from ora_privacidad.corpus import RAIZ_DATOS, Corpus, normalizar_clave
+from privacidad.corpus import RAIZ_DATOS, Corpus, normalizar_clave
 
 
 class TestCorpus(unittest.TestCase):
@@ -124,7 +124,7 @@ class TestIndiceExportado(unittest.TestCase):
         self.assertEqual(
             indice.read_text(encoding="utf-8"),
             Corpus.desde_directorio().a_json(),
-            "indice.json desactualizado: ejecuta python -m ora_privacidad.corpus --exportar",
+            "indice.json desactualizado: ejecuta python -m privacidad.corpus --exportar",
         )
 
 

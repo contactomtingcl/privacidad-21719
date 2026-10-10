@@ -1,6 +1,6 @@
 # Inventario con IA: planillas de la demo
 
-Datos sintéticos de Comercial Los Robles. Generado por `python -m ora_privacidad.inventario.demo_ia`.
+Datos sintéticos de Comercial Los Robles. Generado por `python -m privacidad.inventario.demo_ia`.
 
 Costo total de IA: US$0.0695
 

@@ -19,4 +19,4 @@ jobs:
       - name: Pruebas
         run: pytest -q
       - name: Índice legal al día
-        run: python -m ora_privacidad.corpus --verificar
+        run: python -m privacidad.corpus --verificar

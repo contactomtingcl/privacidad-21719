@@ -1,8 +1,8 @@
 """Uso:
 
-python -m ora_privacidad.corpus             # resumen del corpus
-python -m ora_privacidad.corpus --exportar  # regenera data/normas/indice.json
-python -m ora_privacidad.corpus --verificar # falla si indice.json está desactualizado
+python -m privacidad.corpus             # resumen del corpus
+python -m privacidad.corpus --exportar  # regenera data/normas/indice.json
+python -m privacidad.corpus --verificar # falla si indice.json está desactualizado
 """
 
 from __future__ import annotations
@@ -14,7 +14,7 @@ from .corpus import RAIZ_DATOS, Corpus
 
 
 def main() -> int:
-    p = argparse.ArgumentParser(prog="python -m ora_privacidad.corpus")
+    p = argparse.ArgumentParser(prog="python -m privacidad.corpus")
     g = p.add_mutually_exclusive_group()
     g.add_argument("--exportar", action="store_true", help="regenera indice.json")
     g.add_argument("--verificar", action="store_true", help="comprueba que indice.json está al día")

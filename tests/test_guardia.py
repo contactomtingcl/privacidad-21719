@@ -1,6 +1,6 @@
 import unittest
 
-from ora_privacidad import guardia, rut
+from privacidad import guardia, rut
 
 
 class TestConvencionSintetica(unittest.TestCase):

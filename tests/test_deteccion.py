@@ -1,8 +1,8 @@
 import unittest
 from datetime import date
 
-from ora_privacidad import guardia
-from ora_privacidad.deteccion import Enmascarador, detectar, edad_en, parsear_fecha
+from privacidad import guardia
+from privacidad.deteccion import Enmascarador, detectar, edad_en, parsear_fecha
 
 
 class TestDeteccion(unittest.TestCase):

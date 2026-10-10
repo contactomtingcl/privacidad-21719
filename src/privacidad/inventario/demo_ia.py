@@ -1,6 +1,6 @@
 """Ejecuta el inventario con IA sobre las cuatro planillas de la demo.
 
-    python -m ora_privacidad.inventario.demo_ia
+    python -m privacidad.inventario.demo_ia
 
 Escribe resultados/inventario_demo.json (completo) y resultados/inventario_demo.md (resumen).
 Requiere ANTHROPIC_API_KEY. Solo procesa datos sintéticos.
@@ -44,7 +44,7 @@ def _resumen_md(actividades: list[dict], costo_total: float) -> str:
         "# Inventario con IA: planillas de la demo",
         "",
         "Datos sintéticos de Comercial Los Robles. Generado por "
-        "`python -m ora_privacidad.inventario.demo_ia`.",
+        "`python -m privacidad.inventario.demo_ia`.",
         "",
         f"Costo total de IA: US${costo_total:.4f}",
         "",

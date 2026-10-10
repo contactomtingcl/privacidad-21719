@@ -1,6 +1,6 @@
 import unittest
 
-from ora_privacidad import rut
+from privacidad import rut
 
 
 class TestDigitoVerificador(unittest.TestCase):

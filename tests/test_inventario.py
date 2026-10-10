@@ -5,11 +5,11 @@ from pathlib import Path
 
 import pandas as pd
 
-from ora_privacidad import guardia
-from ora_privacidad.corpus import corpus_por_defecto
-from ora_privacidad.inventario import cargar_categorias, perfilar_archivo, perfilar_dataframe
-from ora_privacidad.inventario.perfilador import categoria_por_encabezado
-from ora_privacidad.sinteticos import comercial_los_robles
+from privacidad import guardia
+from privacidad.corpus import corpus_por_defecto
+from privacidad.inventario import cargar_categorias, perfilar_archivo, perfilar_dataframe
+from privacidad.inventario.perfilador import categoria_por_encabezado
+from privacidad.sinteticos import comercial_los_robles
 
 REF = date(2026, 10, 10)
 
