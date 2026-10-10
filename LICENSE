@@ -1,0 +1,19 @@
+Copyright (c) 2026 Matías Ignacio Navarro Arroyo. Todos los derechos reservados.
+
+Este repositorio es público solo para que pueda ser revisado y evaluado, en
+particular por la organización y el jurado de ProductIA 2026 (Soho). Se permite
+leer el código, ejecutarlo localmente y reproducir sus pruebas y evaluaciones
+con ese fin.
+
+No se concede ninguna otra licencia: no se permite copiar, modificar,
+distribuir, sublicenciar ni usar este software o partes de él con fines
+comerciales sin autorización escrita del titular.
+
+Los textos legales de data/normas/ son normas oficiales de la República de
+Chile publicadas en el Diario Oficial; su uso no está restringido por esta
+licencia.
+
+Dependencias de terceros y sus licencias:
+- pydantic: MIT
+- pytest (solo desarrollo): MIT
+- ruff (solo desarrollo): MIT

@@ -1,0 +1,67 @@
+# norma: ley-21663
+# titulo: Ley N° 21.663, Ley Marco de Ciberseguridad
+# publicacion: Diario Oficial N° 43.820, 8 de abril de 2024, CVE 2475674
+# fuente: https://www.diariooficial.interior.gob.cl/publicaciones/2024/04/08/43820/01/2475674.pdf
+# cobertura: artículos 1, 4, 9, 27, 38 y 40 (selección transcrita del texto oficial)
+
+Artículo 1°. Objeto. La presente ley tiene por objeto establecer la institucionalidad, los principios y la normativa general que permitan estructurar, regular y coordinar las acciones de ciberseguridad de los organismos del Estado y entre éstos y los particulares; establecer los requisitos mínimos para la prevención, contención, resolución y respuesta a incidentes de ciberseguridad; establecer las atribuciones y obligaciones de los organismos del Estado, así como los deberes de las instituciones determinadas en el artículo 4°, y los mecanismos de control, supervisión y de responsabilidad ante infracciones.
+Para efectos de esta ley, la Administración del Estado estará constituida por los Ministerios, las Delegaciones Presidenciales Regionales y Provinciales, los Gobiernos Regionales, las Municipalidades, las Fuerzas Armadas, las Fuerzas de Orden y Seguridad Pública, las empresas públicas creadas por ley, y los órganos y servicios públicos creados para el cumplimiento de la función administrativa.
+Las disposiciones de esta ley serán aplicables a las empresas del Estado y sociedades en que éste tenga participación accionaria superior al 50% o mayoría en el directorio.
+
+Artículo 4°. Ámbito de aplicación. La presente ley se aplicará a las instituciones que presten servicios calificados como esenciales según lo establecido en los incisos segundo y tercero de este artículo y a aquellas que sean calificadas como operadores de importancia vital, de conformidad con lo dispuesto en los artículos 5° y 6°.
+Son servicios esenciales aquellos provistos por los organismos de la Administración del Estado y por el Coordinador Eléctrico Nacional; los prestados bajo concesión de servicio público, y los proveídos por instituciones privadas que realicen las siguientes actividades: generación, transmisión o distribución eléctrica; transporte, almacenamiento o distribución de combustibles; suministro de agua potable o saneamiento; telecomunicaciones; infraestructura digital; servicios digitales y servicios de tecnología de la información gestionados por terceros; transporte terrestre, aéreo, ferroviario o marítimo, así como la operación de su infraestructura respectiva; banca, servicios financieros y medios de pago; administración de prestaciones de seguridad social; servicios postales y de mensajería; prestación institucional de salud por entidades tales como hospitales, clínicas, consultorios y centros médicos, y la producción y/o investigación de productos farmacéuticos.
+La Agencia podrá calificar otros servicios como esenciales mediante resolución fundada del Director o Directora Nacional cuando su afectación puede causar un grave daño a la vida o integridad física de la población o a su abastecimiento, a sectores relevantes de las actividades económicas, al medioambiente, al normal funcionamiento de la sociedad y/o de la Administración del Estado, a la defensa nacional, o a la seguridad y el orden público.
+Dicha calificación deberá someterse al proceso de consulta pública y se regirá por las disposiciones de la ley Nº 19.880, que establece bases de los procedimientos administrativos que rigen los actos de los órganos de la Administración del Estado.
+La Agencia identificará, mediante resolución exenta dictada conforme el procedimiento dispuesto en este artículo, las infraestructuras, procesos o funciones específicas que serán calificadas como esenciales, y que quedarán sujetas a las obligaciones establecidas en el artículo 8°.
+
+Artículo 9°. Deber de reportar. Todas las instituciones públicas y privadas señaladas en el artículo 4° tendrán la obligación de reportar al CSIRT Nacional los ciberataques e incidentes de ciberseguridad que puedan tener efectos significativos en los términos del artículo 27, tan pronto les sea posible y conforme al siguiente esquema:
+a) Dentro del plazo máximo de tres horas contado desde que se tiene conocimiento de la ocurrencia del ciberataque o incidente de ciberseguridad que pueda tener impactos significativos, se deberá enviar una alerta temprana sobre la ocurrencia del evento.
+b) Dentro del plazo máximo de setenta y dos horas, una actualización de la información contemplada en la letra a), que incluya una evaluación inicial del incidente, su gravedad e impacto, así como indicadores de compromiso, si estuvieran disponibles.
+Sin embargo, en caso de que la institución afectada fuera un operador de importancia vital y éste viera afectada la prestación de sus servicios esenciales a causa del incidente, la actualización de la información deberá entregarse al CSIRT Nacional en el plazo máximo de veinticuatro horas contado desde que haya tenido conocimiento del incidente.
+c) Dentro del plazo máximo de quince días corridos contado desde el envío de la alerta temprana contemplada en la letra a), un informe final en el que se recojan, al menos, los siguientes elementos:
+i. Una descripción detallada del incidente, incluyendo su gravedad e impacto.
+ii. El tipo de amenaza o causa principal que probablemente haya causado el incidente.
+iii. Las medidas de mitigación aplicadas y en curso.
+iv. Si procede, las repercusiones transfronterizas del incidente.
+d) En el caso de que el incidente siga en curso con posterioridad a la presentación del informe contemplado en el literal c), éste se reemplazará por un informe sobre la situación en ese momento. El informe final deberá ser presentado en el plazo de quince días corridos contado desde que se haya gestionado el incidente.
+Sin perjuicio de lo anterior, tanto el CSIRT Nacional como la autoridad sectorial competente podrán requerir las actualizaciones pertinentes sobre la situación.
+Los operadores de importancia vital deberán, además, informar al CSIRT Nacional su plan de acción, tan pronto lo hubieren adoptado. El plazo para la adopción de un plan de acción en ningún caso podrá ser superior a siete días corridos contados desde que se tuvo conocimiento de la ocurrencia del incidente.
+En el caso de los organismos del Estado, para el cumplimiento del deber establecido en este artículo, los jefes de servicio deberán exigir a los proveedores de servicios de tecnologías de la información que compartan la información sobre vulnerabilidades e incidentes que puedan afectar a las redes y sistemas informáticos de los organismos del Estado, y siempre que tenga por objeto prevenir, detectar o responder a incidentes, recuperarse de ellos o reducir su repercusión; o reforzar el nivel de ciberseguridad y garantizar, a su vez, que se respete la posible naturaleza delicada de la información compartida. Con el objeto de cumplir con lo anterior, los contratos de prestación de servicios no podrán contener ninguna cláusula que pueda restringir o dificultar de cualquier modo la comunicación de información sobre amenazas por parte del prestador de servicios, siempre y cuando con ello no se comprometa la seguridad y protección de datos, incluida la confidencialidad y protección de la propiedad intelectual.
+La Agencia dictará las instrucciones que sean necesarias para la debida realización y recepción de los reportes a que se refiere el presente artículo. En caso de existir la obligación de notificar a más de una autoridad, la Agencia en conjunto con las autoridades involucradas, y conforme lo dispuesto en el artículo 24, procurará poner a disposición de los obligados un sistema de ventanilla única que permita notificarlas simultáneamente.
+Un reglamento expedido por el Ministerio encargado de la seguridad pública regulará el contenido de las diversas clases de reportes señalados en este artículo.
+
+Artículo 27. Incidentes de efecto significativo. Se considerará que un incidente de ciberseguridad tiene efecto significativo si es capaz de interrumpir la continuidad de un servicio esencial o afectar la integridad física o la salud de las personas, así como en el caso de afectar sistemas informáticos que contengan datos personales. Para determinar la importancia de los efectos de un incidente, se tendrán especialmente en cuenta los siguientes criterios:
+a) El número de personas afectadas.
+b) La duración del incidente.
+c) La extensión geográfica con respecto a la zona afectada por el incidente.
+Los CSIRT que pertenezcan a los organismos de la Administración del Estado tendrán la obligación de tomar las providencias necesarias para apoyar el restablecimiento del servicio afectado, bajo la coordinación del CSIRT Nacional.
+Deberá omitirse en los reportes de incidentes de ciberseguridad todo dato o información personal, conforme a lo dispuesto en el artículo 2°, letra f), de la ley N° 19.628, sobre protección de la vida privada. Para efectos de lo dispuesto en este inciso, no se considerará que la dirección IP sea un dato o información personal.
+El procedimiento específico para notificar un incidente de ciberseguridad, la forma, así como las condiciones de anonimato, la taxonomía del informe y la periodicidad, serán establecidos en el reglamento de la presente ley.
+
+Artículo 38. Infracciones. Las infracciones a las obligaciones que esta ley prescribe a los sujetos obligados por ella se califican en leves, graves y gravísimas.
+Se considerarán infracciones leves las siguientes:
+1. Entregar fuera de plazo la información que se le requiera cuando ella no fuere necesaria para la gestión de un incidente de ciberseguridad.
+2. Incumplir las instrucciones generales o particulares impartidas por la Agencia en los casos que no estén sancionados como infracción grave o gravísima.
+3. Cualquier infracción a las obligaciones que esta ley establece y que no tenga señalada una sanción especial.
+Se considerarán infracciones graves las siguientes:
+1. No haber implementado los protocolos y estándares establecidos por la Agencia para prevenir, reportar y resolver incidentes de ciberseguridad.
+2. No haber implementado los estándares particulares de ciberseguridad.
+3. Entregar fuera de plazo la información que se le requiera cuando ella fuere necesaria para la gestión de un incidente de ciberseguridad.
+4. Entregar a la Agencia información manifiestamente falsa o errónea.
+5. Incumplir la obligación de reportar establecida en el artículo 9°.
+6. Negarse injustificadamente a cumplir una instrucción de la Agencia o entorpecer deliberadamente el ejercicio de las atribuciones de la Agencia durante la gestión de un incidente de ciberseguridad, siempre que la atribución no cuente con una sanción especial.
+7. La reincidencia en una misma infracción leve dentro de un año.
+Se considerarán infracciones gravísimas las siguientes:
+1. Entregar a la Agencia información manifiestamente falsa o errónea, cuando ella sea necesaria para la gestión de un incidente de ciberseguridad.
+2. Incumplir las instrucciones generales o particulares impartidas por la Agencia durante la gestión de un incidente de impacto significativo.
+3. No entregar la información que se le requiera cuando ella fuere necesaria para la gestión de un incidente de impacto significativo.
+4. La reincidencia en una infracción grave dentro de un año.
+
+Artículo 40. De las sanciones. La infracción a los preceptos de esta ley conlleva la imposición de una multa a beneficio fiscal, de acuerdo con la siguiente escala:
+1. Las infracciones leves serán sancionadas con multa de hasta 5.000 unidades tributarias mensuales, o hasta 10.000 unidades tributarias mensuales si se trata de un operador de importancia vital.
+2. Las infracciones graves serán sancionadas con multa de hasta 10.000 unidades tributarias mensuales, o hasta 20.000 unidades tributarias mensuales si se trata de un operador de importancia vital.
+3. Las infracciones gravísimas serán sancionadas con multa de hasta 20.000 unidades tributarias mensuales, o hasta 40.000 unidades tributarias mensuales si se trata de un operador de importancia vital.
+Para la fijación de la multa se tendrá en consideración el grado en que el infractor adoptó las medidas necesarias para resguardar la seguridad informática de las operaciones, la probabilidad de ocurrencia del incidente, el grado de exposición del infractor a los riesgos, la gravedad de los efectos de los ataques incluidas sus repercusiones sociales o económicas, la reiteración en la infracción dentro del plazo de tres años contado desde el momento en que se produjo el incidente, el tamaño y la capacidad económica del infractor.
+Cuando por unos mismos hechos y fundamentos jurídicos el infractor pudiese ser sancionado con arreglo a esta ley y a otra u otras leyes, de las sanciones posibles, se le impondrá la de mayor gravedad.
+En ningún caso se podrá aplicar al infractor, por los mismos hechos y fundamentos jurídicos, dos o más sanciones administrativas.
+Las infracciones previstas en esta ley prescribirán a los tres años de cometidas, plazo que se interrumpirá con la notificación de la formulación de cargos por los hechos constitutivos de ellas.

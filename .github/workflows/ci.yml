@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar
+        run: pip install -e ".[dev]"
+      - name: Estilo
+        run: ruff check .
+      - name: Pruebas
+        run: pytest -q
+      - name: Índice legal al día
+        run: python -m ora_privacidad.corpus --verificar
