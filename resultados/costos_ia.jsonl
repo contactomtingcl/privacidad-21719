@@ -2,3 +2,9 @@
 {"modelo": "claude-haiku-5-5", "tokens_entrada": 1825, "tokens_salida": 435, "costo_usd": 0.0004, "latencia_ms": 2052, "proposito": "inventario: clasificar columnas ambiguas", "fecha": "2026-10-10T20:04:01+00:00"}
 {"modelo": "claude-haiku-5-5", "tokens_entrada": 1125, "tokens_salida": 142, "costo_usd": 0.0001835, "latencia_ms": 1346, "proposito": "inventario: clasificar columnas ambiguas", "fecha": "2026-10-10T20:04:56+00:00"}
 {"modelo": "claude-haiku-5-5", "tokens_entrada": 1825, "tokens_salida": 412, "costo_usd": 0.0003885, "latencia_ms": 1940, "proposito": "inventario: clasificar columnas ambiguas", "fecha": "2026-10-10T20:04:59+00:00"}
+{"modelo": "claude-haiku-5-5", "tokens_entrada": 1125, "tokens_salida": 128, "costo_usd": 0.0001765, "latencia_ms": 1531, "proposito": "inventario: clasificar columnas ambiguas", "fecha": "2026-10-10T20:11:09+00:00"}
+{"modelo": "claude-sonnet-5-5", "tokens_entrada": 1881, "tokens_salida": 2214, "costo_usd": 0.025902, "latencia_ms": 16056, "proposito": "inventario: proponer actividad de tratamiento", "fecha": "2026-10-10T20:11:25+00:00"}
+{"modelo": "claude-sonnet-5-5", "tokens_entrada": 1820, "tokens_salida": 1812, "costo_usd": 0.02176, "latencia_ms": 12878, "proposito": "inventario: proponer actividad de tratamiento", "fecha": "2026-10-10T20:11:38+00:00"}
+{"modelo": "claude-sonnet-5-5", "tokens_entrada": 1669, "tokens_salida": 787, "costo_usd": 0.011208, "latencia_ms": 4705, "proposito": "inventario: proponer actividad de tratamiento", "fecha": "2026-10-10T20:11:43+00:00"}
+{"modelo": "claude-haiku-5-5", "tokens_entrada": 1825, "tokens_salida": 408, "costo_usd": 0.0003865, "latencia_ms": 1875, "proposito": "inventario: clasificar columnas ambiguas", "fecha": "2026-10-10T20:11:45+00:00"}
+{"modelo": "claude-sonnet-5-5", "tokens_entrada": 1634, "tokens_salida": 683, "costo_usd": 0.010098, "latencia_ms": 4235, "proposito": "inventario: proponer actividad de tratamiento", "fecha": "2026-10-10T20:11:49+00:00"}

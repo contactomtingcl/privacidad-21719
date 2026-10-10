@@ -17,9 +17,9 @@
       "citas": []
     },
     "ambito_territorial": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3gxzJsYkLnJnV4yXG'})",
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "bases_de_datos": {
@@ -31,51 +31,83 @@
       "citas": []
     },
     "categorias_titulares": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3gxzJsYkLnJnV4yXG'})",
+      "valor": [
+        "Trabajadores de la organización",
+        "Hijos e hijas de los trabajadores (todos menores de 18 años; 61 menores de 14 años)",
+        "Apoderados (personas de contacto)"
+      ],
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "fines": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3gxzJsYkLnJnV4yXG'})",
-      "citas": []
+      "valor": [
+        "Organizar el paseo de fin de año para los trabajadores y sus hijos e hijas (inscripción, logística, alimentación, contacto con el apoderado y entrega de polera)"
+      ],
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ds-662-2025",
+          "articulo": "3"
+        }
+      ]
     },
     "fuente": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3gxzJsYkLnJnV4yXG'})",
+      "valor": "Los propios trabajadores, a quienes Recursos Humanos les pidió completar la planilla. Los datos de los hijos e hijas y de los apoderados los entregan los trabajadores.",
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "base_licitud": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3gxzJsYkLnJnV4yXG'})",
-      "citas": []
+      "valor": "consentimiento_expreso",
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ley-19628",
+          "articulo": "16"
+        },
+        {
+          "norma": "ley-19628",
+          "articulo": "16"
+        },
+        {
+          "norma": "ley-19628",
+          "articulo": "16 bis"
+        }
+      ]
     },
     "destinatarios": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3gxzJsYkLnJnV4yXG'})",
-      "citas": []
+      "valor": [
+        "Eventos Laja SpA (proveedor que recibe la planilla)",
+        "Recursos Humanos de la organización (quien organiza la actividad)"
+      ],
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ley-19628",
+          "articulo": "15 bis"
+        }
+      ]
     },
     "transferencias_internacionales": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3gxzJsYkLnJnV4yXG'})",
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "plazo_supresion": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3gxzJsYkLnJnV4yXG'})",
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "decisiones_automatizadas": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3gxzJsYkLnJnV4yXG'})",
+      "valor": false,
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "columnas": [
@@ -84,7 +116,7 @@
         "categoria": "nombre",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «nombre»",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       },
       {
@@ -92,23 +124,23 @@
         "categoria": "identificador_nacional",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «rut»; 100% de los valores tiene formato de rut",
-        "necesaria": null,
-        "motivo_innecesaria": null
+        "necesaria": false,
+        "motivo_innecesaria": "Para inscribir y contactar al trabajador basta con su nombre. El RUT es un identificador que no se necesita para la finalidad descrita."
       },
       {
         "nombre": "Área",
         "categoria": "laboral",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «area»",
-        "necesaria": null,
-        "motivo_innecesaria": null
+        "necesaria": false,
+        "motivo_innecesaria": "El área de trabajo no es necesaria para organizar un paseo familiar. No aporta a la finalidad y no debería compartirse con el proveedor."
       },
       {
         "nombre": "Nombre hijo/a",
         "categoria": "nombre",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «nombre»; El encabezado indica datos de hijos o hijas",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       },
       {
@@ -116,15 +148,15 @@
         "categoria": "identificador_nacional",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «rut»; 100% de los valores tiene formato de rut; El encabezado indica datos de hijos o hijas",
-        "necesaria": null,
-        "motivo_innecesaria": null
+        "necesaria": false,
+        "motivo_innecesaria": "No se necesita el RUT de niños y niñas para organizar el paseo. Es un dato de menores que se puede evitar. Solo se justificaría si la descripción indicara, por ejemplo, un seguro, y hoy no lo indica."
       },
       {
         "nombre": "Fecha de nacimiento hijo/a",
         "categoria": "fecha_nacimiento",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «fecha de nacimiento»; 100% de los valores tiene formato de fecha; El encabezado indica datos de hijos o hijas",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       },
       {
@@ -132,7 +164,7 @@
         "categoria": "salud",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «condiciones medicas»",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       },
       {
@@ -140,7 +172,7 @@
         "categoria": "telefono",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «celular»; 100% de los valores tiene formato de telefono",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       },
       {
@@ -148,32 +180,19 @@
         "categoria": "correo",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «correo»; 100% de los valores tiene formato de correo",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       },
       {
         "nombre": "Talla polera",
         "categoria": "no_personal",
         "origen": "ia",
-        "justificacion": "La talla de polera (valores como 9, 99 o A, equivalentes a tallas tipo S, M, L o numéricas) es un dato de vestuario para el paseo y no identifica ni describe a una persona natural en particular.",
+        "justificacion": "La talla de polera (valores como 9, 99 o A, equivalentes a tallas S, M, L o numéricas) sirve para logística del paseo y no identifica a una persona natural.",
         "necesaria": null,
         "motivo_innecesaria": null
       }
     ],
     "alertas": [
-      {
-        "nivel": "media",
-        "mensaje": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3gxzJsYkLnJnV4yXG'})",
-        "cita": null
-      },
-      {
-        "nivel": "alta",
-        "mensaje": "La planilla tiene datos sensibles (salud). Requieren consentimiento expreso del titular, salvo excepción legal.",
-        "cita": {
-          "norma": "ley-19628",
-          "articulo": "16"
-        }
-      },
       {
         "nivel": "alta",
         "mensaje": "Hay datos de 61 niños o niñas menores de 14 años: se requiere consentimiento de sus padres o representantes legales, y ante una filtración hay que avisar a cada titular a través de ellos.",
@@ -192,52 +211,31 @@
       },
       {
         "nivel": "media",
-        "mensaje": "El campo «ambito_territorial» quedó pendiente de completar.",
-        "cita": null
+        "mensaje": "La columna «RUT trabajador» parece innecesaria: Para inscribir y contactar al trabajador basta con su nombre. El RUT es un identificador que no se necesita para la finalidad descrita.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "3"
+        }
       },
       {
         "nivel": "media",
-        "mensaje": "El campo «categorias_titulares» quedó pendiente de completar.",
-        "cita": null
+        "mensaje": "La columna «Área» parece innecesaria: El área de trabajo no es necesaria para organizar un paseo familiar. No aporta a la finalidad y no debería compartirse con el proveedor.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "3"
+        }
       },
       {
         "nivel": "media",
-        "mensaje": "El campo «fines» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «fuente» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «base_licitud» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «destinatarios» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «transferencias_internacionales» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «plazo_supresion» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «decisiones_automatizadas» quedó pendiente de completar.",
-        "cita": null
+        "mensaje": "La columna «RUT hijo/a» parece innecesaria: No se necesita el RUT de niños y niñas para organizar el paseo. Es un dato de menores que se puede evitar. Solo se justificaría si la descripción indicara, por ejemplo, un seguro, y hoy no lo indica.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "3"
+        }
       }
     ],
     "citas_rechazadas": [],
-    "costo_ia_usd": 0.000183,
+    "costo_ia_usd": 0.026079,
     "validada": false
   },
   {
@@ -258,9 +256,9 @@
       "citas": []
     },
     "ambito_territorial": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3hx2hQCmdTWF9WQce'})",
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "bases_de_datos": {
@@ -272,51 +270,77 @@
       "citas": []
     },
     "categorias_titulares": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3hx2hQCmdTWF9WQce'})",
+      "valor": [
+        "Trabajadores de la organización"
+      ],
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "fines": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3hx2hQCmdTWF9WQce'})",
-      "citas": []
+      "valor": [
+        "Calcular y pagar las remuneraciones de los trabajadores",
+        "Calcular y pagar las cotizaciones asociadas a las remuneraciones"
+      ],
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ds-662-2025",
+          "articulo": "3"
+        }
+      ]
     },
     "fuente": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3hx2hQCmdTWF9WQce'})",
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "base_licitud": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3hx2hQCmdTWF9WQce'})",
-      "citas": []
+      "valor": "contrato",
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ley-19628",
+          "articulo": "13"
+        },
+        {
+          "norma": "ley-19628",
+          "articulo": "13"
+        }
+      ]
     },
     "destinatarios": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3hx2hQCmdTWF9WQce'})",
-      "citas": []
+      "valor": [
+        "Remuneraciones del Sur SpA (proveedor que procesa la nómina)"
+      ],
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ley-19628",
+          "articulo": "15 bis"
+        }
+      ]
     },
     "transferencias_internacionales": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3hx2hQCmdTWF9WQce'})",
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "plazo_supresion": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3hx2hQCmdTWF9WQce'})",
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "decisiones_automatizadas": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3hx2hQCmdTWF9WQce'})",
+      "valor": false,
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "columnas": [
@@ -325,7 +349,7 @@
         "categoria": "nombre",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «nombre completo»",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       },
       {
@@ -333,7 +357,7 @@
         "categoria": "identificador_nacional",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «rut»; 100% de los valores tiene formato de rut",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       },
       {
@@ -341,7 +365,7 @@
         "categoria": "laboral",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «cargo»",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       },
       {
@@ -349,7 +373,7 @@
         "categoria": "laboral",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «area»",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       },
       {
@@ -357,7 +381,7 @@
         "categoria": "laboral",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «fecha de ingreso»; 100% de los valores tiene formato de fecha",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       },
       {
@@ -365,7 +389,7 @@
         "categoria": "financiero",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «sueldo base»",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       },
       {
@@ -373,7 +397,7 @@
         "categoria": "financiero",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «banco»",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       },
       {
@@ -381,7 +405,7 @@
         "categoria": "financiero",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «numero de cuenta»",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       },
       {
@@ -389,7 +413,7 @@
         "categoria": "laboral",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «afp»",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       },
       {
@@ -397,7 +421,7 @@
         "categoria": "prevision_salud",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «prevision de salud»",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       },
       {
@@ -405,24 +429,19 @@
         "categoria": "afiliacion_sindical",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «afiliado sindicato»",
-        "necesaria": null,
-        "motivo_innecesaria": null
+        "necesaria": false,
+        "motivo_innecesaria": "Es un dato sensible (afiliación sindical) y no se necesita para calcular ni pagar remuneraciones y cotizaciones, según la descripción. Si hubiera descuento de cuota sindical, la organización debería informarlo y justificarlo."
       },
       {
         "nombre": "Días de licencia médica último año",
         "categoria": "salud",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «licencia medica»",
-        "necesaria": null,
-        "motivo_innecesaria": null
+        "necesaria": false,
+        "motivo_innecesaria": "Es un dato sensible (salud). Para la nómina solo serían pertinentes los días de licencia del período que se liquida, no el historial de todo el último año."
       }
     ],
     "alertas": [
-      {
-        "nivel": "media",
-        "mensaje": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3hx2hQCmdTWF9WQce'})",
-        "cita": null
-      },
       {
         "nivel": "alta",
         "mensaje": "La planilla tiene datos sensibles (afiliación sindical o gremial, salud). Requieren consentimiento expreso del titular, salvo excepción legal.",
@@ -432,61 +451,32 @@
         }
       },
       {
+        "nivel": "media",
+        "mensaje": "La columna «Afiliado sindicato» parece innecesaria: Es un dato sensible (afiliación sindical) y no se necesita para calcular ni pagar remuneraciones y cotizaciones, según la descripción. Si hubiera descuento de cuota sindical, la organización debería informarlo y justificarlo.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "3"
+        }
+      },
+      {
+        "nivel": "media",
+        "mensaje": "La columna «Días de licencia médica último año» parece innecesaria: Es un dato sensible (salud). Para la nómina solo serían pertinentes los días de licencia del período que se liquida, no el historial de todo el último año.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "3"
+        }
+      },
+      {
         "nivel": "informativa",
         "mensaje": "Contiene datos económicos o financieros: ante una filtración hay que avisar también a cada titular.",
         "cita": {
           "norma": "ley-19628",
           "articulo": "14 sexies"
         }
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «ambito_territorial» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «categorias_titulares» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «fines» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «fuente» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «base_licitud» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «destinatarios» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «transferencias_internacionales» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «plazo_supresion» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «decisiones_automatizadas» quedó pendiente de completar.",
-        "cita": null
       }
     ],
     "citas_rechazadas": [],
-    "costo_ia_usd": 0.0,
+    "costo_ia_usd": 0.02176,
     "validada": false
   },
   {
@@ -506,9 +496,9 @@
       "citas": []
     },
     "ambito_territorial": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3imt91uFieUgePW8Q'})",
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "bases_de_datos": {
@@ -520,51 +510,80 @@
       "citas": []
     },
     "categorias_titulares": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3imt91uFieUgePW8Q'})",
+      "valor": [
+        "Clientes"
+      ],
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "fines": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3imt91uFieUgePW8Q'})",
-      "citas": []
+      "valor": [
+        "Enviar ofertas y publicidad a clientes por correo electrónico y celular"
+      ],
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ds-662-2025",
+          "articulo": "3"
+        }
+      ]
     },
     "fuente": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3imt91uFieUgePW8Q'})",
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "base_licitud": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3imt91uFieUgePW8Q'})",
-      "citas": []
+      "valor": "consentimiento",
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ley-19628",
+          "articulo": "12"
+        },
+        {
+          "norma": "ley-19628",
+          "articulo": "12"
+        },
+        {
+          "norma": "ley-19628",
+          "articulo": "13"
+        }
+      ]
     },
     "destinatarios": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3imt91uFieUgePW8Q'})",
-      "citas": []
+      "valor": [
+        "Publicidad Austral SpA (proveedor que envía las campañas)"
+      ],
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ley-19628",
+          "articulo": "15 bis"
+        }
+      ]
     },
     "transferencias_internacionales": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3imt91uFieUgePW8Q'})",
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "plazo_supresion": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3imt91uFieUgePW8Q'})",
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "decisiones_automatizadas": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3imt91uFieUgePW8Q'})",
+      "valor": false,
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "columnas": [
@@ -573,7 +592,7 @@
         "categoria": "nombre",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «nombre»",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       },
       {
@@ -581,7 +600,7 @@
         "categoria": "correo",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «correo»; 100% de los valores tiene formato de correo",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       },
       {
@@ -589,7 +608,7 @@
         "categoria": "telefono",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «celular»; 100% de los valores tiene formato de telefono",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       },
       {
@@ -597,39 +616,58 @@
         "categoria": "direccion",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «comuna»",
-        "necesaria": null,
-        "motivo_innecesaria": null
+        "necesaria": false,
+        "motivo_innecesaria": "La publicidad se envía por correo y celular, así que la ubicación no es necesaria. Solo sería pertinente si hay ofertas segmentadas por zona, y eso no se informó."
       },
       {
         "nombre": "Fecha última compra",
         "categoria": "preferencias_comerciales",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «fecha ultima compra»; 100% de los valores tiene formato de fecha",
-        "necesaria": null,
-        "motivo_innecesaria": null
+        "necesaria": false,
+        "motivo_innecesaria": "No es necesaria para enviar publicidad en general. Solo sería pertinente si la organización segmenta por actividad reciente, y eso no se informó."
       },
       {
         "nombre": "Monto compras 2026",
         "categoria": "financiero",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «monto compras»",
-        "necesaria": null,
-        "motivo_innecesaria": null
+        "necesaria": false,
+        "motivo_innecesaria": "Para enviar ofertas y publicidad no hace falta conocer cuánto compró cada cliente. Solo sería pertinente si la organización describe una segmentación por nivel de compra, y eso no se informó."
       },
       {
         "nombre": "Acepta publicidad",
         "categoria": "preferencias_comerciales",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «acepta publicidad»",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       }
     ],
     "alertas": [
       {
         "nivel": "media",
-        "mensaje": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3imt91uFieUgePW8Q'})",
-        "cita": null
+        "mensaje": "La columna «Comuna» parece innecesaria: La publicidad se envía por correo y celular, así que la ubicación no es necesaria. Solo sería pertinente si hay ofertas segmentadas por zona, y eso no se informó.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "3"
+        }
+      },
+      {
+        "nivel": "media",
+        "mensaje": "La columna «Fecha última compra» parece innecesaria: No es necesaria para enviar publicidad en general. Solo sería pertinente si la organización segmenta por actividad reciente, y eso no se informó.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "3"
+        }
+      },
+      {
+        "nivel": "media",
+        "mensaje": "La columna «Monto compras 2026» parece innecesaria: Para enviar ofertas y publicidad no hace falta conocer cuánto compró cada cliente. Solo sería pertinente si la organización describe una segmentación por nivel de compra, y eso no se informó.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "3"
+        }
       },
       {
         "nivel": "informativa",
@@ -638,55 +676,10 @@
           "norma": "ley-19628",
           "articulo": "14 sexies"
         }
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «ambito_territorial» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «categorias_titulares» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «fines» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «fuente» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «base_licitud» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «destinatarios» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «transferencias_internacionales» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «plazo_supresion» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «decisiones_automatizadas» quedó pendiente de completar.",
-        "cita": null
       }
     ],
     "citas_rechazadas": [],
-    "costo_ia_usd": 0.0,
+    "costo_ia_usd": 0.011208,
     "validada": false
   },
   {
@@ -703,9 +696,9 @@
       "citas": []
     },
     "ambito_territorial": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3su4pho8YRMjgJdLd'})",
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "bases_de_datos": {
@@ -717,51 +710,76 @@
       "citas": []
     },
     "categorias_titulares": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3su4pho8YRMjgJdLd'})",
+      "valor": [
+        "Personas de contacto comerciales de los proveedores"
+      ],
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "fines": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3su4pho8YRMjgJdLd'})",
-      "citas": []
+      "valor": [
+        "Mantener un registro de proveedores y de sus personas de contacto comerciales para gestionar la relación comercial"
+      ],
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ley-19628",
+          "articulo": "3"
+        }
+      ]
     },
     "fuente": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3su4pho8YRMjgJdLd'})",
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "base_licitud": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3su4pho8YRMjgJdLd'})",
-      "citas": []
+      "valor": "interes_legitimo",
+      "origen": "ia",
+      "nota": "La organización necesita comunicarse con las personas de contacto de sus proveedores para gestionar y mantener la relación comercial. El tratamiento se limita a datos de contacto profesional (nombre, correo y celular), de bajo impacto para los titulares, que razonablemente esperan ser contactados en ese ámbito.",
+      "citas": [
+        {
+          "norma": "ley-19628",
+          "articulo": "13"
+        },
+        {
+          "norma": "ley-19628",
+          "articulo": "13"
+        }
+      ]
     },
     "destinatarios": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3su4pho8YRMjgJdLd'})",
+      "valor": [
+        "no informado"
+      ],
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "transferencias_internacionales": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3su4pho8YRMjgJdLd'})",
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "plazo_supresion": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3su4pho8YRMjgJdLd'})",
-      "citas": []
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ley-19628",
+          "articulo": "3"
+        }
+      ]
     },
     "decisiones_automatizadas": {
-      "valor": null,
-      "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3su4pho8YRMjgJdLd'})",
+      "valor": false,
+      "origen": "ia",
+      "nota": null,
       "citas": []
     },
     "columnas": [
@@ -769,7 +787,7 @@
         "nombre": "Razón social",
         "categoria": "persona_juridica",
         "origen": "ia",
-        "justificacion": "Las muestras son nombres de empresas (con sufijos como 'S.A.' o 'Ltda.'), que identifican personas jurídicas.",
+        "justificacion": "Las muestras son nombres de empresas (con sufijos como Ltda. o S.A.), por lo que identifica personas jurídicas.",
         "necesaria": null,
         "motivo_innecesaria": null
       },
@@ -777,7 +795,7 @@
         "nombre": "RUT empresa",
         "categoria": "persona_juridica",
         "origen": "ia",
-        "justificacion": "Aunque tiene formato de RUT, en esta planilla identifica al proveedor empresa, que es persona jurídica y no titular de datos según la ley.",
+        "justificacion": "Es el RUT de la empresa proveedora; aunque tiene formato de identificador nacional, corresponde a una persona jurídica que no es titular de datos.",
         "necesaria": null,
         "motivo_innecesaria": null
       },
@@ -785,7 +803,7 @@
         "nombre": "Servicio",
         "categoria": "no_personal",
         "origen": "ia",
-        "justificacion": "Describe el servicio o producto que presta el proveedor, sin referirse a una persona natural.",
+        "justificacion": "Describe el servicio o producto que presta el proveedor, sin datos de personas naturales.",
         "necesaria": null,
         "motivo_innecesaria": null
       },
@@ -793,7 +811,7 @@
         "nombre": "Datos que recibe",
         "categoria": "no_personal",
         "origen": "ia",
-        "justificacion": "Describe el tipo de información que el proveedor recibe de la organización, sin contener datos de personas naturales.",
+        "justificacion": "Describe el tipo de información que el proveedor recibe de la organización, sin identificar a una persona natural.",
         "necesaria": null,
         "motivo_innecesaria": null
       },
@@ -802,7 +820,7 @@
         "categoria": "nombre",
         "origen": "ia",
         "justificacion": "Las muestras tienen forma de nombre y apellidos de la persona de contacto comercial, que es una persona natural identificable.",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       },
       {
@@ -810,7 +828,7 @@
         "categoria": "correo",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «correo»; 100% de los valores tiene formato de correo",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       },
       {
@@ -818,64 +836,13 @@
         "categoria": "telefono",
         "origen": "calculado",
         "justificacion": "El encabezado contiene «celular»; 100% de los valores tiene formato de telefono",
-        "necesaria": null,
+        "necesaria": true,
         "motivo_innecesaria": null
       }
     ],
-    "alertas": [
-      {
-        "nivel": "media",
-        "mensaje": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3su4pho8YRMjgJdLd'})",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «ambito_territorial» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «categorias_titulares» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «fines» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «fuente» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «base_licitud» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «destinatarios» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «transferencias_internacionales» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «plazo_supresion» quedó pendiente de completar.",
-        "cita": null
-      },
-      {
-        "nivel": "media",
-        "mensaje": "El campo «decisiones_automatizadas» quedó pendiente de completar.",
-        "cita": null
-      }
-    ],
+    "alertas": [],
     "citas_rechazadas": [],
-    "costo_ia_usd": 0.000389,
+    "costo_ia_usd": 0.010484,
     "validada": false
   }
 ]
