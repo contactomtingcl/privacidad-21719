@@ -406,6 +406,12 @@ def _tipo_datos(perfil: PerfilPlanilla, columnas: list[ColumnaFinal]) -> Campo:
 # --- orquestación ------------------------------------------------------------
 
 
+def _describir_error(e: Exception) -> str:
+    """Tipo y mensaje del error, acortado. Los mensajes de la API no incluyen el contenido."""
+    mensaje = re.sub(r"\s+", " ", str(e))[:240]
+    return f"{type(e).__name__}: {mensaje}" if mensaje else type(e).__name__
+
+
 def construir_actividad(
     perfil: PerfilPlanilla,
     valores_por_columna: dict[str, list[str]],
@@ -427,7 +433,7 @@ def construir_actividad(
             )
             costo += c1
         except Exception as e:  # la IA no es crítica: el caso queda para revisión humana
-            nota_falla = f"IA no disponible para clasificar columnas ({type(e).__name__})"
+            nota_falla = f"IA no disponible para clasificar columnas ({_describir_error(e)})"
 
     columnas: list[ColumnaFinal] = []
     for c in perfil.columnas:
@@ -482,7 +488,7 @@ def construir_actividad(
             if propuesta is None:
                 nota_falla = "La IA no entregó una propuesta válida"
         except Exception as e:
-            nota_falla = f"IA no disponible para proponer la actividad ({type(e).__name__})"
+            nota_falla = f"IA no disponible para proponer la actividad ({_describir_error(e)})"
 
     # Citas: se conservan solo las que existen en el corpus.
     citas_por_campo: dict[str, list[Cita]] = {}
