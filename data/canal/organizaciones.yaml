@@ -1,0 +1,13 @@
+# Organizaciones del canal de demostración. Todo es ficticio: no hay datos de organizaciones reales.
+#
+# - perfil: define si rige el reloj de la ANCI (servicios esenciales) además del de la Agencia.
+# - version_enlace: al subirla, el enlace y el QR anteriores dejan de funcionar.
+organizaciones:
+  - id: comercial-los-robles
+    nombre: Comercial Los Robles (empresa ficticia)
+    perfil: empresa_privada
+    version_enlace: 1
+  - id: municipalidad-piloto
+    nombre: Municipalidad Piloto (organismo ficticio)
+    perfil: organismo_publico
+    version_enlace: 1

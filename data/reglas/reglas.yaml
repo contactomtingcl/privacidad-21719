@@ -86,3 +86,14 @@ reglas:
     descripcion: Si los datos se comunicaron a otros, avisarles la rectificación, supresión u oposición.
     ley: ley-21719
     fuente: {norma: ley-19628, articulo: "11", fragmento: "cuando el responsable haya comunicado dichos datos a otras personas, deberá comunicar a éstas los cambios realizados"}
+
+  confirmacion_titular:
+    descripcion: Si el mensaje del titular admite lecturas distintas o le falta lo que la ley pide para tramitarlo, el canal le pregunta qué quiso decir. El plazo de respuesta corre igual; si no responde, se tramita con la lectura más protectora.
+    ley: ley-21719
+    fuente: {norma: ley-19628, articulo: "11", fragmento: "Identificación de los datos personales o del tratamiento determinado, respecto de los cuales se ejerce el derecho correspondiente"}
+    parametros:
+      espera_dias: 5
+      # Grupos de lecturas que se confunden entre sí, ordenadas de más a menos protectora.
+      lecturas_excluyentes:
+        - [supresion, oposicion]
+    criterio: Los parámetros son una decisión de diseño del proyecto, no una exigencia de la ley. Están pendientes de revisión legal.

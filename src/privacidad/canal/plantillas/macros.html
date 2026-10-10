@@ -1,0 +1,35 @@
+{% macro opcion(nombre, valor, etiqueta, marcada=False, deshabilitada=False, tipo="checkbox") %}
+<label class="opcion"><input type="{{ tipo }}" name="{{ nombre }}" value="{{ valor }}"{% if marcada %} checked{% endif %}{% if deshabilitada %} disabled{% endif %}><span>{{ etiqueta }}</span></label>
+{% endmacro %}
+
+{% macro lista_derechos(derechos) %}
+<ul>
+{% for d in derechos %}
+<li>{{ ETIQUETAS_DERECHO.get(d, d) }}</li>
+{% endfor %}
+</ul>
+{% endmacro %}
+
+{% macro formulario_confirmacion(caso, titulo) %}
+<form method="post" action="/seguimiento/{{ caso.id }}/confirmar">
+<fieldset><legend>{{ titulo }}</legend>
+{% for clave, etiqueta in ETIQUETAS_DERECHO.items() %}
+{{ opcion("derechos", clave, etiqueta, clave in caso.confirmacion.vigente) }}
+{% endfor %}
+</fieldset>
+<label for="detalle">Si quiere, agregue un detalle</label>
+<p class="ayuda" id="ayuda-detalle">Por ejemplo, qué dato corregir o para qué uso.</p>
+<textarea id="detalle" name="detalle" rows="3" maxlength="1000" aria-describedby="ayuda-detalle"></textarea>
+<button type="submit">Confirmar</button>
+</form>
+{% endmacro %}
+
+{% macro plazos(caso) %}
+{% set r = caso.resultado_solicitud %}
+{% if r and r.respuesta and r.respuesta.vence %}
+<p>Le responderemos a más tardar el <strong>{{ r.respuesta.vence | fecha }}</strong>. Este plazo corre desde hoy, aunque estemos confirmando con usted.</p>
+{% if r.bloqueo and r.bloqueo.vence %}
+<p>Sobre dejar de usar sus datos mientras se resuelve, le responderemos a más tardar el <strong>{{ r.bloqueo.vence | fecha }}</strong>{% if r.bloqueo.a_confirmar %} (fecha estimada){% endif %}.</p>
+{% endif %}
+{% endif %}
+{% endmacro %}

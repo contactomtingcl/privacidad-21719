@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% from "macros.html" import opcion %}
+{% block titulo %}{{ org.nombre }}{% endblock %}
+{% block cuerpo %}
+<h1>{{ org.nombre }}</h1>
+<p>Canal de privacidad: aquí puede ejercer sus derechos sobre sus datos personales o avisar de un incidente.</p>
+<div class="aviso" role="note"><strong>Prototipo con datos ficticios.</strong> No escriba RUT, correos ni teléfonos reales: el sistema los rechaza.</div>
+{% if error %}
+<div class="error" role="alert">{{ error }}</div>
+{% endif %}
+<form method="post" action="">
+<fieldset><legend>¿Qué necesita?</legend>
+{% for clave, etiqueta in TIPOS.items() %}
+{{ opcion("tipo", clave, etiqueta, valores.get("tipo", "solicitud") == clave, tipo="radio") }}
+{% endfor %}
+</fieldset>
+<label for="texto">Cuéntenos qué pasó o qué necesita</label>
+<p class="ayuda" id="ayuda-texto">Escriba con sus palabras. Si avisa de un incidente y quiere reservar su identidad, no escriba su nombre aquí.</p>
+<textarea id="texto" name="texto" rows="6" required maxlength="5000" aria-describedby="ayuda-texto">{{ valores.get("texto", "") }}</textarea>
+<label for="nombre">Su nombre</label>
+<input id="nombre" name="nombre" type="text" maxlength="200" autocomplete="name" aria-describedby="ayuda-identidad" value="{{ valores.get('nombre', '') }}">
+<label for="contacto">Su correo para responderle</label>
+<input id="contacto" name="contacto" type="email" maxlength="200" autocomplete="email" aria-describedby="ayuda-identidad" value="{{ valores.get('contacto', '') }}">
+<p class="ayuda" id="ayuda-identidad">Si pide ejercer un derecho, nombre y correo son obligatorios: necesitamos saber quién es y dónde responderle. En un aviso de incidente son opcionales.</p>
+{{ opcion("reservado", "1", "Modo reservado", valores.get("reservado") == "1", not reservado_disponible) }}
+<p class="ayuda">{% if reservado_disponible %}Solo para avisos de incidente. Guardamos su nombre y contacto cifrados; solo se abren con una llave de acceso restringido.{% else %}No está disponible en este canal.{% endif %}</p>
+<button type="submit">Enviar</button>
+</form>
+{% endblock %}

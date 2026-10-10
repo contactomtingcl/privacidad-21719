@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% from "macros.html" import lista_derechos, formulario_confirmacion, plazos %}
+{% block titulo %}Seguimiento{% endblock %}
+{% block cuerpo %}
+{% if error %}
+<div class="error" role="alert">{{ error }}</div>
+{% endif %}
+<h1>Recibimos su mensaje</h1>
+<p>Su código de seguimiento es <code>{{ caso.id }}</code>. Guárdelo: con él puede volver a esta página.</p>
+{% if caso.tipo == "solicitud" %}
+{% set conf = caso.confirmacion %}
+{% if caso.estado == "requiere_revision" %}
+<p>Una persona del equipo revisará su mensaje y le responderá.</p>
+{{ plazos(caso) }}
+{% elif caso.estado == "sin_solicitud" %}
+<p>Su mensaje no parece pedir algo sobre sus datos personales. Una persona del equipo lo va a leer de todos modos. Si quería avisar de un incidente, use la otra opción del formulario.</p>
+{% elif conf.estado == "pendiente" %}
+<p>Antes de tramitar su solicitud necesitamos confirmar qué nos pide.</p>
+{{ formulario_confirmacion(caso, conf.pregunta) }}
+<p class="ayuda">Si no responde en {{ dias_espera }} días (hasta el {{ conf.espera_hasta | fecha }}), tramitaremos su solicitud con la lectura que más protege sus datos.</p>
+{{ plazos(caso) }}
+{% elif conf.estado == "por_defecto" %}
+<p>Como no recibimos su respuesta, tramitamos su solicitud así:</p>
+{{ lista_derechos(conf.vigente) }}
+{{ formulario_confirmacion(caso, "Si no es lo que quería, corríjalo aquí") }}
+{{ plazos(caso) }}
+{% elif conf.estado in ("confirmada", "corregida") %}
+<p>Gracias por confirmar. Tramitamos su solicitud así:</p>
+{{ lista_derechos(conf.vigente) }}
+{{ plazos(caso) }}
+{% else %}
+<p>Entendimos que usted pide:</p>
+{{ lista_derechos(conf.vigente) }}
+{{ formulario_confirmacion(caso, "Si no es correcto, corríjalo aquí") }}
+{{ plazos(caso) }}
+{% endif %}
+{% else %}
+<p>Gracias por avisar. La persona delegada lo revisará hoy.</p>
+{% if caso.reservado %}
+<p>Usó el modo reservado: si dejó su nombre o contacto, quedaron guardados cifrados y solo se abren con una llave de acceso restringido. Si escribió su nombre dentro del relato, ese texto no está cifrado.</p>
+{% elif caso.identidad is none %}
+<p>Su aviso quedó anónimo.</p>
+{% endif %}
+{% endif %}
+{% endblock %}

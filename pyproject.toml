@@ -15,6 +15,14 @@ dependencies = [
   "pandas>=2.2",
   "openpyxl>=3.1",
   "pyyaml>=6",
+  "cryptography>=42",
+  "tzdata>=2024.1",
+  "segno>=1.6",
+  "starlette>=0.40",
+  "uvicorn>=0.30",
+  "jinja2>=3.1",
+  "itsdangerous>=2.2",
+  "babel>=2.14",
 ]
 
 [project.optional-dependencies]
@@ -23,6 +31,9 @@ ia = ["anthropic>=0.60"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+"privacidad.canal" = ["plantillas/*.html"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

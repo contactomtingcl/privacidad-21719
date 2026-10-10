@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block titulo %}Canal de privacidad{% endblock %}</title>
+<style>
+:root{color-scheme:light dark;--fondo:#ffffff;--texto:#1b1b1f;--suave:#55555f;--borde:#8a8a96;
+--acento:#0b57d0;--acento-texto:#ffffff;--aviso:#fff4d6;--aviso-borde:#9a6700;--error:#fde7e9;
+--error-borde:#b3261e}
+@media (prefers-color-scheme:dark){:root{--fondo:#16161a;--texto:#ececf1;--suave:#b4b4c0;
+--borde:#7d7d8a;--acento:#8ab4f8;--acento-texto:#0a1a33;--aviso:#3a3015;--aviso-borde:#e0b44c;
+--error:#3b1a1c;--error-borde:#f2b8b5}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fondo);color:var(--texto);
+font:1.0625rem/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:40rem;margin:0 auto;padding:1.25rem 1rem 2rem}
+h1{font-size:1.5rem;line-height:1.25;margin:.5rem 0 1rem}
+p,ul{margin:.6rem 0}
+label{display:block;font-weight:600;margin:1.1rem 0 .3rem}
+.ayuda{color:var(--suave);font-size:.95rem;margin:.1rem 0 .4rem}
+input[type=text],input[type=email],textarea{width:100%;font:inherit;color:inherit;
+background:var(--fondo);border:2px solid var(--borde);border-radius:.5rem;padding:.65rem}
+fieldset{border:2px solid var(--borde);border-radius:.5rem;margin:1.1rem 0;padding:.6rem .9rem}
+legend{font-weight:600;padding:0 .3rem}
+.opcion{display:flex;gap:.6rem;align-items:flex-start;font-weight:400;margin:.5rem 0;
+min-height:2.75rem}
+.opcion input{width:1.4rem;height:1.4rem;margin-top:.2rem;flex:none}
+button{font:inherit;font-weight:600;min-height:2.9rem;padding:.6rem 1.4rem;border:0;
+border-radius:.5rem;background:var(--acento);color:var(--acento-texto);cursor:pointer;
+margin-top:1rem}
+:focus-visible{outline:3px solid var(--texto);outline-offset:2px}
+.aviso,.error{border-left:6px solid;border-radius:.4rem;padding:.7rem .9rem;margin:1rem 0}
+.aviso{background:var(--aviso);border-color:var(--aviso-borde)}
+.error{background:var(--error);border-color:var(--error-borde)}
+code{font:1.05rem ui-monospace,Menlo,Consolas,monospace;background:var(--aviso);
+padding:.1rem .4rem;border-radius:.3rem;word-break:break-all}
+footer{max-width:40rem;margin:0 auto;padding:0 1rem 2rem;color:var(--suave);font-size:.9rem}
+.saltar{position:absolute;left:-999px}.saltar:focus{left:.5rem;top:.5rem}
+</style>
+</head>
+<body>
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+<main id="contenido">
+{% block cuerpo %}{% endblock %}
+</main>
+<footer>Prototipo con datos ficticios · Privacidad 21.719</footer>
+</body>
+</html>

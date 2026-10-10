@@ -22,7 +22,8 @@ En construcción (entrega: 28 de octubre de 2026). Avance actual:
 | Interpretación con IA de solicitudes de titulares y reportes de incidentes | Primera versión |
 | Motor de reglas: deberes ante incidentes (Agencia, titulares, ANCI) y plazos de solicitudes | Primera versión |
 | Set etiquetado de 150 casos y evaluación en tres niveles | Listo ([resultados](resultados/evaluacion.md)) |
-| Canal de reporte (QR o enlace) | Pendiente |
+| Canal de reporte (QR o enlace), confirmación al titular y modo reservado | Primera versión ([cómo usarlo](#canal-de-reporte)) |
+| Enrutamiento de reportes | Pendiente |
 | Registro de evidencia | Pendiente |
 
 ## Cómo ejecutar
@@ -39,6 +40,44 @@ python -m privacidad.inventario data/sinteticos/comercial-los-robles/paseo_fin_d
 python -m privacidad.evaluacion --sin-ia      # evaluación sin IA (sin costo)
 python -m privacidad.evaluacion               # evaluación completa (requiere ANTHROPIC_API_KEY)
 ```
+
+El canal de reporte tiene su propia guía más abajo.
+
+## Canal de reporte
+
+Cada organización tiene un enlace propio, firmado, que se reparte también como código QR. Quien lo abre elige si quiere ejercer un derecho sobre sus datos o avisar de un incidente, y recibe un código de seguimiento para volver.
+
+Cómo funciona, en cuatro reglas:
+
+- **La IA propone, el motor decide, la persona confirma.** Si el mensaje de un titular puede leerse de más de una forma, la persona elige entre seis opciones en lenguaje simple (sin IA en ese paso). El plazo legal corre desde que ingresó el mensaje, nunca desde la confirmación.
+- **Si no responde**, pasados 5 días se tramita con la lectura que más protege sus datos (por ejemplo, "dejar de usar mis datos" se trata como "borrar mis datos"). Los 5 días y qué lecturas se confunden son una decisión de diseño, no una exigencia de la ley: están en `data/reglas/reglas.yaml` (regla `confirmacion_titular`) y **pendientes de revisión legal**.
+- **Si la IA falla**, el caso queda "requiere revisión", el reloj corre igual y nada se marca como "sin deber". En un incidente se muestran desde el primer minuto los relojes de la ANCI que correrían si fuera un ciberincidente.
+- **Modo reservado**, solo para avisos de incidente: el nombre y el contacto se guardan cifrados. Si no hay llave configurada, el canal rechaza el reporte en vez de guardarlo sin cifrar. Quien ejerce un derecho debe identificarse (art. 11), por eso ahí no existe.
+
+Se usan librerías estándar y probadas en vez de código propio: `segno` (código QR), `cryptography` (Fernet, para el modo reservado), `itsdangerous` (enlaces firmados), `sqlite3` (casos), Starlette con Jinja2 (pantallas con escape automático) y `babel` (fechas en español).
+
+### Probarlo en tu computador
+
+```bash
+pip install -e ".[dev]"
+python -m privacidad.canal secreto      # crea el secreto de los enlaces (no se muestra en pantalla)
+python -m privacidad.canal llave        # crea la llave del modo reservado (no se muestra en pantalla)
+export PRIVACIDAD_SECRETO_ENLACES="$(cat secreto-enlaces.key)"
+export PRIVACIDAD_LLAVE_RESERVADA_ARCHIVO=llave-reservada.key
+python -m privacidad.canal servir --datos casos-demo     # imprime un enlace por organización
+python -m privacidad.canal enlace --org comercial-los-robles   # guarda el QR en canal-comercial-los-robles.svg
+python -m privacidad.canal identidad --carpeta casos-demo --caso CODIGO   # el delegado abre una identidad reservada
+```
+
+Sin `ANTHROPIC_API_KEY` el canal funciona igual y deja los casos en revisión; con ella, la IA interpreta el texto ya enmascarado. Los archivos `*.key` y la carpeta `casos-demo/` están en `.gitignore`: nunca se suben.
+
+### Límites conocidos
+
+- **Llave simétrica:** con Fernet, quien administra el servidor y tiene la llave puede abrir las identidades reservadas. Las pantallas lo dicen así ("solo se abren con una llave de acceso restringido"), no "solo el delegado". Pasar a un esquema donde el servidor solo pueda cifrar (llave pública del delegado) queda en el roadmap.
+- El cifrado protege los campos de nombre y contacto. Si la persona escribe su nombre dentro del relato, ese texto no se cifra; los nombres no se detectan automáticamente.
+- El código QR depende de `segno`; en entornos sin acceso a PyPI sus pruebas se omiten y solo corren en la integración continua.
+- Aún no hay enrutamiento a la persona o área responsable, registro encadenado de evidencia ni panel del delegado. No se publica una cifra de rendimiento del canal: no hay medición.
+- El servidor no registra IP ni el contenido de los mensajes, pero la publicación en internet (dominio, HTTPS, límite de envíos) aún no está hecha.
 
 ## Evaluación
 

@@ -218,3 +218,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Llaves del delegado y casos de demostración: nunca van al repositorio.
+llaves-delegado/
+*.pem
+casos-demo/
+canal-*.svg
+*.key
+llave*
+secreto-enlaces*
