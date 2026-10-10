@@ -1,0 +1,27 @@
+# Feriados nacionales de Chile para contar días hábiles (lunes a viernes que no son feriado).
+# ESTADO: pendiente de verificar contra una fuente oficial (gob.cl o la ley de cada feriado).
+# Mientras no se verifique, el sistema marca los plazos en días hábiles como "a confirmar".
+verificado: false
+fuente: "Por confirmar en https://www.gob.cl/noticias/feriados-2026-revisa-cuantos-habra-y-cuales-son-irrenunciables/"
+feriados:
+  2026-01-01: Año Nuevo
+  2026-04-03: Viernes Santo
+  2026-04-04: Sábado Santo
+  2026-05-01: Día Nacional del Trabajo
+  2026-05-21: Día de las Glorias Navales
+  2026-06-21: Día Nacional de los Pueblos Indígenas
+  2026-06-29: San Pedro y San Pablo
+  2026-07-16: Virgen del Carmen
+  2026-08-15: Asunción de la Virgen
+  2026-09-18: Independencia Nacional
+  2026-09-19: Glorias del Ejército
+  2026-10-12: Encuentro de Dos Mundos
+  2026-10-31: Día de las Iglesias Evangélicas y Protestantes
+  2026-11-01: Día de Todos los Santos
+  2026-12-08: Inmaculada Concepción
+  2026-12-25: Navidad
+  2027-01-01: Año Nuevo
+  2027-03-26: Viernes Santo
+  2027-03-27: Sábado Santo
+  2027-05-01: Día Nacional del Trabajo
+  2027-05-21: Día de las Glorias Navales

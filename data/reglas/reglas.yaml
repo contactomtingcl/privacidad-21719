@@ -1,0 +1,88 @@
+# Reglas legales del motor. Cada regla guarda su fuente (artículo y fragmento literal,
+# verificados contra el corpus por las pruebas), su versión y su vigencia.
+# Ningún plazo está escrito a mano en el código: se leen de aquí.
+version: "2026-10-10"
+
+vigencias:
+  ley-21719:
+    desde: 2026-12-01
+    fuente: {norma: ley-21719, articulo: transitorio primero, fragmento: "entrarán en vigencia el día primero del mes vigésimo cuarto posterior a la publicación de esta ley en el Diario Oficial"}
+    nota: Publicada el 13 de diciembre de 2024. El Boletín 18.623-07 propone postergarla; si se aprueba, se cambia esta fecha.
+  ley-21663:
+    desde: null
+    nota: Ley publicada el 8 de abril de 2024; el deber de reporte del artículo 9 ya es exigible.
+
+servicios_esenciales:
+  # Perfiles de organización que la Ley 21.663 trata como servicios esenciales.
+  fuente: {norma: ley-21663, articulo: "4", fragmento: "Son servicios esenciales aquellos provistos por los organismos de la Administración del Estado"}
+  perfiles:
+    - organismo_publico
+    - salud
+    - banca_financiero
+    - telecomunicaciones
+    - energia
+    - agua_saneamiento
+    - transporte
+    - combustibles
+    - infraestructura_digital
+    - servicios_ti_terceros
+    - seguridad_social
+    - postal
+
+reglas:
+  aviso_agencia:
+    descripcion: Reportar a la Agencia la vulneración de seguridad que afecta datos personales.
+    ley: ley-21719
+    plazo: {tipo: texto, valor: "sin dilaciones indebidas"}
+    fuente: {norma: ley-19628, articulo: 14 sexies, fragmento: "reportar a la Agencia, por los medios más expeditos posibles y sin dilaciones indebidas"}
+
+  aviso_titulares:
+    descripcion: Avisar a cada titular cuando la vulneración afecta datos sensibles, de menores de 14 años o financieros.
+    ley: ley-21719
+    plazo: {tipo: texto, valor: "junto con el aviso a la Agencia"}
+    fuente: {norma: ley-19628, articulo: 14 sexies, fragmento: "el responsable deberá también efectuar esta comunicación a los titulares de estos datos"}
+
+  anci_alerta_temprana:
+    descripcion: Alerta temprana al CSIRT Nacional (ANCI).
+    ley: ley-21663
+    plazo: {tipo: horas, valor: 3, desde: conocimiento}
+    fuente: {norma: ley-21663, articulo: "9", fragmento: "Dentro del plazo máximo de tres horas contado desde que se tiene conocimiento"}
+
+  anci_actualizacion:
+    descripcion: Actualización con evaluación inicial, gravedad e impacto.
+    ley: ley-21663
+    plazo: {tipo: horas, valor: 72, desde: conocimiento}
+    fuente: {norma: ley-21663, articulo: "9", fragmento: "Dentro del plazo máximo de setenta y dos horas"}
+
+  anci_informe_final:
+    descripcion: Informe final del incidente.
+    ley: ley-21663
+    plazo: {tipo: dias_corridos, valor: 15, desde: alerta_temprana}
+    fuente: {norma: ley-21663, articulo: "9", fragmento: "Dentro del plazo máximo de quince días corridos contado desde el envío de la alerta temprana"}
+
+  anci_efecto_significativo:
+    descripcion: Un incidente que afecta sistemas con datos personales, o interrumpe un servicio esencial, tiene efecto significativo.
+    ley: ley-21663
+    fuente: {norma: ley-21663, articulo: "27", fragmento: "si es capaz de interrumpir la continuidad de un servicio esencial o afectar la integridad física o la salud de las personas, así como en el caso de afectar sistemas informáticos que contengan datos personales"}
+
+  anci_sin_datos_personales:
+    descripcion: Los reportes a la ANCI no deben llevar datos personales.
+    ley: ley-21663
+    fuente: {norma: ley-21663, articulo: "27", fragmento: "Deberá omitirse en los reportes de incidentes de ciberseguridad todo dato o información personal"}
+
+  respuesta_solicitud:
+    descripcion: Acusar recibo y responder la solicitud del titular.
+    ley: ley-21719
+    plazo: {tipo: dias_corridos, valor: 30, desde: ingreso, prorroga_dias_corridos: 30}
+    fuente: {norma: ley-19628, articulo: "11", fragmento: "pronunciarse a más tardar dentro de los treinta días corridos siguientes a la fecha de ingreso de la solicitud"}
+
+  bloqueo_temporal:
+    descripcion: Responder la solicitud de bloqueo temporal; mientras no se resuelva, no se pueden tratar esos datos.
+    ley: ley-21719
+    plazo: {tipo: dias_habiles, valor: 2, desde: ingreso}
+    fuente: {norma: ley-19628, articulo: "11", fragmento: "el responsable deberá responder al requerimiento dentro de los dos días hábiles siguientes a su recepción"}
+
+  comunicar_a_terceros:
+    descripcion: Si los datos se comunicaron a otros, avisarles la rectificación, supresión u oposición.
+    ley: ley-21719
+    fuente: {norma: ley-19628, articulo: "11", fragmento: "cuando el responsable haya comunicado dichos datos a otras personas, deberá comunicar a éstas los cambios realizados"}
