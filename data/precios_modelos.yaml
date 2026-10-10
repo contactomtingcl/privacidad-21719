@@ -1,0 +1,16 @@
+# Precios de la API de Claude en USD por millón de tokens.
+# Fuente: https://platform.claude.com/docs/en/about-claude/pricing (consultada el 10 de octubre de 2026).
+# Haiku 5.5 cobra más cuando el prompt supera 100.000 tokens; el sistema nunca envía prompts tan largos.
+
+fuente: https://platform.claude.com/docs/en/about-claude/pricing
+consultado: "2026-10-10"
+modelos:
+  claude-haiku-5-5:
+    limite_tramo_tokens: 100000
+    entrada: 0.10
+    salida: 0.50
+    entrada_sobre_limite: 0.50
+    salida_sobre_limite: 2.50
+  claude-sonnet-5-5:
+    entrada: 2.00
+    salida: 10.00

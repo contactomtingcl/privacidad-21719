@@ -1,0 +1,27 @@
+name: IA
+
+# Se ejecuta a mano desde la pestaña Actions. Usa el secreto ANTHROPIC_API_KEY.
+on:
+  workflow_dispatch:
+    inputs:
+      tarea:
+        description: "Qué ejecutar"
+        required: true
+        default: prueba_conexion
+        type: choice
+        options: [prueba_conexion]
+
+jobs:
+  ia:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar
+        run: pip install -e ".[ia]"
+      - name: Ejecutar
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python -m ora_privacidad.ia.${{ inputs.tarea }}
