@@ -5,7 +5,16 @@ python -m ora_privacidad.ia.prueba_conexion
 
 from __future__ import annotations
 
+import os
+
 from .cliente import MODELO_EXTRACCION, MODELO_RAPIDO, ClienteIA
+
+
+def _informar(linea: str) -> None:
+    """Imprime y, en GitHub Actions, publica la línea como anotación visible en la ejecución."""
+    print(linea)
+    if os.environ.get("GITHUB_ACTIONS"):
+        print(f"::notice title=Prueba de conexión::{linea}")
 
 
 def main() -> int:
@@ -20,12 +29,11 @@ def main() -> int:
             proposito="prueba de conexión",
         )
         total += r.costo_usd
-        print(
-            f"{modelo:20} respuesta={r.texto.strip()!r:6} "
-            f"tokens={r.tokens_entrada}+{r.tokens_salida} "
+        _informar(
+            f"{modelo}: respuesta={r.texto.strip()!r} tokens={r.tokens_entrada}+{r.tokens_salida} "
             f"costo=US${r.costo_usd:.6f} tiempo={r.latencia_ms} ms"
         )
-    print(f"Costo total de la prueba: US${total:.6f}")
+    _informar(f"Costo total de la prueba: US${total:.6f}")
     return 0
 
 
