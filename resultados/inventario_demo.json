@@ -19,7 +19,7 @@
     "ambito_territorial": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3gxzJsYkLnJnV4yXG'})",
       "citas": []
     },
     "bases_de_datos": {
@@ -33,49 +33,49 @@
     "categorias_titulares": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3gxzJsYkLnJnV4yXG'})",
       "citas": []
     },
     "fines": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3gxzJsYkLnJnV4yXG'})",
       "citas": []
     },
     "fuente": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3gxzJsYkLnJnV4yXG'})",
       "citas": []
     },
     "base_licitud": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3gxzJsYkLnJnV4yXG'})",
       "citas": []
     },
     "destinatarios": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3gxzJsYkLnJnV4yXG'})",
       "citas": []
     },
     "transferencias_internacionales": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3gxzJsYkLnJnV4yXG'})",
       "citas": []
     },
     "plazo_supresion": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3gxzJsYkLnJnV4yXG'})",
       "citas": []
     },
     "decisiones_automatizadas": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3gxzJsYkLnJnV4yXG'})",
       "citas": []
     },
     "columnas": [
@@ -155,7 +155,7 @@
         "nombre": "Talla polera",
         "categoria": "no_personal",
         "origen": "ia",
-        "justificacion": "La talla de polera (valores como S, M, L o números) sirve para encargar prendas y no identifica ni describe directamente a una persona natural.",
+        "justificacion": "La talla de polera (valores como 9, 99 o A, equivalentes a tallas tipo S, M, L o numéricas) es un dato de vestuario para el paseo y no identifica ni describe a una persona natural en particular.",
         "necesaria": null,
         "motivo_innecesaria": null
       }
@@ -163,7 +163,7 @@
     "alertas": [
       {
         "nivel": "media",
-        "mensaje": "IA no disponible para proponer la actividad (BadRequestError)",
+        "mensaje": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3gxzJsYkLnJnV4yXG'})",
         "cita": null
       },
       {
@@ -237,7 +237,7 @@
       }
     ],
     "citas_rechazadas": [],
-    "costo_ia_usd": 0.00017,
+    "costo_ia_usd": 0.000183,
     "validada": false
   },
   {
@@ -260,7 +260,7 @@
     "ambito_territorial": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3hx2hQCmdTWF9WQce'})",
       "citas": []
     },
     "bases_de_datos": {
@@ -274,49 +274,49 @@
     "categorias_titulares": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3hx2hQCmdTWF9WQce'})",
       "citas": []
     },
     "fines": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3hx2hQCmdTWF9WQce'})",
       "citas": []
     },
     "fuente": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3hx2hQCmdTWF9WQce'})",
       "citas": []
     },
     "base_licitud": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3hx2hQCmdTWF9WQce'})",
       "citas": []
     },
     "destinatarios": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3hx2hQCmdTWF9WQce'})",
       "citas": []
     },
     "transferencias_internacionales": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3hx2hQCmdTWF9WQce'})",
       "citas": []
     },
     "plazo_supresion": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3hx2hQCmdTWF9WQce'})",
       "citas": []
     },
     "decisiones_automatizadas": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3hx2hQCmdTWF9WQce'})",
       "citas": []
     },
     "columnas": [
@@ -420,7 +420,7 @@
     "alertas": [
       {
         "nivel": "media",
-        "mensaje": "IA no disponible para proponer la actividad (BadRequestError)",
+        "mensaje": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3hx2hQCmdTWF9WQce'})",
         "cita": null
       },
       {
@@ -508,7 +508,7 @@
     "ambito_territorial": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3imt91uFieUgePW8Q'})",
       "citas": []
     },
     "bases_de_datos": {
@@ -522,49 +522,49 @@
     "categorias_titulares": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3imt91uFieUgePW8Q'})",
       "citas": []
     },
     "fines": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3imt91uFieUgePW8Q'})",
       "citas": []
     },
     "fuente": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3imt91uFieUgePW8Q'})",
       "citas": []
     },
     "base_licitud": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3imt91uFieUgePW8Q'})",
       "citas": []
     },
     "destinatarios": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3imt91uFieUgePW8Q'})",
       "citas": []
     },
     "transferencias_internacionales": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3imt91uFieUgePW8Q'})",
       "citas": []
     },
     "plazo_supresion": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3imt91uFieUgePW8Q'})",
       "citas": []
     },
     "decisiones_automatizadas": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3imt91uFieUgePW8Q'})",
       "citas": []
     },
     "columnas": [
@@ -628,7 +628,7 @@
     "alertas": [
       {
         "nivel": "media",
-        "mensaje": "IA no disponible para proponer la actividad (BadRequestError)",
+        "mensaje": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3imt91uFieUgePW8Q'})",
         "cita": null
       },
       {
@@ -705,7 +705,7 @@
     "ambito_territorial": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3su4pho8YRMjgJdLd'})",
       "citas": []
     },
     "bases_de_datos": {
@@ -719,49 +719,49 @@
     "categorias_titulares": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3su4pho8YRMjgJdLd'})",
       "citas": []
     },
     "fines": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3su4pho8YRMjgJdLd'})",
       "citas": []
     },
     "fuente": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3su4pho8YRMjgJdLd'})",
       "citas": []
     },
     "base_licitud": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3su4pho8YRMjgJdLd'})",
       "citas": []
     },
     "destinatarios": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3su4pho8YRMjgJdLd'})",
       "citas": []
     },
     "transferencias_internacionales": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3su4pho8YRMjgJdLd'})",
       "citas": []
     },
     "plazo_supresion": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3su4pho8YRMjgJdLd'})",
       "citas": []
     },
     "decisiones_automatizadas": {
       "valor": null,
       "origen": "pendiente",
-      "nota": "IA no disponible para proponer la actividad (BadRequestError)",
+      "nota": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3su4pho8YRMjgJdLd'})",
       "citas": []
     },
     "columnas": [
@@ -769,7 +769,7 @@
         "nombre": "Razón social",
         "categoria": "persona_juridica",
         "origen": "ia",
-        "justificacion": "Los valores tienen forma de razón social de empresas (con sufijos como SpA, Ltda., S.A.), por lo que identifican personas jurídicas.",
+        "justificacion": "Las muestras son nombres de empresas (con sufijos como 'S.A.' o 'Ltda.'), que identifican personas jurídicas.",
         "necesaria": null,
         "motivo_innecesaria": null
       },
@@ -777,7 +777,7 @@
         "nombre": "RUT empresa",
         "categoria": "persona_juridica",
         "origen": "ia",
-        "justificacion": "Aunque tiene formato de RUT, el encabezado indica que corresponde a la empresa proveedora, por lo que identifica una persona jurídica y no una persona natural.",
+        "justificacion": "Aunque tiene formato de RUT, en esta planilla identifica al proveedor empresa, que es persona jurídica y no titular de datos según la ley.",
         "necesaria": null,
         "motivo_innecesaria": null
       },
@@ -785,7 +785,7 @@
         "nombre": "Servicio",
         "categoria": "no_personal",
         "origen": "ia",
-        "justificacion": "Describe el servicio que presta el proveedor (por ejemplo, 'Mantención de equipos'), sin datos de personas naturales.",
+        "justificacion": "Describe el servicio o producto que presta el proveedor, sin referirse a una persona natural.",
         "necesaria": null,
         "motivo_innecesaria": null
       },
@@ -793,7 +793,7 @@
         "nombre": "Datos que recibe",
         "categoria": "no_personal",
         "origen": "ia",
-        "justificacion": "Describe el tipo de información que el proveedor recibe de la organización, sin identificar a una persona natural.",
+        "justificacion": "Describe el tipo de información que el proveedor recibe de la organización, sin contener datos de personas naturales.",
         "necesaria": null,
         "motivo_innecesaria": null
       },
@@ -801,7 +801,7 @@
         "nombre": "Contacto",
         "categoria": "nombre",
         "origen": "ia",
-        "justificacion": "Los valores tienen forma de nombre y apellidos de una persona natural, la persona de contacto comercial del proveedor.",
+        "justificacion": "Las muestras tienen forma de nombre y apellidos de la persona de contacto comercial, que es una persona natural identificable.",
         "necesaria": null,
         "motivo_innecesaria": null
       },
@@ -825,7 +825,7 @@
     "alertas": [
       {
         "nivel": "media",
-        "mensaje": "IA no disponible para proponer la actividad (BadRequestError)",
+        "mensaje": "IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CfuA3su4pho8YRMjgJdLd'})",
         "cita": null
       },
       {
@@ -875,7 +875,7 @@
       }
     ],
     "citas_rechazadas": [],
-    "costo_ia_usd": 0.0004,
+    "costo_ia_usd": 0.000389,
     "validada": false
   }
 ]

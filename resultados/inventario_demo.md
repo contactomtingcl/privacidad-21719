@@ -29,7 +29,7 @@ Costo total de IA: US$0.0006
 
 **Alertas**
 
-- [media] IA no disponible para proponer la actividad (BadRequestError)
+- [media] IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type "tool" and "any" are not supported for this model.'}, 'request_id': 'req_011CfuA3gxzJsYkLnJnV4yXG'})
 - [alta] La planilla tiene datos sensibles (salud). Requieren consentimiento expreso del titular, salvo excepción legal.
 - [alta] Hay datos de 61 niños o niñas menores de 14 años: se requiere consentimiento de sus padres o representantes legales, y ante una filtración hay que avisar a cada titular a través de ellos.
 - [alta] Hay 13 adolescentes menores de 16 años con datos sensibles: requieren consentimiento de sus padres o representantes legales.
@@ -72,7 +72,7 @@ Costo IA: US$0.0002
 
 **Alertas**
 
-- [media] IA no disponible para proponer la actividad (BadRequestError)
+- [media] IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type "tool" and "any" are not supported for this model.'}, 'request_id': 'req_011CfuA3hx2hQCmdTWF9WQce'})
 - [alta] La planilla tiene datos sensibles (afiliación sindical o gremial, salud). Requieren consentimiento expreso del titular, salvo excepción legal.
 - [informativa] Contiene datos económicos o financieros: ante una filtración hay que avisar también a cada titular.
 - [media] El campo «ambito_territorial» quedó pendiente de completar.
@@ -109,7 +109,7 @@ Costo IA: US$0.0000
 
 **Alertas**
 
-- [media] IA no disponible para proponer la actividad (BadRequestError)
+- [media] IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type "tool" and "any" are not supported for this model.'}, 'request_id': 'req_011CfuA3imt91uFieUgePW8Q'})
 - [informativa] Contiene datos económicos o financieros: ante una filtración hay que avisar también a cada titular.
 - [media] El campo «ambito_territorial» quedó pendiente de completar.
 - [media] El campo «categorias_titulares» quedó pendiente de completar.
@@ -145,7 +145,7 @@ Costo IA: US$0.0000
 
 **Alertas**
 
-- [media] IA no disponible para proponer la actividad (BadRequestError)
+- [media] IA no disponible para proponer la actividad (BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type "tool" and "any" are not supported for this model.'}, 'request_id': 'req_011CfuA3su4pho8YRMjgJdLd'})
 - [media] El campo «ambito_territorial» quedó pendiente de completar.
 - [media] El campo «categorias_titulares» quedó pendiente de completar.
 - [media] El campo «fines» quedó pendiente de completar.
