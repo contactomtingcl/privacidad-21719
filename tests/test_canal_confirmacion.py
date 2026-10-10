@@ -21,23 +21,43 @@ class TestReglaDeConfirmacion(unittest.TestCase):
         self.assertIn("revisión legal", regla["criterio"])
 
 
-class TestLecturaMasProtectora(unittest.TestCase):
-    def test_oposicion_se_lee_como_supresion(self):
-        self.assertEqual(conf.lectura_mas_protectora(["oposicion"]), ["supresion"])
-        self.assertEqual(conf.lectura_mas_protectora(["supresion"]), ["supresion"])
+class TestLecturaPorDefecto(unittest.TestCase):
+    def test_nunca_incluye_la_supresion(self):
+        for propuesta in (["supresion"], ["oposicion"], ["supresion", "oposicion", "acceso"]):
+            self.assertNotIn("supresion", conf.lectura_por_defecto(propuesta), propuesta)
 
-    def test_si_vienen_las_dos_queda_una(self):
-        self.assertEqual(conf.lectura_mas_protectora(["oposicion", "supresion"]), ["supresion"])
+    def test_oposicion_queda_con_bloqueo_temporal(self):
+        self.assertEqual(conf.lectura_por_defecto(["oposicion"]), ["oposicion", "bloqueo"])
+
+    def test_si_proponian_borrar_se_aplica_oposicion_con_bloqueo(self):
+        self.assertEqual(conf.lectura_por_defecto(["supresion"]), ["oposicion", "bloqueo"])
+
+    def test_si_vienen_las_dos_queda_una_y_un_solo_bloqueo(self):
+        self.assertEqual(
+            conf.lectura_por_defecto(["oposicion", "supresion"]), ["oposicion", "bloqueo"]
+        )
+        self.assertEqual(
+            conf.lectura_por_defecto(["supresion", "bloqueo"]), ["oposicion", "bloqueo"]
+        )
 
     def test_los_demas_derechos_quedan_como_se_propusieron(self):
-        propuesta = ["rectificacion", "bloqueo"]
-        self.assertEqual(conf.lectura_mas_protectora(propuesta), propuesta)
-        self.assertEqual(conf.lectura_mas_protectora(["acceso"]), ["acceso"])
+        for propuesta in (["rectificacion", "bloqueo"], ["acceso"], ["portabilidad"]):
+            self.assertEqual(conf.lectura_por_defecto(propuesta), propuesta)
 
     def test_no_modifica_la_lista_original(self):
-        propuesta = ["oposicion", "bloqueo"]
-        conf.lectura_mas_protectora(propuesta)
-        self.assertEqual(propuesta, ["oposicion", "bloqueo"])
+        propuesta = ["supresion", "acceso"]
+        conf.lectura_por_defecto(propuesta)
+        self.assertEqual(propuesta, ["supresion", "acceso"])
+
+    def test_solo_la_supresion_es_irreversible(self):
+        self.assertTrue(conf.es_irreversible("supresion"))
+        for derecho in ("acceso", "rectificacion", "oposicion", "portabilidad", "bloqueo"):
+            self.assertFalse(conf.es_irreversible(derecho))
+
+    def test_el_criterio_esta_anotado_como_pendiente_de_revision_legal(self):
+        regla = cargar_reglas()["reglas"]["confirmacion_titular"]
+        self.assertIn("reversible", regla["criterio"])
+        self.assertIn("pendientes de revisión legal", regla["criterio"])
 
 
 class TestPreparar(unittest.TestCase):
@@ -118,11 +138,22 @@ class TestSinRespuesta(unittest.TestCase):
         self.assertTrue(conf.vencida(c, limite))
         self.assertFalse(conf.vencida(None, limite))
 
-    def test_aplica_la_lectura_mas_protectora(self):
+    def test_aplica_la_lectura_reversible(self):
         c = conf.preparar(hechos(), AHORA)
         d = conf.aplicar_por_defecto(c, c.espera_hasta)
-        self.assertEqual((d.estado, d.vigente), ("por_defecto", ["supresion"]))
+        self.assertEqual((d.estado, d.vigente), ("por_defecto", ["oposicion", "bloqueo"]))
         self.assertEqual(d.propuesta, ["oposicion"])
+
+    def test_aunque_la_ia_proponga_borrar_no_se_borra_sin_confirmacion(self):
+        c = conf.preparar(hechos(derechos=["supresion"]), AHORA)
+        d = conf.aplicar_por_defecto(c, c.espera_hasta)
+        self.assertEqual(d.vigente, ["oposicion", "bloqueo"])
+        self.assertEqual(d.propuesta, ["supresion"])
+
+    def test_el_motor_se_niega_a_tramitar_una_supresion_por_defecto(self):
+        c = Confirmacion(estado="por_defecto", propuesta=["supresion"], vigente=["supresion"])
+        with self.assertRaises(conf.RespuestaInvalida):
+            conf.hechos_vigentes(c)
 
     def test_solo_aplica_a_pendientes(self):
         c = conf.aplicar_respuesta(conf.preparar(hechos(), AHORA), ["oposicion"], None, AHORA)
@@ -135,6 +166,13 @@ class TestSinRespuesta(unittest.TestCase):
         d = conf.aplicar_por_defecto(c, c.espera_hasta)
         tardia = conf.aplicar_respuesta(d, ["oposicion"], None, c.espera_hasta + timedelta(days=1))
         self.assertEqual((tardia.estado, tardia.vigente), ("confirmada", ["oposicion"]))
+
+    def test_pedir_la_supresion_despues_es_la_confirmacion_expresa(self):
+        c = conf.preparar(hechos(), AHORA)
+        d = conf.aplicar_por_defecto(c, c.espera_hasta)
+        pedida = conf.aplicar_respuesta(d, ["supresion"], None, c.espera_hasta)
+        self.assertEqual((pedida.estado, pedida.vigente), ("corregida", ["supresion"]))
+        self.assertEqual(conf.hechos_vigentes(pedida).derechos, ["supresion"])
 
     def test_hechos_vigentes_para_el_motor(self):
         c = Confirmacion(

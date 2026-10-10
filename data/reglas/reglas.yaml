@@ -88,12 +88,17 @@ reglas:
     fuente: {norma: ley-19628, articulo: "11", fragmento: "cuando el responsable haya comunicado dichos datos a otras personas, deberá comunicar a éstas los cambios realizados"}
 
   confirmacion_titular:
-    descripcion: Si el mensaje del titular admite lecturas distintas o le falta lo que la ley pide para tramitarlo, el canal le pregunta qué quiso decir. El plazo de respuesta corre igual; si no responde, se tramita con la lectura más protectora.
+    descripcion: Si el mensaje del titular admite lecturas distintas o le falta lo que la ley pide para tramitarlo, el canal le pregunta qué quiso decir. El plazo de respuesta corre igual; si no responde, se tramita con una lectura reversible, nunca con una acción irreversible como borrar datos.
     ley: ley-21719
     fuente: {norma: ley-19628, articulo: "11", fragmento: "Identificación de los datos personales o del tratamiento determinado, respecto de los cuales se ejerce el derecho correspondiente"}
     parametros:
       espera_dias: 5
-      # Grupos de lecturas que se confunden entre sí, ordenadas de más a menos protectora.
-      lecturas_excluyentes:
-        - [supresion, oposicion]
-    criterio: Los parámetros son una decisión de diseño del proyecto, no una exigencia de la ley. Están pendientes de revisión legal.
+      # Lectura que se aplica si el titular no responde. Los derechos "irreversibles" nunca se
+      # aplican sin confirmación expresa: se reemplazan por su equivalente reversible, y si
+      # queda una oposición se agrega un bloqueo temporal de esos datos. El titular puede pedir
+      # la supresión cuando quiera.
+      lectura_por_defecto:
+        irreversibles: [supresion]
+        sustituto_reversible: oposicion
+        complemento_temporal: {si_hay: oposicion, agregar: bloqueo}
+    criterio: Los parámetros y el criterio de lectura reversible (oposición más bloqueo temporal, sin supresión por defecto) son una decisión de diseño del proyecto, no una exigencia de la ley. Están pendientes de revisión legal.

@@ -302,13 +302,31 @@ class TestConfirmacionPorLaWeb(Base):
         self.assertEqual(r.status, 400)
         self.assertIn("parecen reales", r.html)
 
-    def test_pasada_la_espera_se_ve_la_lectura_por_defecto(self):
-        destino, _ = self.abrir()
+    def test_pasada_la_espera_se_ve_la_lectura_reversible_y_se_avisa_que_puede_pedir_borrar(self):
+        destino, id_caso = self.abrir()
         self.reloj.avanzar(days=dias_de_espera() + 1)
         html = pedir(self.app, "GET", destino).html
         self.assertIn("Como no recibimos su respuesta", html)
-        self.assertIn("Que borren mis datos", html)
-        self.assertIn("Si no es lo que quería", html)
+        self.assertIn("sin borrar ningún dato", html)
+        self.assertIn("Que dejen de usar mis datos para un fin", html)
+        self.assertIn("Que no usen mis datos mientras se resuelve", html)
+        self.assertIn("Si quiere que borremos sus datos", html)
+        self.assertIn("pedir que borremos sus datos", html)
+        self.assertIn("Sobre dejar de usar sus datos mientras se resuelve", html)
+        self.assertEqual(self.canal.obtener(id_caso).confirmacion.vigente, ["oposicion", "bloqueo"])
+
+    def test_la_espera_avisa_que_no_se_borra_nada(self):
+        destino, _ = self.abrir()
+        html = pedir(self.app, "GET", destino).html
+        self.assertIn("sin borrarlos", html)
+
+    def test_pedir_la_supresion_despues_del_defecto(self):
+        destino, id_caso = self.abrir()
+        self.reloj.avanzar(days=dias_de_espera() + 1)
+        pedir(self.app, "GET", destino)
+        r = pedir(self.app, "POST", destino + "/confirmar", {"derechos": ["supresion"]})
+        self.assertEqual(r.status, 303)
+        self.assertEqual(self.canal.obtener(id_caso).confirmacion.vigente, ["supresion"])
 
     def test_codigos_invalidos_o_desconocidos(self):
         self.assertEqual(pedir(self.app, "GET", "/seguimiento/codigo-inexistente-1").status, 404)

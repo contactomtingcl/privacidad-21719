@@ -272,7 +272,7 @@ class CanalReporte:
             ahora,
             propuesta=propuesta,
             vigente=list(caso.confirmacion.vigente),
-            criterio="lectura más protectora (regla confirmacion_titular)",
+            criterio="lectura reversible, sin supresión (regla confirmacion_titular)",
         )
         self._repo.guardar(caso)
         return True

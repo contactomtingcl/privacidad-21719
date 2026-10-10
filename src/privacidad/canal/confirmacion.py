@@ -44,20 +44,27 @@ def dias_de_espera() -> int:
     return int(_parametros()["espera_dias"])
 
 
-def lectura_mas_protectora(propuesta: list[Derecho]) -> list[Derecho]:
-    """Cambia cada lectura por la más protectora de su grupo (por ejemplo, oposición por supresión).
+def es_irreversible(derecho: str) -> bool:
+    """Derechos que nunca se aplican sin confirmación expresa del titular (borrar datos)."""
+    return derecho in _parametros()["lectura_por_defecto"]["irreversibles"]
 
-    Los derechos que no se confunden con otros (rectificación, bloqueo) quedan como se propusieron.
+
+def lectura_por_defecto(propuesta: list[Derecho]) -> list[Derecho]:
+    """Lectura reversible para cuando el titular no responde.
+
+    Lo irreversible (supresión) se cambia por su equivalente reversible (oposición); si queda una
+    oposición se agrega el bloqueo temporal de esos datos. El resto de los derechos queda igual.
     """
-    grupos = _parametros()["lecturas_excluyentes"]
+    reglas = _parametros()["lectura_por_defecto"]
     resultado: list[Derecho] = []
     for derecho in propuesta:
-        for grupo in grupos:
-            if derecho in grupo:
-                derecho = grupo[0]
-                break
+        if derecho in reglas["irreversibles"]:
+            derecho = reglas["sustituto_reversible"]
         if derecho not in resultado:
             resultado.append(derecho)
+    complemento = reglas["complemento_temporal"]
+    if complemento["si_hay"] in resultado and complemento["agregar"] not in resultado:
+        resultado.append(complemento["agregar"])
     return resultado
 
 
@@ -109,13 +116,13 @@ def vencida(conf: Confirmacion | None, ahora: datetime) -> bool:
 
 
 def aplicar_por_defecto(conf: Confirmacion, ahora: datetime) -> Confirmacion:
-    """Sin respuesta del titular se sigue la lectura más protectora."""
+    """Sin respuesta del titular se aplica la lectura reversible (nunca borrar datos)."""
     if conf.estado != "pendiente":
         raise RespuestaInvalida("Solo una confirmación pendiente pasa a la lectura por defecto")
     return conf.model_copy(
         update={
             "estado": "por_defecto",
-            "vigente": lectura_mas_protectora(conf.propuesta),
+            "vigente": lectura_por_defecto(conf.propuesta),
             "respondida_en": ahora,
         }
     )
@@ -123,4 +130,6 @@ def aplicar_por_defecto(conf: Confirmacion, ahora: datetime) -> Confirmacion:
 
 def hechos_vigentes(conf: Confirmacion) -> HechosSolicitud:
     """Hechos con la lectura vigente, para que el motor calcule los plazos."""
+    if conf.estado == "por_defecto" and any(es_irreversible(d) for d in conf.vigente):
+        raise RespuestaInvalida("Nunca se borran datos sin confirmación expresa del titular")
     return HechosSolicitud(es_solicitud=True, derechos=list(conf.vigente))

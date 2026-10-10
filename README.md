@@ -50,7 +50,7 @@ Cada organización tiene un enlace propio, firmado, que se reparte también como
 Cómo funciona, en cuatro reglas:
 
 - **La IA propone, el motor decide, la persona confirma.** Si el mensaje de un titular puede leerse de más de una forma, la persona elige entre seis opciones en lenguaje simple (sin IA en ese paso). El plazo legal corre desde que ingresó el mensaje, nunca desde la confirmación.
-- **Si no responde**, pasados 5 días se tramita con la lectura que más protege sus datos (por ejemplo, "dejar de usar mis datos" se trata como "borrar mis datos"). Los 5 días y qué lecturas se confunden son una decisión de diseño, no una exigencia de la ley: están en `data/reglas/reglas.yaml` (regla `confirmacion_titular`) y **pendientes de revisión legal**.
+- **Si no responde**, pasados 5 días se tramita con una lectura reversible: nunca se borran datos por defecto. Una supresión pasa a oposición más bloqueo temporal de esos datos, y se le avisa que puede pedir la supresión cuando quiera. Los 5 días y este criterio son una decisión de diseño, no una exigencia de la ley: están en `data/reglas/reglas.yaml` (regla `confirmacion_titular`) y **pendientes de revisión legal**.
 - **Si la IA falla**, el caso queda "requiere revisión", el reloj corre igual y nada se marca como "sin deber". En un incidente se muestran desde el primer minuto los relojes de la ANCI que correrían si fuera un ciberincidente.
 - **Modo reservado**, solo para avisos de incidente: el nombre y el contacto se guardan cifrados. Si no hay llave configurada, el canal rechaza el reporte en vez de guardarlo sin cifrar. Quien ejerce un derecho debe identificarse (art. 11), por eso ahí no existe.
 

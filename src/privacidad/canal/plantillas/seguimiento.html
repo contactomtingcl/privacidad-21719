@@ -17,12 +17,13 @@
 {% elif conf.estado == "pendiente" %}
 <p>Antes de tramitar su solicitud necesitamos confirmar qué nos pide.</p>
 {{ formulario_confirmacion(caso, conf.pregunta) }}
-<p class="ayuda">Si no responde en {{ dias_espera }} días (hasta el {{ conf.espera_hasta | fecha }}), tramitaremos su solicitud con la lectura que más protege sus datos.</p>
+<p class="ayuda">Si no responde en {{ dias_espera }} días (hasta el {{ conf.espera_hasta | fecha }}), tramitaremos su solicitud de forma reversible: dejaremos de usar sus datos mientras se resuelve, sin borrarlos. Si quiere que los borremos, puede pedirlo cuando quiera.</p>
 {{ plazos(caso) }}
 {% elif conf.estado == "por_defecto" %}
-<p>Como no recibimos su respuesta, tramitamos su solicitud así:</p>
+<p>Como no recibimos su respuesta, tramitamos su solicitud así, sin borrar ningún dato:</p>
 {{ lista_derechos(conf.vigente) }}
-{{ formulario_confirmacion(caso, "Si no es lo que quería, corríjalo aquí") }}
+<p>Si quiere que borremos sus datos, o cambiar lo que pidió, puede hacerlo cuando quiera en este formulario.</p>
+{{ formulario_confirmacion(caso, "Cambiar lo que pidió o pedir que borremos sus datos") }}
 {{ plazos(caso) }}
 {% elif conf.estado in ("confirmada", "corregida") %}
 <p>Gracias por confirmar. Tramitamos su solicitud así:</p>

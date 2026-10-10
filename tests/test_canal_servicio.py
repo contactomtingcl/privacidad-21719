@@ -218,18 +218,21 @@ class TestRespuestaPorDefecto(unittest.TestCase):
         self.assertEqual(self.canal.resolver_vencidas(), [])
         self.assertEqual(self.canal.seguimiento(self.caso.id).confirmacion.estado, "pendiente")
 
-    def test_sin_respuesta_se_aplica_la_lectura_mas_protectora(self):
+    def test_sin_respuesta_se_aplica_la_lectura_reversible_sin_borrar(self):
         self.reloj.avanzar(days=dias_de_espera(), minutes=1)
         resueltos = self.canal.resolver_vencidas()
         self.assertEqual([c.id for c in resueltos], [self.caso.id])
         caso = self.canal.obtener(self.caso.id)
         self.assertEqual(caso.confirmacion.estado, "por_defecto")
-        self.assertEqual(caso.confirmacion.vigente, ["supresion"])
+        self.assertEqual(caso.confirmacion.vigente, ["oposicion", "bloqueo"])
+        self.assertNotIn("supresion", caso.confirmacion.vigente)
         self.assertEqual(caso.confirmacion.propuesta, ["oposicion"])
+        self.assertEqual(caso.resultado_solicitud.bloqueo.vence, date(2026, 12, 4))
         self.assertEqual(caso.resultado_solicitud.respuesta.vence, date(2027, 1, 1))
         evento = caso.eventos[-1]
         self.assertEqual(evento.tipo, "confirmacion_por_defecto")
         self.assertIn("confirmacion_titular", evento.detalle["criterio"])
+        self.assertIn("sin supresión", evento.detalle["criterio"])
 
     def test_al_volver_con_el_codigo_se_aplica_sola(self):
         self.reloj.avanzar(days=dias_de_espera() + 1)
@@ -243,6 +246,13 @@ class TestRespuestaPorDefecto(unittest.TestCase):
         n = len(self.canal.obtener(self.caso.id).eventos)
         self.canal.seguimiento(self.caso.id)
         self.assertEqual(len(self.canal.obtener(self.caso.id).eventos), n)
+
+    def test_el_titular_puede_pedir_la_supresion_cuando_quiera(self):
+        self.reloj.avanzar(days=dias_de_espera() + 1)
+        self.canal.seguimiento(self.caso.id)
+        caso = self.canal.responder_confirmacion(self.caso.id, derechos=["supresion"])
+        self.assertEqual(caso.confirmacion.estado, "corregida")
+        self.assertEqual(caso.confirmacion.vigente, ["supresion"])
 
     def test_el_titular_aun_puede_corregir_despues_del_defecto(self):
         self.reloj.avanzar(days=dias_de_espera() + 1)

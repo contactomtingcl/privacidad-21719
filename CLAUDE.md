@@ -56,11 +56,11 @@ Hecho: corpus legal indexado (107 artículos) con verificador de citas, guardia 
 sintéticos, detección y enmascarado, inventario con IA (11 campos del DS 662), motor de
 reglas (Agencia, titulares, ANCI, plazos de solicitudes), interpretación con IA de
 solicitudes e incidentes, set de 150 casos y evaluación en tres niveles (iteración 2:
-IA + motor 76/77 deberes detectados). 247 pruebas (5 omitidas sin segno) en verde.
+IA + motor 76/77 deberes detectados). 257 pruebas (5 omitidas sin segno) en verde.
 
 Canal de reporte (primera versión, 10 oct): enlace firmado y QR (segno), confirmación al
-titular con menú fijo y lectura más protectora a los 5 días (regla `confirmacion_titular`,
-pendiente de revisión legal), modo reservado con Fernet (llave en archivo/variable, nunca en
+titular con menú fijo y, sin respuesta a los 5 días, lectura reversible: oposición + bloqueo
+temporal, nunca supresión por defecto (regla `confirmacion_titular`, pendiente de revisión legal), modo reservado con Fernet (llave en archivo/variable, nunca en
 el repositorio), Starlette + Jinja2, casos en sqlite3. Criterio: librerías estándar y
 probadas antes que código propio. `segno` no se instala aquí (sin PyPI): sus pruebas se
 omiten localmente y corren en CI; la llave simétrica implica que quien administra el servidor
