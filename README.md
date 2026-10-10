@@ -19,8 +19,10 @@ En construcción (entrega: 28 de octubre de 2026). Avance actual:
 | Detección y enmascarado de RUT, correos, teléfonos y fechas | Listo |
 | Inventario: perfilado de planillas y cálculo de edades | Listo |
 | Inventario con IA: columnas ambiguas y registro de actividad (11 campos del DS 662) | Primera versión ([resultados de la demo](resultados/inventario_demo.md)) |
+| Interpretación con IA de solicitudes de titulares y reportes de incidentes | Primera versión |
+| Motor de reglas: deberes ante incidentes (Agencia, titulares, ANCI) y plazos de solicitudes | Primera versión |
+| Set etiquetado de 150 casos y evaluación en tres niveles | Listo ([resultados](resultados/evaluacion.md)) |
 | Canal de reporte (QR o enlace) | Pendiente |
-| Motor de reglas y relojes legales | Pendiente |
 | Registro de evidencia | Pendiente |
 
 ## Cómo ejecutar
@@ -34,7 +36,27 @@ python -m privacidad.corpus             # resumen del corpus legal
 python -m privacidad.corpus --verificar # comprueba que el índice está al día
 python -m privacidad.sinteticos         # regenera los datos de la demo
 python -m privacidad.inventario data/sinteticos/comercial-los-robles/paseo_fin_de_anio.xlsx --referencia 2026-10-10
+python -m privacidad.evaluacion --sin-ia      # evaluación sin IA (sin costo)
+python -m privacidad.evaluacion               # evaluación completa (requiere ANTHROPIC_API_KEY)
 ```
+
+## Evaluación
+
+El sistema se mide con 150 casos ficticios etiquetados (`data/evaluacion/`): 50 reportes de incidentes, 50 mensajes de titulares y 50 columnas de planillas. Se comparan tres niveles: reglas por palabras clave sin IA, la IA decidiendo sola con el texto legal a la vista, y el sistema propuesto (la IA interpreta y el motor de reglas decide).
+
+Resultado de la iteración 2 ([detalle](resultados/evaluacion.md)):
+
+| Métrica | Sin IA | IA sola | IA + motor |
+| --- | --- | --- | --- |
+| Incidentes: deberes de aviso detectados | 62/77 | 70/77 | 76/77 |
+| Incidentes: casos con los tres deberes correctos | 58% | 32% | 96% |
+| Solicitudes: derecho identificado correctamente | 84% | 90% | 96% |
+| Solicitudes: plazo de respuesta correcto | 40/43 | 39/43 | 42/43 |
+| Columnas: sensibles detectadas | 4/11 | 11/11 | 11/11 |
+
+Costo de IA del sistema propuesto: US$0,006 por incidente y menos de US$0,001 por solicitud. Cuando la IA decide sola, deja como "revisar" 27 de los 37 casos en que el aviso a la Agencia es obligatorio: no se equivoca hacia el "no", pero no decide.
+
+Límites: las etiquetas fueron redactadas con asistencia de IA y están pendientes de revisión del autor y de un abogado; las instrucciones a la IA y la línea base se escribieron conociendo el set, por lo que se agregará un set ciego escrito por otra persona. La primera medición, con sus errores, está en [`resultados/historial/`](resultados/historial/).
 
 ## Corpus legal
 
