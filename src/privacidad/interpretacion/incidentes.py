@@ -11,7 +11,7 @@ from pydantic import BaseModel, ValidationError
 
 from ..motor import HechosIncidente
 from ..motor.motor import CategoriaEspecial, Vulneracion
-from .comun import ClienteLLM, enmascarar, entrada_herramienta
+from .comun import ClienteLLM, enmascarar, entrada_herramienta, sin_respuesta
 
 SISTEMA = """Lees reportes de incidentes escritos por personas de una organización chilena y \
 describes los hechos. No decides si hay que avisar a alguien: eso lo hace el sistema con \
@@ -90,7 +90,7 @@ def extraer_hechos(texto: str, cliente: ClienteLLM, modelo: str) -> ExtraccionIn
             mensajes=[{"role": "user", "content": f"Reporte:\n{enmascarar(texto)}"}],
             herramientas=[_herramienta()],
             forzar_herramienta="registrar_hechos",
-            max_tokens=700,
+            max_tokens=1000,
             proposito="incidentes: extraer hechos",
         )
     except Exception as e:
@@ -98,8 +98,11 @@ def extraer_hechos(texto: str, cliente: ClienteLLM, modelo: str) -> ExtraccionIn
     costo = getattr(r, "costo_usd", 0.0)
     entrada = entrada_herramienta(r, "registrar_hechos")
     if not entrada:
-        return ExtraccionIncidente(hechos=None, costo_usd=costo, error="sin_respuesta")
+        return ExtraccionIncidente(hechos=None, costo_usd=costo, error=sin_respuesta(r))
     resumen = entrada.pop("resumen", None)
+    entrada = {k: v for k, v in entrada.items() if v is not None}
+    if not isinstance(entrada.get("titulares_aprox"), int):
+        entrada.pop("titulares_aprox", None)  # dato informativo; no decide nada
     try:
         hechos = HechosIncidente(**entrada)
     except ValidationError:

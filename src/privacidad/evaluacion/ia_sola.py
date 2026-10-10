@@ -13,7 +13,7 @@ from typing import Any
 from pydantic import BaseModel
 
 from ..corpus import corpus_por_defecto
-from ..interpretacion.comun import ClienteLLM, enmascarar, entrada_herramienta
+from ..interpretacion.comun import ClienteLLM, enmascarar, entrada_herramienta, sin_respuesta
 from ..interpretacion.solicitudes import DERECHOS
 from ..interpretacion.solicitudes import SISTEMA as SISTEMA_SOLICITUD
 
@@ -66,7 +66,7 @@ def deberes_incidente(texto: str, perfil: str, cliente: ClienteLLM, modelo: str)
             mensajes=[{"role": "user", "content": mensaje}],
             herramientas=[herramienta],
             forzar_herramienta="decidir_deberes",
-            max_tokens=600,
+            max_tokens=1500,
             proposito="evaluacion: IA sola decide deberes",
         )
     except Exception as e:
@@ -77,7 +77,7 @@ def deberes_incidente(texto: str, perfil: str, cliente: ClienteLLM, modelo: str)
         aviso_titulares=entrada.get("aviso_titulares"),
         reporte_anci=entrada.get("reporte_anci"),
         costo_usd=getattr(r, "costo_usd", 0.0),
-        error=None if entrada else "sin_respuesta",
+        error=None if entrada else sin_respuesta(r),
     )
 
 
@@ -116,7 +116,13 @@ def solicitud(texto: str, ingreso: date, cliente: ClienteLLM, modelo: str) -> So
                 "vence_respuesta": {"type": "string", "description": "AAAA-MM-DD o vacío"},
                 "vence_bloqueo": {"type": "string", "description": "AAAA-MM-DD o vacío"},
             },
-            "required": ["es_solicitud", "derechos", "requiere_confirmacion"],
+            "required": [
+                "es_solicitud",
+                "derechos",
+                "requiere_confirmacion",
+                "vence_respuesta",
+                "vence_bloqueo",
+            ],
         },
     }
     mensaje = (
@@ -129,7 +135,7 @@ def solicitud(texto: str, ingreso: date, cliente: ClienteLLM, modelo: str) -> So
             mensajes=[{"role": "user", "content": mensaje}],
             herramientas=[herramienta],
             forzar_herramienta="interpretar_y_calcular",
-            max_tokens=600,
+            max_tokens=1500,
             proposito="evaluacion: IA sola interpreta y calcula plazos",
         )
     except Exception as e:
@@ -144,5 +150,5 @@ def solicitud(texto: str, ingreso: date, cliente: ClienteLLM, modelo: str) -> So
         vence_respuesta=_fecha(entrada.get("vence_respuesta")),
         vence_bloqueo=_fecha(entrada.get("vence_bloqueo")),
         costo_usd=getattr(r, "costo_usd", 0.0),
-        error=None if entrada else "sin_respuesta",
+        error=None if entrada else sin_respuesta(r),
     )

@@ -3,7 +3,10 @@
 Flujo:
 
 1. El perfilador (sin IA) clasifica lo que puede con certeza.
-2. La IA rápida clasifica solo las columnas ambiguas. Recibe el encabezado y la
+2. La IA rápida revisa las columnas que el código no pudo confirmar por el formato de
+   sus valores (sin categoría o solo con una palabra clave en el encabezado). Puede
+   corregir una palabra clave engañosa ("Raza" de una mascota), pero no quitar la marca
+   de sensible: en ese caso se mantiene sensible y queda para revisión. Recibe el encabezado y la
    forma de los valores ("Aaaaa Aaaaa", "99.999.999-9"), nunca los valores, salvo
    en columnas categóricas de pocas opciones ("Sí", "No", "M").
 3. La IA de extracción propone los campos que requieren contexto (finalidad, base
@@ -27,7 +30,7 @@ from pydantic import BaseModel, Field
 
 from ..corpus import corpus_por_defecto
 from ..deteccion import Enmascarador
-from .perfilador import PerfilPlanilla, cargar_categorias
+from .perfilador import PerfilColumna, PerfilPlanilla, cargar_categorias
 
 Origen = Literal["calculado", "ia", "pendiente", "persona"]
 BaseLicitud = Literal[
@@ -78,6 +81,7 @@ class ColumnaFinal(BaseModel):
     origen: Origen
     justificacion: str | None = None
     necesaria: bool | None = None
+    revisar: bool = False
     motivo_innecesaria: str | None = None
 
 
@@ -257,11 +261,11 @@ def clasificar_ambiguas(
     cliente: ClienteLLM,
     modelo: str,
 ) -> tuple[dict[str, tuple[str, str]], float]:
-    """Clasifica con IA las columnas sin categoría o con confianza baja.
+    """Clasifica con IA las columnas que el código no confirmó por el formato de sus valores.
 
     Devuelve {columna: (categoria, justificacion)} solo con respuestas válidas, y el costo.
     """
-    ambiguas = [c for c in perfil.columnas if c.categoria is None or c.confianza == "baja"]
+    ambiguas = [c for c in perfil.columnas if c.categoria is None or c.confianza != "alta"]
     if not ambiguas:
         return {}, 0.0
     carga = [
@@ -297,6 +301,38 @@ def clasificar_ambiguas(
         and item.get("categoria") in validas
     }
     return resultado, getattr(r, "costo_usd", 0.0)
+
+
+def combinar_clasificacion(
+    columna: PerfilColumna, sugerencia: tuple[str, str] | None
+) -> ColumnaFinal:
+    """Une lo que calculó el código con lo que sugiere la IA.
+
+    - Confianza alta (formato y encabezado coinciden): manda el código.
+    - La IA puede corregir una palabra clave, salvo para quitar la marca de sensible:
+      ahí se mantiene la categoría sensible y la columna queda para revisión humana.
+    """
+    cats = cargar_categorias()
+    calculada = ColumnaFinal(
+        nombre=columna.nombre,
+        categoria=columna.categoria,
+        origen="calculado",
+        justificacion="; ".join(columna.evidencia),
+    )
+    if sugerencia is None or columna.confianza == "alta":
+        if columna.categoria is None or columna.confianza == "baja":
+            return ColumnaFinal(
+                nombre=columna.nombre, categoria=columna.categoria, origen="pendiente"
+            )
+        return calculada
+    cat, just = sugerencia
+    era_sensible = columna.categoria in cats and cats[columna.categoria].sensible is True
+    sigue_sensible = cat in cats and cats[cat].sensible is True
+    if era_sensible and not sigue_sensible:
+        calculada.revisar = True
+        calculada.justificacion = f"La IA sugiere «{cat}»: {just}. Se mantiene como sensible."
+        return calculada
+    return ColumnaFinal(nombre=columna.nombre, categoria=cat, origen="ia", justificacion=just)
 
 
 # --- reglas fijas ------------------------------------------------------------
@@ -435,26 +471,7 @@ def construir_actividad(
         except Exception as e:  # la IA no es crítica: el caso queda para revisión humana
             nota_falla = f"IA no disponible para clasificar columnas ({_describir_error(e)})"
 
-    columnas: list[ColumnaFinal] = []
-    for c in perfil.columnas:
-        if c.nombre in clasificadas:
-            cat, just = clasificadas[c.nombre]
-            columnas.append(
-                ColumnaFinal(nombre=c.nombre, categoria=cat, origen="ia", justificacion=just)
-            )
-        elif c.categoria is not None and c.confianza != "baja":
-            columnas.append(
-                ColumnaFinal(
-                    nombre=c.nombre,
-                    categoria=c.categoria,
-                    origen="calculado",
-                    justificacion="; ".join(c.evidencia),
-                )
-            )
-        else:
-            columnas.append(
-                ColumnaFinal(nombre=c.nombre, categoria=c.categoria, origen="pendiente")
-            )
+    columnas = [combinar_clasificacion(c, clasificadas.get(c.nombre)) for c in perfil.columnas]
 
     if cliente is not None and nota_falla is None:
         try:

@@ -18,6 +18,12 @@ def entrada_herramienta(respuesta: Any, nombre: str) -> dict[str, Any] | None:
     return None
 
 
+def sin_respuesta(respuesta: Any) -> str:
+    """Código de error cuando la IA no usó la herramienta, con el motivo de término."""
+    motivo = getattr(respuesta, "motivo_termino", None)
+    return f"sin_respuesta:{motivo}" if motivo else "sin_respuesta"
+
+
 def enmascarar(texto: str) -> str:
     """RUT, correos, teléfonos y fechas se reemplazan por marcadores antes de llamar a la IA."""
     return Enmascarador().enmascarar(texto)

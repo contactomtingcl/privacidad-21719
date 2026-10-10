@@ -298,8 +298,9 @@ casos:
       Le robaron el notebook a un ejecutivo de la cooperativa. Tiene cifrado completo con
       clave robusta y ya confirmamos el borrado remoto. Tenía planillas de socios con sus
       deudas.
-    hechos: {datos_personales: true, vulneracion: perdida, categorias_especiales: [financieros], riesgo_mitigado: true, ciberincidente: "no"}
-    esperado: {aviso_agencia: "revisar", aviso_titulares: "revisar", reporte_anci: "no"}
+    hechos: {datos_personales: true, vulneracion: perdida, categorias_especiales: [financieros], riesgo_mitigado: true, ciberincidente: "dudoso"}
+    esperado: {aviso_agencia: "revisar", aviso_titulares: "revisar", reporte_anci: "revisar"}
+    nota: Corregido el 10 de octubre de 2026 (antes "ciberincidente no"), para seguir la misma convención que los casos inc-20 e inc-41 (robo o pérdida de un dispositivo digital = dudoso).
 
   - id: inc-34
     perfil: empresa_privada

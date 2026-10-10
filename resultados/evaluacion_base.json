@@ -1,5 +1,5 @@
 {
-  "fecha": "2026-10-10 22:29 UTC",
+  "fecha": "2026-10-10 22:36 UTC",
   "modelos": "ninguno",
   "incidentes": {
     "metricas": {
@@ -11,10 +11,11 @@
           "aviso_titulares": 80.0,
           "reporte_anci": 90.0
         },
-        "deberes_detectados": "61/76",
-        "deberes_detectados_pct": 80.3,
+        "deberes_detectados": "62/77",
+        "deberes_detectados_pct": 80.5,
         "deberes_omitidos": 15,
-        "alarmas_de_mas": 6
+        "alarmas_de_mas": 5,
+        "respuestas_fallidas_ia": 0
       }
     },
     "costo_usd": {},
@@ -440,7 +441,7 @@
         "esperado": {
           "aviso_agencia": "revisar",
           "aviso_titulares": "revisar",
-          "reporte_anci": "no"
+          "reporte_anci": "revisar"
         },
         "base": {
           "aviso_agencia": "revisar",
@@ -680,7 +681,8 @@
         "confirmaciones_innecesarias": 0,
         "plazo_respuesta_correcto": "40/43",
         "plazo_respuesta_correcto_pct": 93.0,
-        "plazo_bloqueo_correcto": "4/4"
+        "plazo_bloqueo_correcto": "4/4",
+        "respuestas_fallidas_ia": 0
       }
     },
     "costo_usd": {},
@@ -1780,7 +1782,8 @@
         "sensibles_detectadas_pct": 36.4,
         "falsos_sensibles": 2,
         "trampas_acertadas": "0/5",
-        "sin_clasificar": 23
+        "sin_clasificar": 23,
+        "enviadas_a_revision": 0
       }
     },
     "costo_usd": {},
@@ -1792,7 +1795,8 @@
         "trampa": false,
         "base": "nombre",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-a",
@@ -1801,7 +1805,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-a",
@@ -1810,7 +1815,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-a",
@@ -1819,7 +1825,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-a",
@@ -1828,7 +1835,8 @@
         "trampa": false,
         "base": "fecha_nacimiento",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-a",
@@ -1837,7 +1845,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-a",
@@ -1846,7 +1855,8 @@
         "trampa": false,
         "base": "telefono",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-a",
@@ -1855,7 +1865,8 @@
         "trampa": false,
         "base": "direccion",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-a",
@@ -1864,7 +1875,8 @@
         "trampa": false,
         "base": "origen_etnico",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-a",
@@ -1873,7 +1885,8 @@
         "trampa": false,
         "base": "financiero",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-b",
@@ -1882,7 +1895,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-b",
@@ -1891,7 +1905,8 @@
         "trampa": false,
         "base": "correo",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-b",
@@ -1900,7 +1915,8 @@
         "trampa": false,
         "base": "telefono",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-b",
@@ -1909,7 +1925,8 @@
         "trampa": true,
         "base": "origen_etnico",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-b",
@@ -1918,7 +1935,8 @@
         "trampa": true,
         "base": "nombre",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-b",
@@ -1927,7 +1945,8 @@
         "trampa": false,
         "base": "financiero",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-b",
@@ -1936,7 +1955,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-b",
@@ -1945,7 +1965,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-b",
@@ -1954,7 +1975,8 @@
         "trampa": true,
         "base": "salud",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-b",
@@ -1963,7 +1985,8 @@
         "trampa": false,
         "base": "direccion",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-c",
@@ -1972,7 +1995,8 @@
         "trampa": false,
         "base": "identificador_nacional",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-c",
@@ -1981,7 +2005,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-c",
@@ -1990,7 +2015,8 @@
         "trampa": false,
         "base": "financiero",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-c",
@@ -1999,7 +2025,8 @@
         "trampa": false,
         "base": "salud",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-c",
@@ -2008,7 +2035,8 @@
         "trampa": false,
         "base": "parentesco",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-c",
@@ -2017,7 +2045,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-c",
@@ -2026,7 +2055,8 @@
         "trampa": false,
         "base": "fecha_nacimiento",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-c",
@@ -2035,7 +2065,8 @@
         "trampa": false,
         "base": "laboral",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-c",
@@ -2044,7 +2075,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-c",
@@ -2053,7 +2085,8 @@
         "trampa": false,
         "base": "afiliacion_politica",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-d",
@@ -2062,7 +2095,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-d",
@@ -2071,7 +2105,8 @@
         "trampa": true,
         "base": "identificador_nacional",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-d",
@@ -2080,7 +2115,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-d",
@@ -2089,7 +2125,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-d",
@@ -2098,7 +2135,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-d",
@@ -2107,7 +2145,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-d",
@@ -2116,7 +2155,8 @@
         "trampa": true,
         "base": "geolocalizacion",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-d",
@@ -2125,7 +2165,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-d",
@@ -2134,7 +2175,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-d",
@@ -2143,7 +2185,8 @@
         "trampa": false,
         "base": "telefono",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-e",
@@ -2152,7 +2195,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-e",
@@ -2161,7 +2205,8 @@
         "trampa": false,
         "base": "biometrico",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-e",
@@ -2170,7 +2215,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-e",
@@ -2179,7 +2225,8 @@
         "trampa": false,
         "base": "geolocalizacion",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-e",
@@ -2188,7 +2235,8 @@
         "trampa": false,
         "base": "imagen",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-e",
@@ -2197,7 +2245,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-e",
@@ -2206,7 +2255,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-e",
@@ -2215,7 +2265,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-e",
@@ -2224,7 +2275,8 @@
         "trampa": false,
         "base": "laboral",
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       },
       {
         "planilla": "col-e",
@@ -2233,7 +2285,8 @@
         "trampa": false,
         "base": null,
         "ia_sola": null,
-        "ia_motor": null
+        "ia_motor": null,
+        "ia_motor_revisar": false
       }
     ]
   },

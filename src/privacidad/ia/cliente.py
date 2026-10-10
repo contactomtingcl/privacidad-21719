@@ -50,6 +50,7 @@ class RespuestaIA:
     tokens_salida: int = 0
     costo_usd: float = 0.0
     latencia_ms: int = 0
+    motivo_termino: str | None = None  # stop_reason de la API
 
 
 class ClienteIA:
@@ -118,6 +119,7 @@ class ClienteIA:
             tokens_salida=r.usage.output_tokens,
             costo_usd=costo_usd(modelo, r.usage.input_tokens, r.usage.output_tokens),
             latencia_ms=latencia,
+            motivo_termino=getattr(r, "stop_reason", None),
         )
         self._anotar(respuesta, proposito)
         return respuesta

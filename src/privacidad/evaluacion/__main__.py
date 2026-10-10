@@ -34,7 +34,7 @@ def _tabla(metricas: dict, filas: list[tuple[str, str]]) -> list[str]:
             v = metricas[n]
             for parte in clave.split("."):
                 v = v.get(parte) if isinstance(v, dict) else None
-            valores.append("—" if v is None else (f"{v}%" if clave.endswith("_pct") else str(v)))
+            valores.append("—" if v is None else (f"{v}%" if "_pct" in clave else str(v)))
         lineas.append(f"| {etiqueta} | " + " | ".join(valores) + " |")
     return lineas
 
@@ -64,6 +64,7 @@ def _markdown(r: dict) -> str:
                 ("exactitud_por_deber_pct.aviso_titulares", "Aviso a titulares correcto"),
                 ("exactitud_por_deber_pct.reporte_anci", "Reporte a la ANCI correcto"),
                 ("casos_totalmente_correctos_pct", "Casos con los tres deberes correctos"),
+                ("respuestas_fallidas_ia", "Respuestas fallidas de la IA"),
             ],
         ),
         "",
@@ -77,6 +78,7 @@ def _markdown(r: dict) -> str:
                 ("confirmaciones_innecesarias", "Confirmaciones innecesarias"),
                 ("plazo_respuesta_correcto", "Plazo de respuesta correcto"),
                 ("plazo_bloqueo_correcto", "Plazo de bloqueo correcto"),
+                ("respuestas_fallidas_ia", "Respuestas fallidas de la IA"),
             ],
         ),
         "",
@@ -90,6 +92,7 @@ def _markdown(r: dict) -> str:
                 ("falsos_sensibles", "Marcadas como sensibles sin serlo"),
                 ("trampas_acertadas", "Encabezados engañosos resueltos"),
                 ("sin_clasificar", "Sin clasificar"),
+                ("enviadas_a_revision", "Correcciones de la IA enviadas a revisión humana"),
             ],
         ),
         "",
@@ -110,8 +113,9 @@ def _markdown(r: dict) -> str:
         "- Las reglas de la línea base y las instrucciones a la IA se escribieron conociendo este "
         "set; los resultados pueden ser optimistas. Se agregará un set ciego escrito por otra "
         "persona.",
-        "- En la columna «IA + motor», las columnas de planilla que el perfilador clasifica con "
-        "confianza media no se envían a la IA.",
+        "- En columnas, «IA + motor» significa perfilador más IA: la IA no puede cambiar lo que "
+        "el código confirmó por formato, ni quitar la marca de sensible (esa corrección queda "
+        "para revisión humana).",
         "- 50 casos por bloque: cada caso equivale a 2 puntos porcentuales.",
         "",
         "El detalle caso a caso está en `resultados/evaluacion.json`.",

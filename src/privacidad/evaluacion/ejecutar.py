@@ -17,7 +17,7 @@ import pandas as pd
 
 from ..interpretacion import extraer_hechos, interpretar_solicitud
 from ..inventario import cargar_categorias, perfilar_dataframe
-from ..inventario.actividad import clasificar_ambiguas
+from ..inventario.actividad import clasificar_ambiguas, combinar_clasificacion
 from ..motor import HechosSolicitud, decidir_incidente, decidir_solicitud
 from . import ia_sola
 from .base import hechos_incidente_base, hechos_solicitud_base
@@ -73,6 +73,7 @@ def metricas_columnas(filas: list[dict[str, Any]], nivel: str) -> dict[str, Any]
         "falsos_sensibles": falsas,
         "trampas_acertadas": f"{sum(f[nivel] == f['esperado'] for f in trampas)}/{len(trampas)}",
         "sin_clasificar": sum(f[nivel] is None for f in filas),
+        "enviadas_a_revision": sum(bool(f.get(f"{nivel}_revisar")) for f in filas),
     }
 
 
@@ -85,6 +86,7 @@ def evaluar_columnas(cliente=None, modelo: str | None = None) -> dict[str, Any]:
         base = {c.nombre: c.categoria for c in perfil.columnas}
         ia_sola_pred: dict[str, str | None] = {}
         sistema = dict(base)
+        revision: set[str] = set()
         if cliente:
             nulo = perfil.model_copy(
                 update={
@@ -101,7 +103,11 @@ def evaluar_columnas(cliente=None, modelo: str | None = None) -> dict[str, Any]:
             ia_sola_pred = {k: v[0] for k, v in res.items()}
             res, costo = clasificar_ambiguas(perfil, valores, planilla.descripcion, cliente, modelo)
             costos["ia_motor"] += costo
-            sistema.update({k: v[0] for k, v in res.items()})
+            finales = {
+                c.nombre: combinar_clasificacion(c, res.get(c.nombre)) for c in perfil.columnas
+            }
+            sistema = {k: f.categoria for k, f in finales.items()}
+            revision = {k for k, f in finales.items() if f.revisar}
         for c in planilla.columnas:
             filas.append(
                 {
@@ -112,6 +118,7 @@ def evaluar_columnas(cliente=None, modelo: str | None = None) -> dict[str, Any]:
                     "base": base[c.nombre],
                     "ia_sola": ia_sola_pred.get(c.nombre) if cliente else None,
                     "ia_motor": sistema[c.nombre] if cliente else None,
+                    "ia_motor_revisar": c.nombre in revision,
                 }
             )
     niveles = ["base", "ia_sola", "ia_motor"] if cliente else ["base"]
@@ -146,6 +153,7 @@ def metricas_incidentes(filas: list[dict[str, Any]], nivel: str) -> dict[str, An
         "deberes_detectados_pct": _pct(con_deber - omitidos, con_deber),
         "deberes_omitidos": omitidos,
         "alarmas_de_mas": alarmas,
+        "respuestas_fallidas_ia": sum(bool(f.get(f"{nivel}_error")) for f in filas),
     }
 
 
@@ -184,6 +192,7 @@ def evaluar_incidentes(cliente=None, modelo: str | None = None) -> dict[str, Any
             fila["categorias_ia"] = ext.hechos.categorias_especiales if ext.hechos else None
             s = solas[i]
             fila["ia_sola"] = {d: getattr(s, d) or "sin_respuesta" for d in DEBERES}
+            fila["ia_sola_error"] = s.error
         filas.append(fila)
     niveles = ["base", "ia_sola", "ia_motor"] if cliente else ["base"]
     return {
@@ -201,14 +210,20 @@ def evaluar_incidentes(cliente=None, modelo: str | None = None) -> dict[str, Any
 # --- solicitudes --------------------------------------------------------------
 
 
-def _clasificacion_correcta(caso: CasoSolicitud, es: bool | None, derechos: list[str]) -> bool:
+def _clasificacion_correcta(
+    caso: CasoSolicitud, es: bool | None, derechos: list[str], confirma: bool
+) -> bool:
     e = caso.esperado
     if es is None or es != e.es_solicitud:
         return False
     if not e.es_solicitud:
         return True
     aceptadas = [set(e.derechos), *(set(a) for a in e.alternativas)]
-    return set(derechos) in aceptadas
+    if set(derechos) in aceptadas:
+        return True
+    # Si el mensaje es ambiguo y el sistema pide confirmar, puede proponer las lecturas posibles.
+    posibles = set().union(*aceptadas)
+    return bool(derechos) and confirma and e.requiere_confirmacion and set(derechos) <= posibles
 
 
 def metricas_solicitudes(filas: list[dict[str, Any]], nivel: str) -> dict[str, Any]:
@@ -231,6 +246,7 @@ def metricas_solicitudes(filas: list[dict[str, Any]], nivel: str) -> dict[str, A
         "plazo_respuesta_correcto": f"{plazo_ok}/{len(gold_sol)}",
         "plazo_respuesta_correcto_pct": _pct(plazo_ok, len(gold_sol)),
         "plazo_bloqueo_correcto": f"{bloq_ok}/{len(gold_bloq)}",
+        "respuestas_fallidas_ia": sum(bool(f.get(f"{nivel}_error")) for f in filas),
     }
 
 
@@ -250,7 +266,7 @@ def _fila_motor(caso: CasoSolicitud, hechos: HechosSolicitud | None) -> dict[str
         "es_solicitud": es,
         "derechos": derechos,
         "requiere_confirmacion": conf,
-        "clasificacion_correcta": _clasificacion_correcta(caso, es, derechos),
+        "clasificacion_correcta": _clasificacion_correcta(caso, es, derechos, conf),
         "vence_respuesta": r.respuesta.vence.isoformat() if r.respuesta else None,
         "vence_bloqueo": r.bloqueo.vence.isoformat() if r.bloqueo else None,
     }
@@ -289,12 +305,16 @@ def evaluar_solicitudes(cliente=None, modelo: str | None = None) -> dict[str, An
                 if interpretaciones[i].hechos
                 else None
             )
+            fila["ia_motor_error"] = interpretaciones[i].error
             s = solas[i]
+            fila["ia_sola_error"] = s.error
             fila["ia_sola"] = {
                 "es_solicitud": s.es_solicitud,
                 "derechos": s.derechos,
                 "requiere_confirmacion": bool(s.requiere_confirmacion),
-                "clasificacion_correcta": _clasificacion_correcta(caso, s.es_solicitud, s.derechos),
+                "clasificacion_correcta": _clasificacion_correcta(
+                    caso, s.es_solicitud, s.derechos, bool(s.requiere_confirmacion)
+                ),
                 "vence_respuesta": s.vence_respuesta.isoformat() if s.vence_respuesta else None,
                 "vence_bloqueo": s.vence_bloqueo.isoformat() if s.vence_bloqueo else None,
             }

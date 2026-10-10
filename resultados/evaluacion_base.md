@@ -1,6 +1,6 @@
 # Evaluación con el set etiquetado
 
-Generado el 2026-10-10 22:29 UTC con `python -m privacidad.evaluacion`. Todos los casos son ficticios (`data/evaluacion/`).
+Generado el 2026-10-10 22:36 UTC con `python -m privacidad.evaluacion`. Todos los casos son ficticios (`data/evaluacion/`).
 
 - **Sin IA:** reglas por palabras clave; los deberes y plazos los calcula el motor.
 - **IA sola:** el modelo interpreta y decide, con el texto legal a la vista.
@@ -12,13 +12,14 @@ Modelos: ninguno. Costo total: US$0.
 
 | Métrica | Sin IA (palabras clave) |
 | --- | --- |
-| Deberes de aviso detectados | 61/76 |
+| Deberes de aviso detectados | 62/77 |
 | Deberes omitidos (el error más grave) | 15 |
-| Alarmas de más | 6 |
-| Aviso a la Agencia correcto | 74.0 |
-| Aviso a titulares correcto | 80.0 |
-| Reporte a la ANCI correcto | 90.0 |
+| Alarmas de más | 5 |
+| Aviso a la Agencia correcto | 74.0% |
+| Aviso a titulares correcto | 80.0% |
+| Reporte a la ANCI correcto | 90.0% |
 | Casos con los tres deberes correctos | 58.0% |
+| Respuestas fallidas de la IA | 0 |
 
 ## Solicitudes de titulares (50 casos): ¿qué pide y cuándo vence?
 
@@ -29,6 +30,7 @@ Modelos: ninguno. Costo total: US$0.
 | Confirmaciones innecesarias | 0 |
 | Plazo de respuesta correcto | 40/43 |
 | Plazo de bloqueo correcto | 4/4 |
+| Respuestas fallidas de la IA | 0 |
 
 ## Columnas de planillas (50 casos): ¿qué dato es?
 
@@ -39,6 +41,7 @@ Modelos: ninguno. Costo total: US$0.
 | Marcadas como sensibles sin serlo | 2 |
 | Encabezados engañosos resueltos | 0/5 |
 | Sin clasificar | 23 |
+| Correcciones de la IA enviadas a revisión humana | 0 |
 
 ## Costo de IA por bloque (US$)
 
@@ -52,7 +55,7 @@ Modelos: ninguno. Costo total: US$0.
 
 - Las etiquetas fueron redactadas con asistencia de IA a partir del texto legal y están pendientes de revisión del autor y de un abogado.
 - Las reglas de la línea base y las instrucciones a la IA se escribieron conociendo este set; los resultados pueden ser optimistas. Se agregará un set ciego escrito por otra persona.
-- En la columna «IA + motor», las columnas de planilla que el perfilador clasifica con confianza media no se envían a la IA.
+- En columnas, «IA + motor» significa perfilador más IA: la IA no puede cambiar lo que el código confirmó por formato, ni quitar la marca de sensible (esa corrección queda para revisión humana).
 - 50 casos por bloque: cada caso equivale a 2 puntos porcentuales.
 
 El detalle caso a caso está en `resultados/evaluacion.json`.

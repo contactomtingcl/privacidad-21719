@@ -6,7 +6,13 @@ from types import SimpleNamespace
 
 from privacidad import guardia
 from privacidad.inventario import leer_planilla, perfilar_dataframe
-from privacidad.inventario.actividad import construir_actividad, forma, muestras_seguras
+from privacidad.inventario.actividad import (
+    combinar_clasificacion,
+    construir_actividad,
+    forma,
+    muestras_seguras,
+)
+from privacidad.inventario.perfilador import perfilar_columna
 from privacidad.sinteticos import comercial_los_robles
 
 REF = date(2026, 10, 10)
@@ -165,3 +171,24 @@ class TestConstruirActividad(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestCombinarClasificacion(unittest.TestCase):
+    def test_la_ia_corrige_una_palabra_clave_no_sensible(self):
+        col = perfilar_columna("Nombre mascota", ["Toby", "Luna"])
+        final = combinar_clasificacion(col, ("no_personal", "Es el nombre de un perro"))
+        self.assertEqual(
+            (final.categoria, final.origen, final.revisar), ("no_personal", "ia", False)
+        )
+
+    def test_la_ia_no_puede_quitar_la_marca_de_sensible(self):
+        col = perfilar_columna("Raza", ["Labrador", "Poodle"])
+        final = combinar_clasificacion(col, ("no_personal", "Raza de la mascota"))
+        self.assertEqual(final.categoria, "origen_etnico")
+        self.assertTrue(final.revisar)
+        self.assertIn("no_personal", final.justificacion)
+
+    def test_lo_confirmado_por_formato_no_se_cambia(self):
+        col = perfilar_columna("RUT", [guardia.rut_sintetico(i) for i in range(1, 6)])
+        final = combinar_clasificacion(col, ("persona_juridica", "x"))
+        self.assertEqual((final.categoria, final.origen), ("identificador_nacional", "calculado"))

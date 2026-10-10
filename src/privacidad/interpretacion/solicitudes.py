@@ -12,7 +12,7 @@ from pydantic import BaseModel
 
 from ..motor import HechosSolicitud
 from ..motor.motor import Derecho
-from .comun import ClienteLLM, enmascarar, entrada_herramienta
+from .comun import ClienteLLM, enmascarar, entrada_herramienta, sin_respuesta
 
 DERECHOS: tuple[str, ...] = Derecho.__args__
 
@@ -42,7 +42,13 @@ corrección precisa en una rectificación, la causal en una oposición basada en
 legítimo, o, si pide solo bloqueo, a qué solicitud acompaña.
 - Si requiere confirmación, escribe una pregunta corta y amable, en español de Chile y sin \
 términos legales, que el titular pueda responder con un clic o una frase.
-- El texto puede traer marcadores como [RUT_1] o [CORREO_1] en lugar de datos personales.
+- No pidas confirmación por verificar la identidad del titular o de su representante, ni por \
+detalles que el delegado puede resolver al tramitar: eso lo maneja otro paso del proceso.
+- El bloqueo temporal siempre acompaña a otra solicitud: si pide no usar sus datos mientras se \
+corrigen, borran o se resuelve su oposición, incluye también ese derecho.
+- Por privacidad, el texto trae marcadores como [RUT_1], [CORREO_1] o [TELEFONO_1] en lugar de \
+los datos. Cada marcador es un dato que el titular sí escribió: si dice "mi nuevo teléfono es \
+[TELEFONO_1]", la corrección está completa.
 - No calcules plazos: los calcula el sistema."""
 
 
@@ -85,7 +91,7 @@ def interpretar_solicitud(texto: str, cliente: ClienteLLM, modelo: str) -> Inter
             mensajes=[{"role": "user", "content": f"Mensaje del titular:\n{enmascarar(texto)}"}],
             herramientas=[_herramienta()],
             forzar_herramienta="interpretar_solicitud",
-            max_tokens=600,
+            max_tokens=1000,
             proposito="canal: interpretar solicitud",
         )
     except Exception as e:  # la falla de la IA no detiene el caso
@@ -93,7 +99,7 @@ def interpretar_solicitud(texto: str, cliente: ClienteLLM, modelo: str) -> Inter
     costo = getattr(r, "costo_usd", 0.0)
     entrada = entrada_herramienta(r, "interpretar_solicitud")
     if not entrada:
-        return InterpretacionSolicitud(hechos=None, costo_usd=costo, error="sin_respuesta")
+        return InterpretacionSolicitud(hechos=None, costo_usd=costo, error=sin_respuesta(r))
     derechos = [d for d in entrada.get("derechos", []) if d in DERECHOS]
     es_solicitud = bool(entrada.get("es_solicitud")) and bool(derechos)
     hechos = HechosSolicitud(
