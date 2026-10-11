@@ -2,8 +2,8 @@
 
 Un caso nunca guarda la identidad reservada en claro: queda dentro de `identidad_cifrada`.
 Los eventos describen qué pasó sin copiar datos personales; el texto del titular vive solo en
-el caso. Así el registro de evidencia (próximo bloque) puede encadenar los eventos sin arrastrar
-datos personales.
+el caso. Así el registro de evidencia (`evidencia.py`) encadena los eventos sin arrastrar datos
+personales.
 """
 
 from __future__ import annotations
@@ -35,6 +35,7 @@ EstadoCaso = Literal[
     "requiere_revision",  # la IA no respondió: lo revisa el delegado; los plazos corren igual
     "sin_solicitud",  # el mensaje no ejerce un derecho; lo revisa una persona
 ]
+Urgencia = Literal["inmediata", "alta", "normal"]
 EstadoConfirmacion = Literal["no_requerida", "pendiente", "confirmada", "corregida", "por_defecto"]
 
 
@@ -68,6 +69,40 @@ class Confirmacion(BaseModel):
     respondida_en: datetime | None = None
 
 
+# --- enrutamiento ------------------------------------------------------------------------
+
+
+class Destino(BaseModel):
+    rol: Literal["delegado", "area"]
+    id: str
+    nombre: str
+    contacto: str
+    porque: str
+    motivos: list[str] = Field(default_factory=list)  # claves de regla, para la evidencia
+
+
+class Asignacion(BaseModel):
+    version_reglas: str
+    destinos: list[Destino]
+    # En modo reservado: áreas que recibirían el caso si no fuera reservado. Las ve el delegado.
+    sugeridas: list[Destino] = Field(default_factory=list)
+    urgencia: Urgencia
+    porque_urgencia: str
+    proximo_plazo: str | None = None  # id del deber que vence primero
+    vence: datetime | None = None
+
+    def para_evidencia(self) -> dict:
+        """Lo que se anota en el registro: identificadores y reglas, sin texto del mensaje."""
+        return {
+            "version_reglas": self.version_reglas,
+            "destinos": [{"id": d.id, "motivos": d.motivos} for d in self.destinos],
+            "sugeridas": [{"id": d.id, "motivos": d.motivos} for d in self.sugeridas],
+            "urgencia": self.urgencia,
+            "proximo_plazo": self.proximo_plazo,
+            "vence": self.vence.isoformat() if self.vence else None,
+        }
+
+
 class Caso(BaseModel):
     id: str  # también es el código de seguimiento que recibe la persona
     id_organizacion: str
@@ -89,6 +124,7 @@ class Caso(BaseModel):
     # Si la IA no respondió: relojes de la ANCI que correrían si el incidente resultara de
     # ciberseguridad, para que el delegado los vea desde el primer minuto.
     relojes_anci_posibles: list[Deber] = Field(default_factory=list)
+    asignacion: Asignacion | None = None  # a quién le llegó y con qué urgencia
     eventos: list[Evento] = Field(default_factory=list)
 
     def registrar(self, tipo: str, momento: datetime, /, **detalle: Any) -> None:

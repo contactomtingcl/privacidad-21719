@@ -7,6 +7,8 @@ Quién hace qué:
 - El motor de reglas decide plazos y deberes. Si la IA falla, el caso queda "requiere revisión",
   nada se marca como "sin deber" y el reloj corre igual.
 - La confirmación con el titular y la validación final son de personas.
+- Cada caso se enruta al delegado y al área dueña de los datos con reglas escritas
+  (`enrutamiento.py`), sin IA; cada cambio de destino queda como evento en la evidencia.
 
 Solo datos ficticios: antes de procesar, la guardia rechaza lo que parezca un RUT, correo o
 móvil reales. En modo reservado la identidad se cifra con la llave de reserva; si esa llave no
@@ -31,6 +33,7 @@ from ..motor import HechosIncidente, HechosSolicitud, decidir_incidente, decidir
 from . import confirmacion as conf
 from .confirmacion import RespuestaInvalida
 from .enlaces import enlace_canal, firma_valida
+from .enrutamiento import ReglasEnrutamiento, cargar_reglas_enrutamiento, enrutar
 from .modelos import Caso, Organizacion, TipoReporte, ahora_chile
 from .repositorio import RepositorioCasos
 from .reservado import cifrar_identidad
@@ -80,8 +83,13 @@ class CanalReporte:
         nuevo_id: Callable[[], str] = _nuevo_id,
         modelo_solicitudes: str = MODELO_RAPIDO,
         modelo_incidentes: str = MODELO_EXTRACCION,
+        enrutamiento: ReglasEnrutamiento | None = None,
     ) -> None:
         self._organizaciones = dict(organizaciones)
+        self._enrutamiento = enrutamiento or cargar_reglas_enrutamiento()
+        sin_reglas = sorted(set(self._organizaciones) - set(self._enrutamiento.organizaciones))
+        if sin_reglas:
+            raise ValueError(f"Organizaciones sin reglas de enrutamiento: {', '.join(sin_reglas)}")
         self._repo = repositorio
         self._cliente = cliente
         self._secreto = secreto_enlaces
@@ -208,8 +216,17 @@ class CanalReporte:
                     else None,
                 )
             self._recalcular_plazos(caso)
+        self._enrutar(caso, ahora)
         self._repo.guardar(caso)
         return caso
+
+    def _enrutar(self, caso: Caso, ahora: datetime) -> None:
+        """Decide a quién le llega el caso. Solo se anota en la evidencia si cambió algo."""
+        nueva = enrutar(caso, self._enrutamiento, ahora)
+        anterior = caso.asignacion
+        caso.asignacion = nueva
+        if anterior is None or anterior.para_evidencia() != nueva.para_evidencia():
+            caso.registrar("enrutado", ahora, **nueva.para_evidencia())
 
     def _interpretar_solicitud(self, texto: str) -> InterpretacionSolicitud:
         if self._cliente is None:
@@ -247,6 +264,7 @@ class CanalReporte:
             vigente=list(caso.confirmacion.vigente),
             con_detalle=bool(caso.confirmacion.detalle),
         )
+        self._enrutar(caso, ahora)
         self._repo.guardar(caso)
         return caso
 
@@ -274,6 +292,7 @@ class CanalReporte:
             vigente=list(caso.confirmacion.vigente),
             criterio="lectura reversible, sin supresión (regla confirmacion_titular)",
         )
+        self._enrutar(caso, ahora)
         self._repo.guardar(caso)
         return True
 
@@ -352,6 +371,7 @@ class CanalReporte:
                 aviso_titulares=resultado.aviso_titulares.decision,
                 reporte_anci=resultado.reporte_anci.decision,
             )
+        self._enrutar(caso, ahora)
         self._repo.guardar(caso)
         return caso
 

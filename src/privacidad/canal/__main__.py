@@ -5,6 +5,7 @@
     python -m privacidad.canal enlace --org comercial-los-robles --base-url https://...
     python -m privacidad.canal servir --datos casos-demo
     python -m privacidad.canal identidad --carpeta casos-demo --caso CODIGO
+    python -m privacidad.canal evidencia --carpeta casos-demo [--caso CODIGO] [--cabeza HUELLA]
 
 Los secretos (de enlaces, de cifrado, de la API de Claude) nunca se imprimen ni se guardan en
 el repositorio: los comandos `secreto` y `llave` los dejan en un archivo que solo lee su dueño
@@ -23,7 +24,7 @@ from cryptography.fernet import MultiFernet
 
 from . import enlaces, qr, reservado
 from .modelos import cargar_organizaciones
-from .repositorio import RepositorioCasos
+from .repositorio import NOMBRE_ARCHIVO, RepositorioCasos
 from .servicio import CanalReporte
 from .web import crear_app
 
@@ -167,6 +168,36 @@ def comando_identidad(args: argparse.Namespace) -> int:
     return 0
 
 
+def comando_evidencia(args: argparse.Namespace) -> int:
+    """Revisa la cadena de evidencia completa y, si se pide, muestra la de un caso."""
+    carpeta = Path(args.carpeta)
+    if not (carpeta / NOMBRE_ARCHIVO).is_file():
+        return _error(f"No hay casos guardados en {carpeta}.")
+    repo = RepositorioCasos(carpeta)
+    try:
+        if args.caso:
+            anotaciones = repo.evidencia(args.caso)
+            if not anotaciones:
+                return _error("Ese caso no existe o no tiene evidencia.")
+            for a in anotaciones:
+                print(a.model_dump_json())
+        resultado = repo.verificar_evidencia(args.cabeza)
+    finally:
+        repo.cerrar()
+    if resultado.integra:
+        print(f"Cadena íntegra: {resultado.anotaciones} anotaciones revisadas, ninguna alterada.")
+    else:
+        print("ATENCIÓN: la evidencia fue alterada.")
+        for problema in resultado.problemas:
+            print(f"  - {problema}")
+    print(f"Huella final: {resultado.cabeza}")
+    print(
+        "Guárdela fuera de este computador. Si alguien borra las últimas anotaciones, se "
+        "detecta revisando con --cabeza y esa huella."
+    )
+    return 0 if resultado.integra else 1
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="python -m privacidad.canal", description=__doc__)
     sub = parser.add_subparsers(dest="comando", required=True)
@@ -197,6 +228,12 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--caso", required=True)
     p.add_argument("--llave", help="archivo de la llave (si no, se usa la variable de entorno)")
     p.set_defaults(funcion=comando_identidad)
+
+    p = sub.add_parser("evidencia", help="revisa la cadena de evidencia (delegado)")
+    p.add_argument("--carpeta", required=True)
+    p.add_argument("--caso", help="muestra además la evidencia de este caso")
+    p.add_argument("--cabeza", help="huella final guardada antes, para detectar borrados")
+    p.set_defaults(funcion=comando_evidencia)
 
     args = parser.parse_args(argv)
     return args.funcion(args)

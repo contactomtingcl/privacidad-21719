@@ -50,13 +50,13 @@ Entrega: 28 de octubre de 2026. Demo Day: 29 de octubre. Nombre de trabajo
 - `claude-sonnet-5-5` no acepta forzar herramienta; `ClienteIA` reintenta solo.
 - Commits directos a `main`, con el autor configurado en el repositorio.
 
-## Estado al 10 de octubre de 2026 (fin del día 1)
+## Estado al 11 de octubre de 2026
 
 Hecho: corpus legal indexado (107 artículos) con verificador de citas, guardia de datos
 sintéticos, detección y enmascarado, inventario con IA (11 campos del DS 662), motor de
 reglas (Agencia, titulares, ANCI, plazos de solicitudes), interpretación con IA de
 solicitudes e incidentes, set de 150 casos y evaluación en tres niveles (iteración 2:
-IA + motor 76/77 deberes detectados). 257 pruebas (5 omitidas sin segno) en verde.
+IA + motor 76/77 deberes detectados). 292 pruebas (5 omitidas sin segno) en verde.
 
 Canal de reporte (primera versión, 10 oct): enlace firmado y QR (segno), confirmación al
 titular con menú fijo y, sin respuesta a los 5 días, lectura reversible: oposición + bloqueo
@@ -66,11 +66,24 @@ probadas antes que código propio. `segno` no se instala aquí (sin PyPI): sus p
 omiten localmente y corren en CI; la llave simétrica implica que quien administra el servidor
 puede abrir identidades reservadas (declarado en el README).
 
-Pendiente técnico, en orden: enrutamiento de reportes, registro de evidencia encadenado,
-panel del delegado, borradores de reporte a la Agencia y a la ANCI, completar el motor
-(perfiles, simulador), publicación en internet con modo demo. Si se cumple la puerta de
-calidad del 23 de octubre: red de cascada y sello de tiempo. Rediseño contrafactual e
-impacto de proyectos de ley entran seguro.
+Enrutamiento y evidencia (11 oct): `data/canal/enrutamiento.yaml` define delegado y áreas
+ficticias por organización; `canal/enrutamiento.py` asigna sin IA (delegado siempre, área por
+palabras o por tipo, reservado solo al delegado) con porqué y urgencia desde los plazos del
+motor. `canal/evidencia.py`: cadena SHA-256 (hashlib) en la misma base sqlite, anotada en la
+misma transacción que el caso, disparadores contra cambios y borrados, sin datos personales,
+comando `evidencia` para verificar. Límite declarado: borrar el final de la cadena solo se
+detecta con la huella final guardada aparte (`--cabeza`).
+
+Pendiente técnico, en orden: panel del delegado, avisos por correo/Telegram a los destinos,
+borradores de reporte a la Agencia y a la ANCI, completar el motor (perfiles, simulador),
+publicación en internet con modo demo. Si se cumple la puerta de calidad del 23 de octubre:
+red de cascada y sello de tiempo. Rediseño contrafactual e impacto de proyectos de ley entran
+seguro.
+
+Hallazgo del 11 oct, sin resolver: si el titular no responde, la lectura por defecto agrega
+un bloqueo temporal cuyo plazo (2 días hábiles desde el ingreso) normalmente ya venció. El
+enrutamiento lo marca como urgencia inmediata; falta decidir si se acorta la espera o se
+aplica el bloqueo desde el ingreso. Va a la revisión legal.
 
 Limitaciones conocidas: etiquetas del set sin revisión del autor ni de un abogado; falta
 un set ciego escrito por otra persona; feriados de `data/reglas/feriados.yaml` sin

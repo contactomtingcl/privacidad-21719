@@ -75,7 +75,7 @@ class TestSolicitudClara(unittest.TestCase):
 
     def test_registra_eventos_sin_texto_personal(self):
         caso = solicitud(self.canal)
-        self.assertEqual([e.tipo for e in caso.eventos], ["recibido", "interpretado"])
+        self.assertEqual([e.tipo for e in caso.eventos], ["recibido", "interpretado", "enrutado"])
         volcado = json.dumps([e.model_dump(mode="json") for e in caso.eventos])
         self.assertNotIn(NOMBRE, volcado)
         self.assertNotIn(CORREO, volcado)
@@ -229,8 +229,7 @@ class TestRespuestaPorDefecto(unittest.TestCase):
         self.assertEqual(caso.confirmacion.propuesta, ["oposicion"])
         self.assertEqual(caso.resultado_solicitud.bloqueo.vence, date(2026, 12, 4))
         self.assertEqual(caso.resultado_solicitud.respuesta.vence, date(2027, 1, 1))
-        evento = caso.eventos[-1]
-        self.assertEqual(evento.tipo, "confirmacion_por_defecto")
+        evento = next(e for e in caso.eventos if e.tipo == "confirmacion_por_defecto")
         self.assertIn("confirmacion_titular", evento.detalle["criterio"])
         self.assertIn("sin supresión", evento.detalle["criterio"])
 

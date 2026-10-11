@@ -1,0 +1,81 @@
+# Quién recibe cada reporte del canal. Todo es ficticio: cargos y correos de dominios
+# reservados (RFC 2606), sin nombres de personas.
+#
+# Cómo se decide (sin IA, con código que se puede revisar):
+#
+# - El delegado de protección de datos recibe siempre todos los casos.
+# - Un área recibe el caso si el mensaje menciona una de sus palabras (se compara sin
+#   mayúsculas ni tildes, desde el inicio de una palabra: "remuneracion" encuentra
+#   "remuneraciones"), o si el caso es de un tipo que el área atiende (`recibe`).
+# - En modo reservado el caso va solo al delegado: las áreas quedan como sugerencia y el
+#   delegado decide si lo deriva, para que nadie pueda deducir quién reportó.
+# - La urgencia sale de los plazos que calcula el motor de reglas, nunca de la IA.
+#
+# Las palabras, los umbrales de urgencia y el criterio de reserva son decisiones de diseño
+# del proyecto, no exigencias de la ley.
+version: "2026-10-11"
+
+urgencia:
+  # Un plazo que vence dentro de estas horas hace el caso "inmediato" (por ejemplo, la
+  # alerta temprana de 3 horas a la ANCI).
+  inmediata_horas: 24
+  # Un plazo dentro de estos días, o un aviso a la Agencia que corresponde o hay que revisar
+  # ("sin dilaciones indebidas", sin fecha fija), hace el caso de urgencia "alta".
+  alta_dias: 3
+
+organizaciones:
+  comercial-los-robles:
+    delegado:
+      cargo: Delegado de protección de datos
+      contacto: delegado@comercial-los-robles.example
+    areas:
+      - id: rrhh
+        nombre: Recursos Humanos
+        contacto: rrhh@comercial-los-robles.example
+        datos: Nómina de remuneraciones y planilla del paseo de fin de año
+        palabras: [paseo, nomina, remuneracion, sueldo, liquidacion de sueldo, contrato de trabajo, vacaciones, asignacion familiar, licencia medica, ficha del trabajador]
+      - id: marketing
+        nombre: Marketing
+        contacto: marketing@comercial-los-robles.example
+        datos: Base de clientes para publicidad
+        palabras: [publicidad, promocion, oferta, newsletter, boletin, campana, suscripcion, mensajes comerciales, correos comerciales]
+      - id: compras
+        nombre: Compras
+        contacto: compras@comercial-los-robles.example
+        datos: Registro de proveedores y datos que reciben
+        palabras: [orden de compra, factura, ficha de proveedor, datos del proveedor, pago a proveedor]
+        recibe: [aviso_proveedor]
+      - id: informatica
+        nombre: Informática
+        contacto: informatica@comercial-los-robles.example
+        datos: Sistemas, correo y equipos
+        palabras: [contrasena, virus, malware, ransomware, phishing, hacke, ciberataque, servidor, pendrive, notebook, computador, acceso indebido]
+        recibe: [ciberincidente]
+
+  municipalidad-piloto:
+    delegado:
+      cargo: Delegado de protección de datos
+      contacto: delegado@municipalidad-piloto.example
+    areas:
+      - id: personal
+        nombre: Departamento de Personal
+        contacto: personal@municipalidad-piloto.example
+        datos: Fichas y remuneraciones de funcionarios
+        palabras: [funcionari, remuneracion, sueldo, liquidacion de sueldo, licencia medica, sumario, calificaciones, contrata, honorarios]
+      - id: social
+        nombre: Dirección de Desarrollo Comunitario
+        contacto: social@municipalidad-piloto.example
+        datos: Postulaciones a beneficios y fichas sociales
+        palabras: [beneficio, subsidio, ayuda social, ficha social, registro social de hogares, beca, postulacion, canasta]
+      - id: partes
+        nombre: Oficina de Partes
+        contacto: partes@municipalidad-piloto.example
+        datos: Correspondencia, solicitudes y expedientes
+        palabras: [expediente, oficio, carta, transparencia, solicitud ingresada]
+        recibe: [aviso_proveedor]
+      - id: informatica
+        nombre: Informática
+        contacto: informatica@municipalidad-piloto.example
+        datos: Sistemas, correo y equipos (encargado de reporte ante la ANCI)
+        palabras: [contrasena, virus, malware, ransomware, phishing, hacke, ciberataque, servidor, pendrive, notebook, computador, acceso indebido, pagina web]
+        recibe: [ciberincidente]

@@ -3,6 +3,10 @@
 Es el almacén del prototipo con datos ficticios: en memoria o en un archivo dentro de una
 carpeta. El diseño final usa PostgreSQL (ver el documento de arquitectura); el resto del canal
 solo conoce esta interfaz, así que el cambio queda en este archivo.
+
+Cada vez que se guarda un caso, sus eventos nuevos se anotan en el registro de evidencia
+encadenado (`evidencia.py`) dentro de la misma transacción: o quedan el caso y su evidencia, o
+no queda ninguno.
 """
 
 from __future__ import annotations
@@ -13,6 +17,7 @@ import threading
 from datetime import UTC
 from pathlib import Path
 
+from . import evidencia
 from .modelos import Caso
 
 _ID_CASO = re.compile(r"^[A-Za-z0-9_-]{8,64}$")
@@ -38,6 +43,7 @@ class RepositorioCasos:
                 "id TEXT PRIMARY KEY, id_organizacion TEXT NOT NULL, "
                 "ingreso_utc TEXT NOT NULL, datos TEXT NOT NULL)"
             )
+        evidencia.crear_tablas(self._con)
         if carpeta is not None:
             ruta.chmod(0o600)  # los casos contienen datos personales: solo el dueño lee
 
@@ -46,6 +52,7 @@ class RepositorioCasos:
             raise ValueError("Identificador de caso inválido")
         ingreso_utc = caso.ingreso.astimezone(UTC).isoformat()
         with self._cerrojo, self._con:
+            evidencia.anotar_eventos(self._con, caso)
             self._con.execute(
                 "INSERT OR REPLACE INTO casos (id, id_organizacion, ingreso_utc, datos) "
                 "VALUES (?, ?, ?, ?)",
@@ -63,6 +70,17 @@ class RepositorioCasos:
         with self._cerrojo:
             filas = self._con.execute("SELECT datos FROM casos ORDER BY ingreso_utc, id").fetchall()
         return [Caso.model_validate_json(f[0]) for f in filas]
+
+    def evidencia(self, id_caso: str | None = None) -> list[evidencia.Anotacion]:
+        """Anotaciones de la cadena, de un caso o de todos."""
+        with self._cerrojo:
+            return evidencia.leer(self._con, id_caso)
+
+    def verificar_evidencia(self, cabeza_esperada: str | None = None) -> evidencia.Verificacion:
+        """Revisa la cadena completa y la compara con la historia guardada en cada caso."""
+        with self._cerrojo:
+            anotaciones = evidencia.leer(self._con)
+        return evidencia.verificar_cadena(anotaciones, self.listar(), cabeza_esperada)
 
     def cerrar(self) -> None:
         with self._cerrojo:

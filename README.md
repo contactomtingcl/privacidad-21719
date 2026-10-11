@@ -23,8 +23,8 @@ En construcción (entrega: 28 de octubre de 2026). Avance actual:
 | Motor de reglas: deberes ante incidentes (Agencia, titulares, ANCI) y plazos de solicitudes | Primera versión |
 | Set etiquetado de 150 casos y evaluación en tres niveles | Listo ([resultados](resultados/evaluacion.md)) |
 | Canal de reporte (QR o enlace), confirmación al titular y modo reservado | Primera versión ([cómo usarlo](#canal-de-reporte)) |
-| Enrutamiento de reportes | Pendiente |
-| Registro de evidencia | Pendiente |
+| Enrutamiento de reportes al delegado y al área dueña de los datos | Primera versión ([cómo funciona](#enrutamiento-y-evidencia)) |
+| Registro de evidencia encadenado (SHA-256) con verificación | Primera versión ([cómo funciona](#enrutamiento-y-evidencia)) |
 
 ## Cómo ejecutar
 
@@ -67,6 +67,7 @@ export PRIVACIDAD_LLAVE_RESERVADA_ARCHIVO=llave-reservada.key
 python -m privacidad.canal servir --datos casos-demo     # imprime un enlace por organización
 python -m privacidad.canal enlace --org comercial-los-robles   # guarda el QR en canal-comercial-los-robles.svg
 python -m privacidad.canal identidad --carpeta casos-demo --caso CODIGO   # el delegado abre una identidad reservada
+python -m privacidad.canal evidencia --carpeta casos-demo                 # revisa que la evidencia no se haya alterado
 ```
 
 Sin `ANTHROPIC_API_KEY` el canal funciona igual y deja los casos en revisión; con ella, la IA interpreta el texto ya enmascarado. Los archivos `*.key` y la carpeta `casos-demo/` están en `.gitignore`: nunca se suben.
@@ -76,8 +77,35 @@ Sin `ANTHROPIC_API_KEY` el canal funciona igual y deja los casos en revisión; c
 - **Llave simétrica:** con Fernet, quien administra el servidor y tiene la llave puede abrir las identidades reservadas. Las pantallas lo dicen así ("solo se abren con una llave de acceso restringido"), no "solo el delegado". Pasar a un esquema donde el servidor solo pueda cifrar (llave pública del delegado) queda en el roadmap.
 - El cifrado protege los campos de nombre y contacto. Si la persona escribe su nombre dentro del relato, ese texto no se cifra; los nombres no se detectan automáticamente.
 - El código QR depende de `segno`; en entornos sin acceso a PyPI sus pruebas se omiten y solo corren en la integración continua.
-- Aún no hay enrutamiento a la persona o área responsable, registro encadenado de evidencia ni panel del delegado. No se publica una cifra de rendimiento del canal: no hay medición.
+- Aún no hay panel del delegado ni avisos por correo o Telegram: el enrutamiento decide quién recibe cada caso, pero todavía no le envía nada. No se publica una cifra de rendimiento del canal: no hay medición.
 - El servidor no registra IP ni el contenido de los mensajes, pero la publicación en internet (dominio, HTTPS, límite de envíos) aún no está hecha.
+
+## Enrutamiento y evidencia
+
+### A quién le llega cada caso
+
+Las reglas están en `data/canal/enrutamiento.yaml` y se aplican con código, sin IA:
+
+- **El delegado de protección de datos recibe todos los casos** y valida cada decisión.
+- **Un área recibe el caso** si el mensaje menciona una de sus palabras (por ejemplo, "paseo" o "nómina" para Recursos Humanos, "publicidad" para Marketing; se compara sin mayúsculas ni tildes), o si atiende ese tipo de reporte: Compras recibe los avisos de proveedores e Informática los posibles ciberincidentes. Si ninguna área coincide, el delegado decide a quién derivarlo.
+- **Modo reservado:** el caso va solo al delegado. Las áreas que coincidían quedan como sugerencia para que él decida, así nadie del área puede deducir quién reportó.
+- **Urgencia según los plazos del motor:** "inmediata" si un plazo vence en menos de 24 horas o ya venció (por ejemplo, la alerta de 3 horas a la ANCI); "alta" si corresponde avisar a la Agencia, si un plazo vence en menos de 3 días o si la IA no pudo leer un incidente; "normal" en el resto.
+
+Cada destino y la urgencia traen su porqué en lenguaje simple. Las palabras y los umbrales son una decisión de diseño del proyecto, no una exigencia de la ley. Los cargos y correos son ficticios y pasan por la guardia de datos sintéticos.
+
+### Registro de evidencia encadenado
+
+Todo lo que le pasa a un caso (ingreso, lectura de la IA, confirmación del titular, enrutamiento) queda anotado en un registro donde cada anotación lleva la huella SHA-256 de la anterior (`hashlib`, de la biblioteca estándar de Python). Si alguien cambia o borra una anotación, las huellas dejan de calzar.
+
+- El caso y sus anotaciones se guardan en la misma transacción: o quedan ambos o ninguno.
+- La aplicación no permite acortar ni reescribir la historia de un caso, y la base de datos rechaza cambios y borrados en la evidencia.
+- Las anotaciones no llevan datos personales: si un evento trae un RUT, un correo o un teléfono, no se guarda.
+- `python -m privacidad.canal evidencia --carpeta casos-demo` revisa la cadena completa y la compara con la historia de cada caso. Termina con la huella final.
+
+Límites conocidos:
+
+- Quien tenga acceso directo al archivo puede quitar las protecciones de la base de datos. Lo que no puede es alterar la evidencia sin que la revisión lo detecte, con una excepción: **si borra las últimas anotaciones (y los casos a los que pertenecen), la cadena que queda sigue siendo coherente.** Para detectarlo hay que guardar la huella final fuera del servidor y revisar con `--cabeza HUELLA`. El sello de tiempo previsto en el roadmap automatiza ese paso.
+- La cadena es una sola para todas las organizaciones del prototipo; cada organización con su propia cadena queda para la versión con PostgreSQL.
 
 ## Evaluación
 
