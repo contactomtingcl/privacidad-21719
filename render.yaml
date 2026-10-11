@@ -1,0 +1,23 @@
+# Publicación del prototipo en Render (https://render.com/docs/blueprint-spec).
+# Solo datos ficticios: el servidor arranca en modo demo, con casos de prueba y sin contraseña.
+# Los secretos no van aquí: Render los genera (generateValue) o los pide en su panel (sync: false).
+services:
+  - type: web
+    name: privacidad-21719
+    runtime: docker
+    branch: main
+    region: virginia
+    plan: 0.5c-512mb
+    healthCheckPath: /salud
+    autoDeployTrigger: checksPass   # se publica solo si las pruebas de GitHub pasan
+    disk:
+      name: casos
+      mountPath: /app/datos
+      sizeGB: 1
+    envVars:
+      - key: PRIVACIDAD_SECRETO_ENLACES
+        generateValue: true
+      - key: PRIVACIDAD_SECRETO_PANEL
+        generateValue: true
+      - key: ANTHROPIC_API_KEY
+        sync: false   # se pega en el panel de Render; nunca en el repositorio ni en un chat

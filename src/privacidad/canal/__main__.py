@@ -184,6 +184,11 @@ def comando_servir(args: argparse.Namespace) -> int:
         port=args.puerto,
         access_log=False,
         log_level="warning",
+        # Detrás del proxy de un servicio de hosting (Render), la conexión con el navegador es
+        # HTTPS aunque al programa le llegue HTTP: se confía en las cabeceras X-Forwarded-*
+        # solo cuando se indica, porque ahí nadie más puede llegar directo al programa.
+        proxy_headers=True,
+        forwarded_allow_ips="*" if args.detras_de_proxy else None,
     )
     return 0
 
@@ -284,6 +289,11 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--base-url")
     p.add_argument("--datos", help="carpeta donde guardar los casos (por defecto, memoria)")
     p.add_argument("--demo", action="store_true", help="panel sin contraseña y casos ficticios")
+    p.add_argument(
+        "--detras-de-proxy",
+        action="store_true",
+        help="confía en las cabeceras X-Forwarded-* del hosting (solo detrás de su proxy)",
+    )
     p.set_defaults(funcion=comando_servir)
 
     p = sub.add_parser("usuario", help="crea un usuario del panel del delegado")

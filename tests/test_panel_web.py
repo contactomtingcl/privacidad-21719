@@ -311,6 +311,11 @@ class TestDemo(unittest.TestCase):
 
 
 class TestSinInterferencia(unittest.TestCase):
+    def test_ruta_de_salud_para_el_hosting(self):
+        app, *_ = crear_panel_de_prueba(None)
+        r = Navegador(app).pedir("GET", "/salud")
+        self.assertEqual((r.status, r.cuerpo), (200, b"ok"))
+
     def test_el_canal_publico_sigue_igual(self):
         app, canal, _ = crear_panel_de_prueba(None)
         r = Navegador(app).pedir("GET", "/")

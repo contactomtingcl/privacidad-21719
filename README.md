@@ -158,6 +158,17 @@ Librerías y recursos incluidos en el repositorio, sin cargar nada de internet: 
 - La IA todavía no indica en qué frase del mensaje se basó cada hecho; está planificado, con verificación por código.
 - En la demo, la llave del modo reservado se crea en memoria al arrancar y se pierde al detenerlo.
 
+## Publicación en internet
+
+El prototipo se publica en [Render](https://render.com) a partir de este repositorio, con la configuración en `render.yaml` y la imagen en `Dockerfile`:
+
+- Arranca en **modo demo** (casos ficticios, sin contraseña) y se publica solo cuando las pruebas de GitHub pasan.
+- Los casos y la cadena de evidencia quedan en un disco persistente de 1 GB; los secretos los genera Render o se pegan en su panel, nunca en el repositorio.
+- Corre detrás del proxy de Render, que entrega HTTPS: la opción `--detras-de-proxy` le indica al programa que confíe en sus cabeceras `X-Forwarded-*`.
+- Costo: US$7 al mes por el servidor siempre encendido y US$0,25 al mes por el disco (precios de Render, octubre de 2026).
+
+Límites: el servidor está en Estados Unidos (región Virginia). Para un piloto con datos reales, el plan es moverlo a la región de Santiago de Google Cloud. Con disco persistente, cada despliegue deja el sitio sin servicio unos segundos. La imagen corre como administrador del contenedor porque Render no documenta los permisos del disco.
+
 ## Evaluación
 
 El sistema se mide con 150 casos ficticios etiquetados (`data/evaluacion/`): 50 reportes de incidentes, 50 mensajes de titulares y 50 columnas de planillas. Se comparan tres niveles: reglas por palabras clave sin IA, la IA decidiendo sola con el texto legal a la vista, y el sistema propuesto (la IA interpreta y el motor de reglas decide).

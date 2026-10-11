@@ -1,0 +1,10 @@
+.git
+.github
+tests
+resultados
+casos-demo
+**/__pycache__
+*.key
+llave*
+secreto-enlaces*
+.ruff_cache

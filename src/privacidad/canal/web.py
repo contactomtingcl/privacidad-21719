@@ -177,6 +177,10 @@ def crear_app(canal: CanalReporte, base_url: str, panel: Any = None) -> Starlett
             "organización.",
         )
 
+    async def salud(_: Request) -> Response:
+        """Para el hosting: responde si el programa está vivo, sin datos de ningún caso."""
+        return Response("ok", media_type="text/plain")
+
     async def ver_formulario(request: Request) -> Response:
         return formulario(organizacion(request), {})
 
@@ -274,6 +278,7 @@ def crear_app(canal: CanalReporte, base_url: str, panel: Any = None) -> Starlett
 
     rutas = [
         Route("/", inicio, methods=["GET"]),
+        Route("/salud", salud, methods=["GET"]),
         Route("/canal/{org}/{firma}", ver_formulario, methods=["GET"]),
         Route("/canal/{org}/{firma}", enviar_formulario, methods=["POST"]),
         Route("/canal/{org}/{firma}/qr.svg", ver_qr, methods=["GET"]),
