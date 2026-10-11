@@ -32,6 +32,7 @@ from ..interpretacion.solicitudes import InterpretacionSolicitud
 from ..motor import HechosIncidente, HechosSolicitud, decidir_incidente, decidir_solicitud
 from . import confirmacion as conf
 from .confirmacion import RespuestaInvalida
+from .delegado import AccionesDelegado
 from .enlaces import enlace_canal, firma_valida
 from .enrutamiento import ReglasEnrutamiento, cargar_reglas_enrutamiento, enrutar
 from .modelos import Caso, Organizacion, TipoReporte, ahora_chile
@@ -70,7 +71,7 @@ def _nuevo_id() -> str:
     return secrets.token_urlsafe(12)
 
 
-class CanalReporte:
+class CanalReporte(AccionesDelegado):
     def __init__(
         self,
         *,

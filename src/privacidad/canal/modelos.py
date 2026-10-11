@@ -36,6 +36,10 @@ EstadoCaso = Literal[
     "sin_solicitud",  # el mensaje no ejerce un derecho; lo revisa una persona
 ]
 Urgencia = Literal["inmediata", "alta", "normal"]
+# Motivos fijos: van a la evidencia, así que no pueden traer texto libre con datos personales.
+MotivoCorreccion = Literal["error_ia", "informacion_nueva", "confirmado_por_area", "otro"]
+MotivoDecision = Literal["datos_revisados", "consulta_area", "criterio_delegado", "otro"]
+MotivoIdentidad = Literal["contactar_a_quien_reporto", "requerimiento_de_autoridad", "otro"]
 EstadoConfirmacion = Literal["no_requerida", "pendiente", "confirmada", "corregida", "por_defecto"]
 
 
@@ -103,6 +107,34 @@ class Asignacion(BaseModel):
         }
 
 
+# --- acciones del delegado --------------------------------------------------------------
+
+
+class Correccion(BaseModel):
+    """El delegado cambió hechos propuestos por la IA. Solo valores cerrados, sin texto libre."""
+
+    cambios: dict[str, list[Any]]  # campo → [antes, después]
+    motivo: MotivoCorreccion
+    nota: str | None = None  # queda en el caso, nunca en la evidencia
+    por: str  # identificador de usuario, no un nombre
+    momento: datetime
+
+
+class DecisionDelegado(BaseModel):
+    """Resolución humana de un deber que el motor dejó en "revisar"."""
+
+    deber: str
+    decision: Literal["si", "no"]
+    motivo: MotivoDecision
+    por: str
+    momento: datetime
+
+
+class Validacion(BaseModel):
+    por: str
+    momento: datetime
+
+
 class Caso(BaseModel):
     id: str  # también es el código de seguimiento que recibe la persona
     id_organizacion: str
@@ -125,10 +157,20 @@ class Caso(BaseModel):
     # ciberseguridad, para que el delegado los vea desde el primer minuto.
     relojes_anci_posibles: list[Deber] = Field(default_factory=list)
     asignacion: Asignacion | None = None  # a quién le llegó y con qué urgencia
+    # Lo que hizo el delegado. `hechos_incidente` conserva siempre la propuesta de la IA.
+    hechos_delegado: HechosIncidente | None = None
+    correcciones: list[Correccion] = Field(default_factory=list)
+    decisiones: dict[str, DecisionDelegado] = Field(default_factory=dict)
+    validacion: Validacion | None = None
     eventos: list[Evento] = Field(default_factory=list)
 
     def registrar(self, tipo: str, momento: datetime, /, **detalle: Any) -> None:
         self.eventos.append(Evento(tipo=tipo, momento=momento, detalle=detalle))
+
+    @property
+    def hechos_vigentes(self) -> HechosIncidente | None:
+        """Los hechos con que decide el motor: los del delegado si corrigió, si no los de la IA."""
+        return self.hechos_delegado or self.hechos_incidente
 
 
 def cargar_organizaciones(ruta: Path | None = None) -> dict[str, Organizacion]:

@@ -167,8 +167,9 @@ def _urgencia(
 
 
 def _es_ciberincidente(caso: Caso) -> bool:
-    if caso.hechos_incidente is not None:
-        return caso.hechos_incidente.ciberincidente in ("si", "dudoso")
+    hechos = caso.hechos_vigentes  # los del delegado si corrigió, si no los de la IA
+    if hechos is not None:
+        return hechos.ciberincidente in ("si", "dudoso")
     # Si la IA no respondió y el motor mostró relojes posibles de la ANCI, se trata como posible.
     return bool(caso.relojes_anci_posibles)
 
