@@ -25,6 +25,7 @@ En construcción (entrega: 28 de octubre de 2026). Avance actual:
 | Canal de reporte (QR o enlace), confirmación al titular y modo reservado | Primera versión ([cómo usarlo](#canal-de-reporte)) |
 | Enrutamiento de reportes al delegado y al área dueña de los datos | Primera versión ([cómo funciona](#enrutamiento-y-evidencia)) |
 | Registro de evidencia encadenado (SHA-256) con verificación | Primera versión ([cómo funciona](#enrutamiento-y-evidencia)) |
+| Panel del delegado: bandeja en vivo, ficha del caso, correcciones, validación y evidencia | Primera versión ([cómo usarlo](#panel-del-delegado)) |
 
 ## Cómo ejecutar
 
@@ -77,7 +78,7 @@ Sin `ANTHROPIC_API_KEY` el canal funciona igual y deja los casos en revisión; c
 - **Llave simétrica:** con Fernet, quien administra el servidor y tiene la llave puede abrir las identidades reservadas. Las pantallas lo dicen así ("solo se abren con una llave de acceso restringido"), no "solo el delegado". Pasar a un esquema donde el servidor solo pueda cifrar (llave pública del delegado) queda en el roadmap.
 - El cifrado protege los campos de nombre y contacto. Si la persona escribe su nombre dentro del relato, ese texto no se cifra; los nombres no se detectan automáticamente.
 - El código QR depende de `segno`; en entornos sin acceso a PyPI sus pruebas se omiten y solo corren en la integración continua.
-- Aún no hay panel del delegado ni avisos por correo o Telegram: el enrutamiento decide quién recibe cada caso, pero todavía no le envía nada. No se publica una cifra de rendimiento del canal: no hay medición.
+- Aún no hay avisos por correo o Telegram: el enrutamiento decide quién recibe cada caso y el delegado lo ve en el panel, pero las áreas todavía no reciben nada. No se publica una cifra de rendimiento del canal: no hay medición.
 - El servidor no registra IP ni el contenido de los mensajes, pero la publicación en internet (dominio, HTTPS, límite de envíos) aún no está hecha.
 
 ## Enrutamiento y evidencia
@@ -106,6 +107,56 @@ Límites conocidos:
 
 - Quien tenga acceso directo al archivo puede quitar las protecciones de la base de datos. Lo que no puede es alterar la evidencia sin que la revisión lo detecte, con una excepción: **si borra las últimas anotaciones (y los casos a los que pertenecen), la cadena que queda sigue siendo coherente.** Para detectarlo hay que guardar la huella final fuera del servidor y revisar con `--cabeza HUELLA`. El sello de tiempo previsto en el roadmap automatiza ese paso.
 - La cadena es una sola para todas las organizaciones del prototipo; cada organización con su propia cadena queda para la versión con PostgreSQL.
+
+## Panel del delegado
+
+El panel vive en el mismo programa que el canal, en la dirección `/panel`. Tiene tres pantallas:
+
+- **Bandeja:** los casos ordenados por urgencia, con el plazo más cercano corriendo en vivo. Cada 5 segundos revisa si llegó algo nuevo: un reporte enviado por el código QR aparece solo, con un aviso.
+- **Ficha del caso:** lo que llegó (tal como lo leyó la IA, con los datos tapados), los hechos que propuso la IA, lo que decidió el motor con su artículo, a quién se envió y por qué, y la línea de tiempo con la huella de cada anotación.
+- **Evidencia:** revisa la cadena completa y muestra las últimas anotaciones de la organización.
+
+Lo que puede hacer el delegado, siempre con la regla "la IA interpreta, el motor decide, la persona valida":
+
+- **Corregir hechos**, nunca plazos: el motor vuelve a decidir desde que se supo del incidente. La propuesta de la IA se conserva para comparar.
+- **Resolver dudas:** lo que el motor deja en "Revisar" se decide con un sí o un no y un motivo.
+- **Validar:** no se puede mientras quede una duda; si después se corrige algo, la validación se anula y queda anotado.
+- **Abrir una identidad reservada:** pide de nuevo la contraseña y un motivo, y queda en la evidencia.
+
+Cada acción deja un evento en la cadena con el usuario y un motivo de una lista cerrada. Las notas libres quedan solo en el caso, nunca en la cadena.
+
+### Probarlo
+
+```bash
+python -m privacidad.canal servir --demo --datos casos-demo          # demo: sin contraseña, con casos ficticios
+python -m privacidad.canal usuario --datos casos-demo --org municipalidad-piloto --usuario delegado-muni
+python -m privacidad.canal servir --datos casos-demo                 # modo real: pide usuario y contraseña
+```
+
+La **demo** carga casos ficticios (`data/demo/casos.yaml`) por el mismo canal que un reporte real, con las respuestas de la IA grabadas (cada evento las marca como `respuesta-grabada`). Funciona sin conexión y sin costo, muestra un aviso visible y no abre identidades reservadas. Su botón "Simular una alteración" cambia de verdad una copia de la base y corre la misma verificación; la base real no se toca.
+
+### Seguridad
+
+- Contraseñas guardadas como huella **scrypt** (`hashlib`, biblioteca estándar) con sal propia; comparación en tiempo constante. Un usuario inexistente tarda lo mismo que uno real.
+- Tras 5 intentos fallidos en 15 minutos, el usuario se bloquea 15 minutos.
+- Sesión en una cookie firmada solo para `/panel`, `HttpOnly`, `SameSite=Strict` y `Secure` con HTTPS. Expira a los 30 minutos sin uso y a las 8 horas en total; la revisión automática de la bandeja no la mantiene viva.
+- Cada formulario y cada llamada de htmx lleva un código propio de la sesión (CSRF) y se revisa la cabecera `Origin`.
+- Política de contenido estricta: solo scripts, estilos y fuentes del mismo panel, sin código escrito dentro de las páginas (una prueba lo revisa en cada plantilla). htmx corre sin `eval`.
+- Un delegado solo alcanza su organización; un caso ajeno responde 404, igual que uno inexistente.
+
+### Diseño y accesibilidad
+
+Tema oscuro y claro (botón de sol), uso completo con teclado, urgencia escrita además de coloreada y el lenguaje de la ley solo en "Ver fuente legal". Las animaciones son solo CSS, muestran cambios que ya ocurrieron (un caso que llega, un plazo que se recalcula, la cadena que se revisa) y se apagan si el equipo pide "reducir movimiento". La ficha se puede imprimir como expediente.
+
+Librerías y recursos incluidos en el repositorio, sin cargar nada de internet: [htmx 2.0.11](https://htmx.org) (licencia 0BSD), fuentes IBM Plex Sans y Mono y Space Grotesk (SIL Open Font License). Sus licencias están junto a los archivos, en `src/privacidad/panel/estaticos/`.
+
+### Límites conocidos
+
+- Un solo rol (delegado). La vista para cada área (solo sus casos, nunca los reservados) queda para después.
+- Sin segundo factor de ingreso. El límite de intentos vive en memoria: se reinicia con el servidor.
+- La cookie de sesión va firmada, no cifrada: contiene el usuario y la organización (no la contraseña ni datos de casos).
+- La IA todavía no indica en qué frase del mensaje se basó cada hecho; está planificado, con verificación por código.
+- En la demo, la llave del modo reservado se crea en memoria al arrancar y se pierde al detenerlo.
 
 ## Evaluación
 

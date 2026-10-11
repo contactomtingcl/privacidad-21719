@@ -56,7 +56,7 @@ Hecho: corpus legal indexado (107 artículos) con verificador de citas, guardia 
 sintéticos, detección y enmascarado, inventario con IA (11 campos del DS 662), motor de
 reglas (Agencia, titulares, ANCI, plazos de solicitudes), interpretación con IA de
 solicitudes e incidentes, set de 150 casos y evaluación en tres niveles (iteración 2:
-IA + motor 76/77 deberes detectados). 292 pruebas (5 omitidas sin segno) en verde.
+IA + motor 76/77 deberes detectados). 341 pruebas (5 omitidas sin segno) en verde.
 
 Canal de reporte (primera versión, 10 oct): enlace firmado y QR (segno), confirmación al
 titular con menú fijo y, sin respuesta a los 5 días, lectura reversible: oposición + bloqueo
@@ -74,7 +74,18 @@ misma transacción que el caso, disparadores contra cambios y borrados, sin dato
 comando `evidencia` para verificar. Límite declarado: borrar el final de la cadena solo se
 detecta con la huella final guardada aparte (`--cabeza`).
 
-Pendiente técnico, en orden: panel del delegado, avisos por correo/Telegram a los destinos,
+Panel del delegado (11 oct, diseño aprobado por Matías tras tres auditorías contra la rúbrica):
+`src/privacidad/panel/` montado en `/panel` del mismo programa. Starlette + Jinja2 + htmx 2.0.11
+guardado en el repositorio (sin eval), fuentes locales, CSP sin código en línea, tema oscuro y
+claro, animaciones solo CSS con "reducir movimiento". Acciones en `canal/delegado.py` (corregir
+hechos con motivo de lista cerrada, resolver "revisar", validar, abrir identidad con contraseña).
+Usuarios con scrypt (`panel/usuarios.py`), comando `usuario`. Demo: `servir --demo` con
+`data/demo/casos.yaml` (respuestas grabadas) y alteración real sobre una copia. Para revisar las
+pantallas: levantar la demo y tomar capturas con Playwright (Chromium en /opt/pw-browsers).
+
+Pendiente técnico, en orden: respaldo de la IA (frase del mensaje que sostiene cada hecho,
+verificada por código; requiere cambiar el esquema y volver a medir), cifra de correcciones del
+delegado desde la evidencia, avisos por correo/Telegram a los destinos,
 borradores de reporte a la Agencia y a la ANCI, completar el motor (perfiles, simulador),
 publicación en internet con modo demo. Si se cumple la puerta de calidad del 23 de octubre:
 red de cascada y sello de tiempo. Rediseño contrafactual e impacto de proyectos de ley entran
