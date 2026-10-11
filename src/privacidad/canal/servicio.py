@@ -68,7 +68,12 @@ class ReservadoNoDisponible(ErrorCanal):
 
 
 def _nuevo_id() -> str:
-    return secrets.token_urlsafe(12)
+    """Código de seguimiento aleatorio. Nunca empieza con guion, para que la línea de comandos
+    no lo confunda con una opción (`--caso -abc…`)."""
+    while True:
+        codigo = secrets.token_urlsafe(12)
+        if codigo[0] != "-":
+            return codigo
 
 
 class CanalReporte(AccionesDelegado):

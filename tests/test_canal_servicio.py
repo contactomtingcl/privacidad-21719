@@ -416,3 +416,10 @@ class TestPersistenciaEnCarpeta(unittest.TestCase):
             nuevo = RepositorioCasos(Path(tmp))
             self.assertEqual(nuevo.obtener(caso.id).estado, "interpretado")
             nuevo.cerrar()
+
+
+class TestCodigos(unittest.TestCase):
+    def test_el_codigo_nunca_empieza_con_guion(self):
+        from privacidad.canal.servicio import _nuevo_id
+
+        self.assertTrue(all(_nuevo_id()[0] != "-" for _ in range(2000)))
