@@ -1,0 +1,133 @@
+# Casos de la demo pública. Todo es ficticio: organizaciones, personas, correos (dominios
+# reservados .example) y textos. Las respuestas de la IA están grabadas para que la demo
+# funcione sin conexión y sin costo; cada evento las marca con el modelo "respuesta-grabada".
+# Un caso con `ia: null` simula que la IA no respondió.
+casos:
+  - org: municipalidad-piloto
+    tipo: incidente
+    hace_minutos: 19
+    texto: >-
+      Esta mañana el sistema de beneficios mostró postulaciones de otras familias a una
+      funcionaria de partes. Alguien entró con la cuenta soporte@municipalidad-piloto.example
+      desde fuera del municipio.
+    ia:
+      herramienta: registrar_hechos
+      entrada:
+        datos_personales: true
+        vulneracion: acceso_no_autorizado
+        categorias_especiales: []
+        riesgo_mitigado: false
+        ciberincidente: "si"
+        interrupcion_servicio: false
+        titulares_aprox: 120
+        resumen: Acceso indebido al sistema de beneficios sociales
+
+  - org: municipalidad-piloto
+    tipo: aviso_proveedor
+    hace_minutos: 47
+    texto: >-
+      Somos el proveedor del sistema de pagos en línea. Detectamos un acceso extraño a una base
+      de respaldo y estamos revisando qué se vio.
+    ia: null
+
+  - org: municipalidad-piloto
+    tipo: incidente
+    hace_minutos: 95
+    texto: >-
+      Un funcionario dejó abierta en la pantalla del mesón de atención la ficha social de un
+      vecino y otra persona la fotografió.
+    ia:
+      herramienta: registrar_hechos
+      entrada:
+        datos_personales: true
+        vulneracion: comunicacion_no_autorizada
+        categorias_especiales: []
+        riesgo_mitigado: false
+        ciberincidente: dudoso
+        interrupcion_servicio: false
+        titulares_aprox: 1
+        resumen: Ficha social expuesta en el mesón de atención
+
+  - org: municipalidad-piloto
+    tipo: solicitud
+    hace_minutos: 1500
+    nombre: Vecina Ficticia Uno
+    contacto: vecina.uno@example.com
+    texto: >-
+      Quiero que dejen de usar mis datos del registro de postulantes mientras reviso mi caso.
+    ia:
+      herramienta: interpretar_solicitud
+      entrada:
+        es_solicitud: true
+        derechos: [bloqueo]
+        requiere_confirmacion: false
+        resumen: Pide bloquear sus datos del registro de postulantes
+
+  - org: municipalidad-piloto
+    tipo: solicitud
+    hace_minutos: 4300
+    nombre: Vecino Ficticio Dos
+    contacto: vecino.dos@example.com
+    texto: Quiero saber qué datos míos tiene la municipalidad y para qué los usan.
+    ia:
+      herramienta: interpretar_solicitud
+      entrada:
+        es_solicitud: true
+        derechos: [acceso]
+        requiere_confirmacion: false
+        resumen: Quiere saber qué datos suyos tiene la municipalidad
+
+  - org: comercial-los-robles
+    tipo: incidente
+    hace_minutos: 26
+    reservado: true
+    nombre: Trabajadora Ficticia Tres
+    contacto: trabajadora.tres@example.com
+    texto: >-
+      Envié por error la planilla del paseo de fin de año, con los datos y alergias de los
+      hijos de los trabajadores, al correo de un proveedor.
+    ia:
+      herramienta: registrar_hechos
+      entrada:
+        datos_personales: true
+        vulneracion: comunicacion_no_autorizada
+        categorias_especiales: [menores_14, sensibles]
+        riesgo_mitigado: false
+        ciberincidente: "no"
+        interrupcion_servicio: false
+        titulares_aprox: 84
+        resumen: Planilla del paseo enviada a un proveedor por error
+
+  - org: comercial-los-robles
+    tipo: solicitud
+    hace_minutos: 300
+    nombre: Cliente Ficticio Cuatro
+    contacto: cliente.cuatro@example.com
+    texto: Ya no quiero recibir sus correos de ofertas. Sáquenme de todo.
+    ia:
+      herramienta: interpretar_solicitud
+      entrada:
+        es_solicitud: true
+        derechos: [oposicion]
+        requiere_confirmacion: true
+        pregunta_confirmacion: ¿Quiere dejar de recibir publicidad o que borremos sus datos?
+        resumen: No quiere recibir más publicidad
+
+  - org: comercial-los-robles
+    tipo: incidente
+    hace_minutos: 2900
+    validar: true
+    texto: >-
+      Se perdió un pendrive con la nómina de remuneraciones, pero estaba cifrado con contraseña
+      y lo encontramos al día siguiente sin señales de uso.
+    ia:
+      herramienta: registrar_hechos
+      entrada:
+        datos_personales: true
+        vulneracion: perdida
+        categorias_especiales: [financieros]
+        riesgo_mitigado: true
+        ciberincidente: "no"
+        interrupcion_servicio: false
+        titulares_aprox: 120
+        resumen: Pendrive cifrado con la nómina, recuperado sin uso

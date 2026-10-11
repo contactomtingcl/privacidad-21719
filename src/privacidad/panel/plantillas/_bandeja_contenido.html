@@ -1,0 +1,73 @@
+{% from "macros.html" import anillo, pildora %}
+<div id="vivo" class="vivo" hx-get="{{ BASE }}/bandeja/contenido?filtro={{ filtro }}&amp;desde={{ ahora | iso | urlencode }}" hx-trigger="every 5s" hx-swap="outerHTML">
+{% if nuevas %}
+<div class="aviso llegada" role="status">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3DD6C3" stroke-width="2" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/></svg>
+<span>{% if nuevas == 1 %}Llegó un reporte nuevo{% else %}Llegaron {{ nuevas }} reportes nuevos{% endif %}: el motor calculó sus plazos y quedó en la evidencia.{% if nuevas_revision %} La IA no {% if nuevas_revision == 1 %}pudo leer uno{% else %}pudo leer {{ nuevas_revision }}{% endif %}: queda en revisión y el plazo corre igual.{% else %} La IA ya propuso su lectura.{% endif %}</span>
+</div>
+{% endif %}
+<section class="resumen" aria-label="Resumen">
+<div class="tarjeta cifra {{ '' if en_vivo else 'sube' }}">
+<span class="etiqueta">Plazos legales corriendo</span>
+<span class="numero"><span class="{% if nuevas %}salta{% endif %}">{{ resumen.plazos }}</span></span>
+<span class="pie {% if resumen.plazos_cercanos %}rojo{% endif %}">{% if resumen.plazos_cercanos %}{{ resumen.plazos_cercanos }} vence{% if resumen.plazos_cercanos > 1 %}n{% endif %} en menos de 3 horas{% else %}Ninguno vence en las próximas 3 horas{% endif %}</span>
+</div>
+<div class="tarjeta cifra {{ '' if en_vivo else 'sube' }}">
+<span class="etiqueta">Esperan tu validación</span>
+<span class="numero"><span class="{% if nuevas %}salta{% endif %}">{{ resumen.por_validar }}</span></span>
+<span class="pie">La IA propone, tú decides</span>
+</div>
+<div class="tarjeta cifra {{ '' if en_vivo else 'sube' }}">
+<span class="etiqueta">Requieren revisión</span>
+<span class="numero">{{ resumen.revision }}</span>
+<span class="pie {% if resumen.revision %}ambar{% endif %}">{% if resumen.revision %}La IA no respondió; el plazo corre igual{% else %}Ninguno sin lectura{% endif %}</span>
+</div>
+<a class="tarjeta cifra {{ '' if en_vivo else 'sube' }} {% if integra %}integra{% else %}alterada{% endif %}" href="{{ BASE }}/evidencia">
+<span class="etiqueta">Cadena de evidencia</span>
+<span class="numero">{% if integra %}Íntegra{% else %}Alterada{% endif %}</span>
+<span class="pie">Revisada recién · ver detalle</span>
+</a>
+</section>
+
+{% if urgente and filtro != "validados" %}
+{% set u = urgente.fila %}
+<section class="urgente {{ '' if en_vivo else 'sube' }} {{ u.urgencia }}" aria-label="Lo más urgente">
+{% if u.vence and urgente.relojes and urgente.relojes[0].vence %}
+{{ anillo(urgente.relojes[0].vence, urgente.relojes[0].total_s, ahora) }}
+{% endif %}
+<div class="texto">
+<div class="acciones">{{ pildora(u.urgencia, u.etiqueta_urgencia) }}<span class="suave">{{ u.tipo }} · ingresó a las {{ urgente.caso.ingreso | hora }}</span></div>
+<h2>{{ u.resumen }}</h2>
+<p>{{ urgente.caso.asignacion.porque_urgencia }} Se envió a: {{ u.destinos }}.</p>
+</div>
+<div class="botones">
+<a class="boton primario" href="{{ BASE }}/caso/{{ u.id }}">Abrir y validar</a>
+</div>
+</section>
+{% endif %}
+
+<section aria-label="Casos" class="vivo">
+<div class="cabecera">
+<h2>{% if filtro == "validados" %}Validados{% else %}Casos abiertos{% endif %}</h2>
+<nav class="filtros" aria-label="Filtrar">
+{% for id, nombre in FILTROS.items() %}<a href="{{ BASE }}/?filtro={{ id }}" {% if id == filtro %}aria-current="true"{% endif %}>{{ nombre }}</a>{% endfor %}
+</nav>
+</div>
+<div class="tabla">
+<div class="ancho">
+<div class="fila titulos" aria-hidden="true"><span>Urgencia</span><span>Caso</span><span>Se envió a</span><span>Próximo plazo</span><span>Estado</span></div>
+{% for f in filas %}
+<a class="fila {% if f.nueva %}nueva{% endif %}" href="{{ BASE }}/caso/{{ f.id }}">
+{{ pildora(f.urgencia, f.etiqueta_urgencia) }}
+<span class="caso"><b>{{ f.resumen }}</b><small>{{ f.tipo }} · <span class="mono">{{ f.id }}</span></small></span>
+<span>{{ f.destinos }}</span>
+<span class="plazo {% if f.urgencia == 'inmediata' %}rojo{% endif %}">{{ f.plazo }}</span>
+<span class="e-{{ f.clase_estado }}">{{ f.estado }}</span>
+</a>
+{% else %}
+<p class="vacio">{% if filtro == "validados" %}Todavía no validas ningún caso.{% else %}No hay casos en esta vista. Cuando alguien reporte por el código QR, aparecerá aquí solo.{% endif %}</p>
+{% endfor %}
+</div>
+</div>
+</section>
+</div>

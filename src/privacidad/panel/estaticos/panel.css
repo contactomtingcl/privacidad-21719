@@ -1,0 +1,285 @@
+/* Panel del delegado · Privacidad 21.719
+   Tema oscuro por defecto y claro con el botón de sol. Las animaciones solo muestran cambios que
+   ya ocurrieron y se apagan si el equipo pide "reducir movimiento". */
+
+@font-face{font-family:"Space Grotesk";font-weight:500;font-display:swap;src:url(fuentes/SpaceGrotesk-Medium.woff2) format("woff2")}
+@font-face{font-family:"Space Grotesk";font-weight:700;font-display:swap;src:url(fuentes/SpaceGrotesk-Bold.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:400;font-display:swap;src:url(fuentes/IBMPlexSans-Regular.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:500;font-display:swap;src:url(fuentes/IBMPlexSans-Medium.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-weight:600;font-display:swap;src:url(fuentes/IBMPlexSans-SemiBold.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-display:swap;src:url(fuentes/IBMPlexMono-Regular.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:500;font-display:swap;src:url(fuentes/IBMPlexMono-Medium.woff2) format("woff2")}
+
+:root,[data-tema=oscuro]{color-scheme:dark;
+--bg:#0E1116;--nav:#12161D;--panel:#161B22;--sel:#1C2530;--line:#232B36;--line2:#2A3340;
+--tx:#E8EDF3;--tx2:#B5C0CB;--tx3:#9AA6B2;--acc:#3DD6C3;--acc-tx:#3DD6C3;--on-acc:#062B27;
+--red:#FF6B5B;--on-red:#2A0B07;--red-tx:#FF8A7D;--red-bg:#1A1416;--red-line:#5A2A26;--red-soft:#D5C3C0;--ring:#3A2224;
+--amb:#F2B84B;--on-amb:#2B1D02;--amb-tx:#F2B84B;--amb-bg:#1A1810;--amb-line:#5A4A1E;--amb-soft:#D8CDB0;
+--blu:#2F5E9E;--on-blu:#FFFFFF;--ok-bg:#10221F;--ok-line:#1F4A45;--mark:rgba(242,184,75,.32);--scan:rgba(61,214,195,.22)}
+[data-tema=claro]{color-scheme:light;
+--bg:#F3F5F8;--nav:#FFFFFF;--panel:#FFFFFF;--sel:#E9F1F0;--line:#E2E7ED;--line2:#D3DAE2;
+--tx:#0F1720;--tx2:#3D4A57;--tx3:#55626F;--acc:#3DD6C3;--acc-tx:#0B6E63;--on-acc:#062B27;
+--red-tx:#B42318;--red-bg:#FFF2F0;--red-line:#F3C3BC;--red-soft:#5A2E28;--ring:#F6D5D0;
+--amb-tx:#8A5A00;--amb-bg:#FFF8E8;--amb-line:#EED9A6;--amb-soft:#5C4615;
+--ok-bg:#E6F7F4;--ok-line:#A7E0D6;--mark:rgba(242,184,75,.45);--scan:rgba(11,110,99,.16)}
+
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--tx)}
+body{font:400 15px/1.6 "IBM Plex Sans",ui-sans-serif,system-ui,sans-serif}
+a{color:var(--acc-tx)}
+h1,h2,h3,.titular{font-family:"Space Grotesk",ui-sans-serif,system-ui,sans-serif;font-weight:500;letter-spacing:-.015em;margin:0}
+h1{font-size:32px;line-height:1.15}
+h2{font-size:20px}
+h3{font-size:17px}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+.suave{color:var(--tx3)}
+.saltar{position:absolute;left:-999px;top:0}
+.saltar:focus{left:12px;top:12px;z-index:9;background:var(--panel);padding:8px 12px;border-radius:8px}
+.oculto{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+
+/* --- estructura -------------------------------------------------------------- */
+.marco{min-height:100vh;display:flex;flex-wrap:wrap}
+.menu{flex:1 1 240px;max-width:100%;background:var(--nav);border-right:1px solid var(--line);padding:28px 20px;display:flex;flex-direction:column;gap:24px}
+.contenido{flex:999 1 560px;min-width:0;padding:32px 40px 48px;display:flex;flex-direction:column;gap:24px}
+@media (max-width:720px){.contenido{padding:20px 16px 40px}.menu{border-right:0;border-bottom:1px solid var(--line)}}
+.marca{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--tx)}
+.marca strong{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:17px;display:block}
+.marca span{font-size:12px;color:var(--tx3)}
+.nav{display:flex;flex-direction:column;gap:4px}
+.nav a{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;color:var(--tx2);text-decoration:none;min-height:44px}
+.nav a[aria-current=page]{background:var(--sel);color:var(--tx);font-weight:500}
+.nav .cuenta{margin-left:auto;font-size:12px;font-weight:600;background:var(--red);color:var(--on-red);border-radius:999px;padding:1px 8px}
+.pie-menu{margin-top:auto;display:flex;flex-direction:column;gap:12px}
+.nota-demo{border:1px dashed var(--line2);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--tx3);line-height:1.5}
+.persona{display:flex;align-items:center;gap:10px}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--sel);display:flex;align-items:center;justify-content:center;font:700 13px "Space Grotesk",sans-serif;color:var(--acc-tx);flex:none}
+.persona small{display:block;font-size:12px;color:var(--tx3)}
+.cabecera{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px}
+.acciones{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.banda-demo{background:var(--amb-bg);border:1px solid var(--amb-line);color:var(--amb-soft);border-radius:12px;padding:10px 14px;font-size:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.banda-demo form{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+/* --- controles --------------------------------------------------------------- */
+.boton,button,select,input,textarea{font:inherit}
+.boton,button{min-height:44px;border-radius:12px;border:1px solid var(--line2);background:var(--panel);color:var(--tx);padding:0 16px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font-weight:500;transition:background-color .2s,border-color .2s,transform .1s}
+.boton:hover,button:hover{border-color:var(--tx3)}
+button:active,.boton:active{transform:scale(.98)}
+.primario{background:var(--acc);border-color:var(--acc);color:var(--on-acc);font-weight:600}
+.primario:hover{border-color:var(--tx)}
+.peligro{border-color:var(--red-line);color:var(--red-tx);background:transparent}
+.discreto{border-style:dashed;background:transparent;color:var(--tx2)}
+.icono{min-width:44px;padding:0}
+select,input[type=text],input[type=password],input[type=number],textarea{min-height:44px;border-radius:10px;border:1px solid var(--line2);background:var(--bg);color:var(--tx);padding:8px 12px}
+textarea{min-height:72px;width:100%;resize:vertical}
+label{font-size:13px;color:var(--tx2)}
+.campo{display:flex;flex-direction:column;gap:6px}
+.error,.aviso{border-radius:12px;padding:12px 16px;font-size:14px}
+.error{background:var(--red-bg);border:1px solid var(--red-line);color:var(--red-tx)}
+.aviso{background:var(--ok-bg);border:1px solid var(--ok-line)}
+
+.vivo{display:flex;flex-direction:column;gap:24px}
+
+/* --- tarjetas ---------------------------------------------------------------- */
+.tarjeta{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 22px}
+.resumen{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.cifra{display:flex;flex-direction:column;gap:6px;text-decoration:none;color:var(--tx)}
+.cifra .numero{font:500 34px/1.1 "Space Grotesk",sans-serif}
+.cifra .etiqueta{font-size:13px;color:var(--tx3)}
+.cifra .pie{font-size:12px;color:var(--tx3)}
+.cifra .pie.rojo{color:var(--red-tx)}.cifra .pie.ambar{color:var(--amb-tx)}
+.cifra.integra{border-color:var(--ok-line)}.cifra.integra .numero{color:var(--acc-tx)}
+.cifra.alterada{border-color:var(--red-line)}.cifra.alterada .numero{color:var(--red-tx)}
+
+.pildora{display:inline-block;font-size:12px;font-weight:600;border-radius:6px;padding:3px 9px;white-space:nowrap}
+.u-inmediata{background:var(--red);color:var(--on-red)}
+.u-alta{background:var(--amb);color:var(--on-amb)}
+.u-normal{background:var(--line2);color:var(--tx)}
+
+/* lo más urgente */
+.urgente{background:var(--red-bg);border:1px solid var(--red-line);border-radius:18px;padding:24px 28px;display:flex;flex-wrap:wrap;align-items:center;gap:28px}
+.urgente.alta{background:var(--amb-bg);border-color:var(--amb-line)}
+.urgente p{margin:0;color:var(--red-soft)}
+.urgente.alta p{color:var(--amb-soft)}
+.urgente .texto{flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:10px}
+.urgente .botones{display:flex;flex-direction:column;gap:10px;flex:0 1 220px}
+
+/* anillo del reloj */
+.anillo{position:relative;flex:none}
+.anillo svg{display:block}
+.anillo .pista{stroke:var(--ring)}
+.anillo .avance{stroke:var(--red);transition:stroke-dasharray 1s linear}
+.anillo .latido{stroke:var(--red);transform-origin:center;transform-box:fill-box;animation:latido 1.6s ease-out infinite}
+.anillo .lectura{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.anillo .lectura b{font:500 21px "IBM Plex Mono",monospace;color:var(--red-tx)}
+.anillo .lectura small{font-size:11px;color:var(--red-soft)}
+
+/* tabla de casos */
+.filtros{display:flex;gap:6px;flex-wrap:wrap}
+.filtros a{min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line2);color:var(--tx2);text-decoration:none;display:inline-flex;align-items:center;font-size:13px;transition:background-color .2s,color .2s}
+.filtros a[aria-current=true]{background:var(--tx);color:var(--bg);border-color:var(--tx);font-weight:600}
+.tabla{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--nav)}
+.tabla .ancho{min-width:900px}
+.fila{display:grid;grid-template-columns:110px 2fr 1.4fr 1.4fr 140px;gap:16px;align-items:center;padding:14px 20px;border-bottom:1px solid var(--line);color:var(--tx);text-decoration:none;font-size:14px;transition:background-color .2s}
+a.fila:hover{background:var(--sel)}
+.fila.titulos{font-size:12px;color:var(--tx3);padding:12px 20px}
+.fila .caso{display:flex;flex-direction:column;gap:2px}
+.fila .caso b{font-weight:500}
+.fila .caso small{font-size:12px;color:var(--tx3)}
+.fila .plazo{font-size:13px;color:var(--tx2)}
+.fila .plazo.rojo{color:var(--red-tx);font-weight:500}
+.e-validar{color:var(--acc-tx);font-weight:500}.e-revision{color:var(--amb-tx);font-weight:500}.e-espera,.e-validado{color:var(--tx3)}
+.vacio{padding:28px 20px;color:var(--tx3)}
+
+.anillo.chico .lectura b{font-size:15px}
+.anillo.chico .lectura small{font-size:10px}
+.tarjeta>h2+p,.tarjeta>p{margin:6px 0 0}
+.tarjeta h3{margin:20px 0 10px}
+.tarjeta .mensaje{margin-top:12px}
+.lateral .tarjeta{display:flex;flex-direction:column;gap:14px}
+.salto{align-self:center;font:12px "IBM Plex Mono",monospace;color:var(--tx3);border:1px dashed var(--line2);border-radius:999px;padding:2px 8px;margin:0 2px}
+@media (max-width:720px){
+  .menu{flex-direction:row;flex-wrap:wrap;align-items:center;padding:12px 16px;gap:8px 16px}
+  .nav{flex-direction:row;flex-wrap:wrap}
+  .nav a{padding:8px 10px}
+  .pie-menu{margin:0 0 0 auto;flex-direction:row}
+  .pie-menu .nota-demo,.pie-menu .persona{display:none}
+  h1{font-size:26px}
+  .urgente{padding:18px}
+}
+
+/* --- ficha ------------------------------------------------------------------- */
+.volver{font-size:14px;text-decoration:none;display:inline-flex;align-items:center;min-height:32px}
+.recorrido{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.recorrido li{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;animation:encender .4s ease-out both}
+.recorrido li.pendiente{border-style:dashed;border-color:var(--line2)}
+.recorrido li.hecho-final{background:var(--ok-bg);border-color:var(--acc)}
+.recorrido small{font-size:12px;color:var(--tx3)}
+.recorrido .barra{display:block;height:3px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:6px}
+.recorrido .barra i{display:block;height:100%;background:var(--acc);transform-origin:left;animation:llenar .55s cubic-bezier(.3,.7,.2,1) both}
+.recorrido li:nth-child(2),.recorrido li:nth-child(2) .barra i{animation-delay:.22s}
+.recorrido li:nth-child(3),.recorrido li:nth-child(3) .barra i{animation-delay:.44s}
+.recorrido li:nth-child(4),.recorrido li:nth-child(4) .barra i{animation-delay:.66s}
+.columnas{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.principal{flex:3 1 520px;min-width:0;display:flex;flex-direction:column;gap:20px}
+.lateral{flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:20px}
+.relojes{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.reloj{border-radius:16px;padding:18px 20px;display:flex;gap:18px;align-items:center;animation:entrada .5s ease-out both}
+.reloj.rojo{background:var(--red-bg);border:1px solid var(--red-line)}
+.reloj.ambar{background:var(--amb-bg);border:1px solid var(--amb-line);animation-delay:.1s}
+.reloj .texto{display:flex;flex-direction:column;gap:4px;min-width:0}
+.reloj.rojo .texto small,.reloj.rojo .texto p{color:var(--red-soft)}
+.reloj.ambar .texto small,.reloj.ambar .texto p{color:var(--amb-soft)}
+.reloj p{margin:0;font-size:13px;line-height:1.5}
+.mensaje{margin:0;font-size:16px;line-height:1.8;background:var(--bg);border-radius:10px;padding:14px 16px;white-space:pre-wrap;overflow-wrap:anywhere}
+.mensaje mark{background:none;color:var(--amb-tx);font-family:"IBM Plex Mono",monospace}
+.hechos{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.hecho{border:1px solid var(--line2);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.hecho small{font-size:12px;color:var(--tx3)}
+.hecho .origen{color:var(--acc-tx)}
+.hecho.corregido{border-color:var(--amb-line);background:var(--amb-bg)}
+.hecho.corregido .origen{color:var(--amb-tx)}
+details.plegable>summary{list-style:none;cursor:pointer;min-height:44px;display:inline-flex;align-items:center}
+details.plegable>summary::-webkit-details-marker{display:none}
+details.plegable[open]>.desplegado{animation:desplegar .45s cubic-bezier(.2,.9,.3,1.1) both}
+.desplegado{margin-top:12px;display:flex;flex-direction:column;gap:14px;border:1px solid var(--amb-line);background:var(--amb-bg);border-radius:12px;padding:16px}
+.rejilla{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+fieldset{border:1px solid var(--line2);border-radius:10px;padding:10px 12px;margin:0}
+legend{font-size:13px;color:var(--tx2);padding:0 4px}
+.opcion{display:flex;gap:8px;align-items:center;min-height:36px;font-size:14px;color:var(--tx)}
+.opcion input{width:18px;height:18px;accent-color:var(--acc)}
+.deber{display:flex;gap:14px;align-items:flex-start;padding:14px 10px;border-top:1px solid var(--line);border-radius:8px}
+.deber .marca-d{flex:none;min-width:72px;text-align:center}
+.d-si{background:var(--amb);color:var(--on-amb)}
+.d-no{background:var(--line2);color:var(--tx)}
+.d-revisar{background:var(--blu);color:var(--on-blu)}
+.deber .cuerpo{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
+.deber .cuerpo p{margin:0;font-size:14px;color:var(--tx2)}
+.deber .quien{font-size:12px;color:var(--tx3)}
+.deber form{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.fuente{font-size:13px;color:var(--tx3)}
+.fuente summary{color:var(--acc-tx);cursor:pointer;min-height:28px}
+.fuente blockquote{margin:6px 0 0;padding-left:10px;border-left:2px solid var(--line2);font-style:italic;line-height:1.6}
+.destino{display:flex;flex-direction:column;gap:3px;animation:entrada .45s ease-out both}
+.destino small{font-size:13px;color:var(--tx3)}
+.hito{display:flex;gap:12px;align-items:flex-start}
+.hito .punto{width:10px;height:10px;border-radius:50%;margin-top:7px;flex:none;background:var(--line2)}
+.hito.delegado .punto{background:var(--amb)}
+.hito.validado .punto{background:var(--acc)}
+.hito small{display:block;font-size:12px;color:var(--tx3)}
+.hito.nuevo{animation:nodo .5s ease-out both}
+.identidad{border:1px solid var(--amb-line);background:var(--amb-bg);border-radius:12px;padding:16px}
+.identidad dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:8px 0 0}
+.identidad dt{color:var(--tx3)}.identidad dd{margin:0}
+
+/* cambios recién hechos */
+.cambio{animation:destello 1.6s ease-out both}
+.visto path{stroke-dasharray:24;animation:trazo .45s ease-out .1s both}
+
+/* --- evidencia --------------------------------------------------------------- */
+.estado-cadena{border-radius:18px;padding:22px 26px;display:flex;flex-wrap:wrap;align-items:center;gap:18px;animation:banner .4s ease-out both}
+.estado-cadena.ok{background:var(--ok-bg);border:1px solid var(--ok-line)}
+.estado-cadena.mal{background:var(--red-bg);border:1px solid var(--red-line)}
+.estado-cadena .titular{font-size:22px;font-weight:500}
+.estado-cadena.ok .titular{color:var(--acc-tx)}.estado-cadena.mal .titular{color:var(--red-tx)}
+.estado-cadena ul{margin:6px 0 0;padding-left:18px;color:var(--tx2);font-size:14px}
+.cadena{display:flex;flex-wrap:wrap;align-items:stretch}
+.eslabon{display:flex;align-items:center;animation:entrada .45s ease-out both}
+.bloque{width:178px;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:6px;margin:6px 0;background:var(--panel);border:1px solid var(--line)}
+.bloque.mala{background:var(--red-bg);border-color:var(--red)}
+.escaneo .bloque{animation:escaneo .7s ease-out both}
+.escaneo .bloque.mala{animation:temblor .5s ease-in-out .4s both}
+.bloque .arriba{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.bloque small{font-size:12px;color:var(--tx3)}
+.bloque .huellas{display:flex;flex-direction:column;gap:2px;border-top:1px solid var(--line);padding-top:8px;font:12px "IBM Plex Mono",monospace;color:var(--tx3)}
+.bloque .huellas .propia{color:var(--tx2)}
+.bloque.mala .huellas .propia{color:var(--red-tx);text-decoration:line-through}
+.sello{font-size:11px;font-weight:600;border-radius:5px;padding:2px 7px;background:var(--ok-bg);color:var(--acc-tx)}
+.bloque.mala .sello{background:var(--red);color:var(--on-red)}
+.escaneo .sello{display:inline-block;animation:sello .45s ease-out both}
+.flecha path{stroke:var(--acc)}
+.flecha .flujo{stroke-dasharray:4 4;animation:flujo .8s linear infinite}
+.huella-final{word-break:break-all;font:15px "IBM Plex Mono",monospace}
+.cadena .eslabon:nth-child(2),.escaneo .eslabon:nth-child(2) .bloque,.escaneo .eslabon:nth-child(2) .sello{animation-delay:.12s}
+.cadena .eslabon:nth-child(3),.escaneo .eslabon:nth-child(3) .bloque,.escaneo .eslabon:nth-child(3) .sello{animation-delay:.24s}
+.cadena .eslabon:nth-child(4),.escaneo .eslabon:nth-child(4) .bloque,.escaneo .eslabon:nth-child(4) .sello{animation-delay:.36s}
+.cadena .eslabon:nth-child(5),.escaneo .eslabon:nth-child(5) .bloque,.escaneo .eslabon:nth-child(5) .sello{animation-delay:.48s}
+.cadena .eslabon:nth-child(6),.escaneo .eslabon:nth-child(6) .bloque,.escaneo .eslabon:nth-child(6) .sello{animation-delay:.6s}
+.cadena .eslabon:nth-child(n+7),.escaneo .eslabon:nth-child(n+7) .bloque,.escaneo .eslabon:nth-child(n+7) .sello{animation-delay:.72s}
+
+/* --- ingreso ----------------------------------------------------------------- */
+.ingreso{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.ingreso .tarjeta{width:100%;max-width:420px;display:flex;flex-direction:column;gap:18px;padding:32px;animation:entrada .5s ease-out both}
+
+/* --- llegada en vivo --------------------------------------------------------- */
+.fila.nueva{animation:llega .6s cubic-bezier(.2,.9,.3,1.2) both,destello 1.8s ease-out .2s both}
+.aviso.llegada{display:flex;gap:10px;align-items:center;animation:aviso-entra .4s ease-out both}
+.salta{display:inline-block;animation:salto .5s ease-out}
+.sube{animation:entrada .5s ease-out both}
+.resumen .sube:nth-child(2){animation-delay:.08s}.resumen .sube:nth-child(3){animation-delay:.16s}.resumen .sube:nth-child(4){animation-delay:.24s}
+
+@keyframes llega{0%{opacity:0;transform:translateY(-18px) scale(.97)}60%{opacity:1;transform:translateY(2px) scale(1.005)}100%{transform:none}}
+@keyframes destello{0%{background-color:rgba(61,214,195,.28)}100%{background-color:transparent}}
+@keyframes latido{0%,100%{transform:scale(1);opacity:.55}50%{transform:scale(1.12);opacity:0}}
+@keyframes salto{0%{transform:scale(1)}40%{transform:scale(1.25)}100%{transform:scale(1)}}
+@keyframes aviso-entra{0%{opacity:0;transform:translateY(-10px)}100%{opacity:1;transform:none}}
+@keyframes entrada{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:none}}
+@keyframes encender{0%{opacity:.35}100%{opacity:1}}
+@keyframes llenar{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}
+@keyframes desplegar{0%{opacity:0;transform:perspective(600px) rotateX(-12deg) translateY(-8px)}100%{opacity:1;transform:none}}
+@keyframes trazo{0%{stroke-dashoffset:24}100%{stroke-dashoffset:0}}
+@keyframes nodo{0%{opacity:0;transform:translateX(-10px)}60%{opacity:1;transform:translateX(2px)}100%{transform:none}}
+@keyframes escaneo{0%{background-color:var(--panel)}35%{background-color:var(--scan)}100%{background-color:var(--panel)}}
+@keyframes sello{0%{opacity:0;transform:scale(.4)}70%{opacity:1;transform:scale(1.15)}100%{transform:scale(1)}}
+@keyframes temblor{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+@keyframes flujo{0%{stroke-dashoffset:12}100%{stroke-dashoffset:0}}
+@keyframes banner{0%{opacity:0;transform:scale(.98)}100%{opacity:1;transform:none}}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+@media print{
+  .menu,.acciones,.banda-demo,form,details.plegable,.volver{display:none!important}
+  html,body{background:#fff;color:#000}
+  .tarjeta,.reloj,.estado-cadena{border:1px solid #999!important;background:#fff!important;color:#000!important}
+  *{animation:none!important}
+}

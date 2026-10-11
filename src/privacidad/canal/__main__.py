@@ -3,7 +3,8 @@
     python -m privacidad.canal secreto
     python -m privacidad.canal llave
     python -m privacidad.canal enlace --org comercial-los-robles --base-url https://...
-    python -m privacidad.canal servir --datos casos-demo
+    python -m privacidad.canal servir --datos casos-demo [--demo]
+    python -m privacidad.canal usuario --datos casos-demo --org ORGANIZACION --usuario NOMBRE
     python -m privacidad.canal identidad --carpeta casos-demo --caso CODIGO
     python -m privacidad.canal evidencia --carpeta casos-demo [--caso CODIGO] [--cabeza HUELLA]
 
@@ -15,8 +16,10 @@ y el canal los toma de variables de entorno.
 from __future__ import annotations
 
 import argparse
+import getpass
 import json
 import os
+import secrets
 import sys
 from pathlib import Path
 
@@ -109,6 +112,28 @@ def _llaves() -> MultiFernet | None:
     return reservado.llaves_desde_entorno()
 
 
+VARIABLE_SECRETO_PANEL = "PRIVACIDAD_SECRETO_PANEL"
+
+
+def _config_panel(args: argparse.Namespace, carpeta: Path | None, base_url: str):
+    """Configuración del panel del delegado, o None si no hay con qué abrirlo."""
+    from ..panel import ConfigPanel, RegistroUsuarios
+    from ..panel.usuarios import NOMBRE_ARCHIVO as ARCHIVO_USUARIOS
+
+    secreto = os.environ.get(VARIABLE_SECRETO_PANEL)
+    if not secreto:
+        secreto = secrets.token_urlsafe(32)
+        print(f"  Panel: sin {VARIABLE_SECRETO_PANEL}; las sesiones se cierran al reiniciar.")
+    https = base_url.startswith("https://")
+    if args.demo:
+        return ConfigPanel(secreto_sesion=secreto, demo=True, https=https)
+    if carpeta is None or not (carpeta / ARCHIVO_USUARIOS).is_file():
+        print("  Panel: apagado (no hay usuarios; créalos con el comando `usuario`).")
+        return None
+    usuarios = RegistroUsuarios(carpeta / ARCHIVO_USUARIOS)
+    return ConfigPanel(secreto_sesion=secreto, usuarios=usuarios, https=https)
+
+
 def comando_servir(args: argparse.Namespace) -> int:
     secreto = _secreto()
     if secreto is None:
@@ -119,10 +144,17 @@ def comando_servir(args: argparse.Namespace) -> int:
         llaves = _llaves()
     except (OSError, reservado.IdentidadReservadaError) as e:
         return _error(f"No se pudo leer la llave del modo reservado: {e}")
+    if llaves is None and args.demo:
+        # Solo para la demo: una llave que vive en memoria y desaparece al detener el servidor.
+        # En la demo nunca se abren identidades reservadas.
+        from cryptography.fernet import Fernet
+
+        llaves = reservado.cargar_llaves(Fernet.generate_key())
     cliente = _cliente_ia(carpeta)
+    repositorio = RepositorioCasos(carpeta)
     canal = CanalReporte(
         organizaciones=organizaciones,
-        repositorio=RepositorioCasos(carpeta),
+        repositorio=repositorio,
         cliente=cliente,
         secreto_enlaces=secreto,
         llaves_reservadas=llaves,
@@ -132,13 +164,22 @@ def comando_servir(args: argparse.Namespace) -> int:
     print(f"  IA: {'activa' if cliente else 'apagada (los casos quedan en revisión)'}")
     print(f"  Modo reservado: {'activo' if llaves else 'no disponible'}")
     print(f"  Casos: {'en la carpeta ' + str(carpeta) if carpeta else 'solo en memoria'}")
+    if args.demo and not repositorio.listar():
+        from ..panel.demo import sembrar
+
+        print(
+            f"  Demo: {sembrar(canal)} casos ficticios cargados con respuestas grabadas de la IA."
+        )
+    panel = _config_panel(args, carpeta, base_url)
     for org in organizaciones.values():
         print(f"  {org.nombre}: {canal.enlace(org.id, base_url)}")
+    if panel is not None:
+        print(f"  Panel del delegado: {base_url}/panel/")
     print("Ctrl+C para detener.")
     import uvicorn
 
     uvicorn.run(
-        crear_app(canal, base_url),
+        crear_app(canal, base_url, panel=panel),
         host=args.host,
         port=args.puerto,
         access_log=False,
@@ -198,6 +239,27 @@ def comando_evidencia(args: argparse.Namespace) -> int:
     return 0 if resultado.integra else 1
 
 
+def comando_usuario(args: argparse.Namespace) -> int:
+    """Crea un usuario del panel. La contraseña se escribe sin que se vea en pantalla."""
+    from ..panel import RegistroUsuarios
+    from ..panel.usuarios import NOMBRE_ARCHIVO as ARCHIVO_USUARIOS
+    from ..panel.usuarios import ErrorUsuarios
+
+    if args.org not in cargar_organizaciones():
+        return _error("Organización desconocida.")
+    contrasena = getpass.getpass("Contraseña (no se ve al escribir): ")
+    if contrasena != getpass.getpass("Repítela: "):
+        return _error("Las contraseñas no coinciden.")
+    try:
+        RegistroUsuarios(Path(args.datos) / ARCHIVO_USUARIOS).crear(
+            args.usuario, args.org, contrasena
+        )
+    except ErrorUsuarios as e:
+        return _error(str(e))
+    print(f"Listo: el usuario {args.usuario} puede entrar al panel de {args.org}.")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="python -m privacidad.canal", description=__doc__)
     sub = parser.add_subparsers(dest="comando", required=True)
@@ -221,7 +283,14 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--puerto", type=int, default=8080)
     p.add_argument("--base-url")
     p.add_argument("--datos", help="carpeta donde guardar los casos (por defecto, memoria)")
+    p.add_argument("--demo", action="store_true", help="panel sin contraseña y casos ficticios")
     p.set_defaults(funcion=comando_servir)
+
+    p = sub.add_parser("usuario", help="crea un usuario del panel del delegado")
+    p.add_argument("--datos", required=True, help="carpeta de los casos")
+    p.add_argument("--org", required=True)
+    p.add_argument("--usuario", required=True)
+    p.set_defaults(funcion=comando_usuario)
 
     p = sub.add_parser("identidad", help="abre la identidad reservada de un caso (delegado)")
     p.add_argument("--carpeta", required=True)

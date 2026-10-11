@@ -34,6 +34,7 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 "privacidad.canal" = ["plantillas/*.html"]
+"privacidad.panel" = ["plantillas/*.html", "estaticos/*.css", "estaticos/*.js", "estaticos/*.txt", "estaticos/fuentes/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

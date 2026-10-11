@@ -31,7 +31,7 @@ from starlette.middleware import Middleware
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import HTMLResponse, RedirectResponse, Response
-from starlette.routing import Route
+from starlette.routing import Mount, Route
 
 from ..guardia import DatosNoSinteticosError
 from . import qr
@@ -124,8 +124,10 @@ def _uno(datos: dict[str, list[str]], clave: str) -> str:
     return (datos.get(clave) or [""])[0]
 
 
-def crear_app(canal: CanalReporte, base_url: str) -> Starlette:
-    """Arma la aplicación web. `base_url` es la dirección pública con la que se arman los QR."""
+def crear_app(canal: CanalReporte, base_url: str, panel: Any = None) -> Starlette:
+    """Arma la aplicación web. `base_url` es la dirección pública con la que se arman los QR.
+    Con `panel` (un `privacidad.panel.web.ConfigPanel`) monta también el panel del delegado en
+    `/panel`."""
     plantillas = crear_entorno()
 
     def pagina(nombre: str, status: int = 200, **contexto: Any) -> HTMLResponse:
@@ -278,6 +280,10 @@ def crear_app(canal: CanalReporte, base_url: str) -> Starlette:
         Route("/seguimiento/{id}", ver_seguimiento, methods=["GET"]),
         Route("/seguimiento/{id}/confirmar", confirmar, methods=["POST"]),
     ]
+    if panel is not None:
+        from ..panel.web import BASE, crear_panel  # import tardío: el panel depende del canal
+
+        rutas.append(Mount(BASE, app=crear_panel(canal, panel)))
     return Starlette(
         routes=rutas,
         middleware=[Middleware(BaseHTTPMiddleware, dispatch=_cabeceras_seguras)],

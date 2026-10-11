@@ -61,7 +61,7 @@ organizaciones:
         nombre: Departamento de Personal
         contacto: personal@municipalidad-piloto.example
         datos: Fichas y remuneraciones de funcionarios
-        palabras: [funcionari, remuneracion, sueldo, liquidacion de sueldo, licencia medica, sumario, calificaciones, contrata, honorarios]
+        palabras: [de funcionari, del funcionari, de los funcionari, de las funcionari, remuneracion, sueldo, liquidacion de sueldo, licencia medica, sumario, calificaciones, contrata, honorarios]
       - id: social
         nombre: Dirección de Desarrollo Comunitario
         contacto: social@municipalidad-piloto.example

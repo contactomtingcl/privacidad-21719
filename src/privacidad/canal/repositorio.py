@@ -82,6 +82,17 @@ class RepositorioCasos:
             anotaciones = evidencia.leer(self._con)
         return evidencia.verificar_cadena(anotaciones, self.listar(), cabeza_esperada)
 
+    def copiar_a(self, destino: Path) -> None:
+        """Copia completa y consistente de la base (API de respaldo de SQLite). La usa la demo
+        para mostrar una alteración real sin tocar la base verdadera."""
+        with self._cerrojo:
+            copia = sqlite3.connect(destino)
+            try:
+                self._con.backup(copia)
+            finally:
+                copia.close()
+        destino.chmod(0o600)
+
     def cerrar(self) -> None:
         with self._cerrojo:
             self._con.close()

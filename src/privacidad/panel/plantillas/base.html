@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es" data-tema="oscuro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="htmx-config" content='{"includeIndicatorStyles":false,"allowEval":false,"allowScriptTags":false,"selfRequestsOnly":true}'>
+<title>{% block titulo %}Panel del delegado{% endblock %} · Privacidad 21.719</title>
+<link rel="stylesheet" href="{{ BASE }}/estaticos/panel.css">
+<script src="{{ BASE }}/estaticos/tema.js"></script>
+<script src="{{ BASE }}/estaticos/htmx-2.0.11.min.js" defer></script>
+<script src="{{ BASE }}/estaticos/panel.js" defer></script>
+</head>
+<body hx-headers='{"X-CSRF": "{{ ctx.csrf }}"}'>
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+<div class="marco">
+<nav class="menu" aria-label="Menú principal">
+<a class="marca" href="{{ BASE }}/">
+<svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect x="1" y="1" width="32" height="32" rx="9" fill="none" stroke="#3DD6C3" stroke-width="2"/><path d="M17 8 L25 11 V17 C25 22 21.5 25 17 26.5 C12.5 25 9 22 9 17 V11 Z" fill="none" stroke="#3DD6C3" stroke-width="2" stroke-linejoin="round"/><path d="M13.5 17 L16 19.5 L20.5 14.5" fill="none" stroke="#3DD6C3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<span><strong>Privacidad 21.719</strong><span>Panel del delegado</span></span>
+</a>
+{% set seccion = seccion if seccion is defined else "" %}
+<div class="nav">
+<a href="{{ BASE }}/" {% if seccion == "bandeja" %}aria-current="page"{% endif %}>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 13h4l2 3h4l2-3h4"/><path d="M4 13l2-8h12l2 8v6H4z"/></svg>Bandeja</a>
+<a href="{{ BASE }}/?filtro=validados" {% if seccion == "validados" %}aria-current="page"{% endif %}>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12.5 L10 17 L19 7"/></svg>Validados</a>
+<a href="{{ BASE }}/evidencia" {% if seccion == "evidencia" %}aria-current="page"{% endif %}>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 7h-1a4 4 0 0 0 0 8h1"/><path d="M15 7h1a4 4 0 0 1 0 8h-1"/><path d="M9 11h6"/></svg>Evidencia</a>
+</div>
+<div class="pie-menu">
+{% if ctx.demo %}<div class="nota-demo">Demo con datos ficticios. Ningún caso corresponde a una persona real.</div>{% endif %}
+<div class="persona">
+<span class="avatar" aria-hidden="true">DP</span>
+<span>{{ ctx.usuario }}<small>{{ ctx.org.nombre }}</small></span>
+</div>
+<form method="post" action="{{ BASE }}/salir">
+<input type="hidden" name="csrf" value="{{ ctx.csrf }}">
+<button type="submit" class="discreto">{% if ctx.demo %}Reiniciar la sesión de demo{% else %}Salir{% endif %}</button>
+</form>
+</div>
+</nav>
+<main class="contenido" id="contenido">
+{% if ctx.demo %}
+<div class="banda-demo">
+<span>Estás en la demo pública: solo datos ficticios y sin contraseña.</span>
+<form method="post" action="{{ BASE }}/demo/organizacion">
+<input type="hidden" name="csrf" value="{{ ctx.csrf }}">
+<label for="org-demo">Organización</label>
+<select id="org-demo" name="org">
+{% for id, o in organizaciones.items() %}<option value="{{ id }}" {% if id == ctx.org.id %}selected{% endif %}>{{ o.nombre }}</option>{% endfor %}
+</select>
+<button type="submit">Cambiar</button>
+</form>
+</div>
+{% endif %}
+{% block cuerpo %}{% endblock %}
+</main>
+</div>
+</body>
+</html>

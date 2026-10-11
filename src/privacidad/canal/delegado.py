@@ -24,6 +24,7 @@ from cryptography.fernet import MultiFernet
 
 from .. import guardia
 from ..motor import Deber, HechosIncidente, decidir_incidente
+from .evidencia import Anotacion, Verificacion
 from .modelos import (
     Caso,
     Correccion,
@@ -78,6 +79,21 @@ def _cambios(antes: HechosIncidente | None, despues: HechosIncidente) -> dict[st
     return {k: [previo.get(k), v] for k, v in nuevo.items() if previo.get(k) != v}
 
 
+def filtrar_problemas(verificacion: Verificacion, propias: list[Anotacion]) -> Verificacion:
+    """Quita de los mensajes los códigos de casos de otras organizaciones."""
+    propios = {a.id_caso for a in propias}
+    problemas = []
+    ajenos = 0
+    for p in verificacion.problemas:
+        if "caso" in p and not any(c in p for c in propios):
+            ajenos += 1
+        else:
+            problemas.append(p)
+    if ajenos:
+        problemas.append(f"Hay {ajenos} problema(s) en casos de otra organización.")
+    return verificacion.model_copy(update={"problemas": problemas})
+
+
 class AccionesDelegado:
     """Se mezcla con `CanalReporte`: usa su repositorio, su reloj y su enrutamiento."""
 
@@ -97,6 +113,15 @@ class AccionesDelegado:
 
     def casos_de_organizacion(self, id_organizacion: str) -> list[Caso]:
         return [c for c in self._repo.listar() if c.id_organizacion == id_organizacion]
+
+    def evidencia_de_organizacion(
+        self, id_organizacion: str, cabeza_esperada: str | None = None
+    ) -> tuple[Verificacion, list[Anotacion]]:
+        """Revisa la cadena completa, pero entrega solo las anotaciones de esta organización y
+        sin mencionar casos de otras."""
+        verificacion = self._repo.verificar_evidencia(cabeza_esperada)
+        propias = [a for a in self._repo.evidencia() if a.id_organizacion == id_organizacion]
+        return filtrar_problemas(verificacion, propias), propias
 
     # --- acciones ----------------------------------------------------------------------
 

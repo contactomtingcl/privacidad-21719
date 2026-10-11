@@ -32,8 +32,8 @@ TipoRecibe = Literal["solicitud", "incidente", "aviso_proveedor", "ciberincident
 NOMBRES_DEBER = {
     "aviso_agencia": "aviso a la Agencia",
     "aviso_titulares": "aviso a los titulares",
-    "reporte_anci": "alerta temprana a la ANCI",
-    "anci_alerta_temprana": "alerta temprana a la ANCI",
+    "reporte_anci": "primer aviso a la ANCI",
+    "anci_alerta_temprana": "primer aviso a la ANCI",
     "anci_actualizacion": "actualización a la ANCI",
     "anci_informe_final": "informe final a la ANCI",
     "respuesta_solicitud": "respuesta al titular",
@@ -95,6 +95,18 @@ def palabras_encontradas(texto: str, palabras: list[str]) -> list[str]:
     """Palabras de la lista que aparecen en el texto, desde el inicio de una palabra."""
     base = normalizar(texto)
     return [p for p in palabras if re.search(r"\b" + re.escape(normalizar(p)), base)]
+
+
+def coincidencias(texto: str, palabras: list[str]) -> list[tuple[str, str]]:
+    """Como `palabras_encontradas`, pero con la palabra completa tal como aparece (sin tildes):
+    la regla "remuneracion" encontró "remuneraciones". Sirve para explicar el porqué."""
+    base = normalizar(texto)
+    salida = []
+    for palabra in palabras:
+        m = re.search(r"\b" + re.escape(normalizar(palabra)) + r"\w*", base)
+        if m:
+            salida.append((palabra, m.group(0)))
+    return salida
 
 
 # --- urgencia -------------------------------------------------------------------------
@@ -177,9 +189,10 @@ def _es_ciberincidente(caso: Caso) -> bool:
 def _destino_area(area: Area, caso: Caso) -> Destino | None:
     porques: list[str] = []
     motivos: list[str] = []
-    encontradas = palabras_encontradas(caso.texto, area.palabras)
+    pares = coincidencias(caso.texto, area.palabras)
+    encontradas = [regla for regla, _ in pares]
     if encontradas:
-        lista = ", ".join(f"«{p}»" for p in encontradas)
+        lista = ", ".join(f"«{visto}»" for _, visto in pares)
         porques.append(f"el mensaje menciona {lista}, datos que administra esta área")
         motivos += [f"palabra:{p}" for p in encontradas]
     if caso.tipo in area.recibe:

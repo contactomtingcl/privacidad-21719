@@ -1,0 +1,20 @@
+{% macro anillo(vence, total, ahora, tam=132, grosor=10) -%}
+{%- set c = tam / 2 -%}
+{%- set r = c - grosor - 2 -%}
+{%- set largo = (2 * 3.14159265 * r) | round(1) -%}
+{%- set resta = [0, (vence - ahora).total_seconds()] | max -%}
+{%- set fraccion = ([1, resta / total] | min) if total > 0 else 0 -%}
+{%- set h = (resta // 3600) | int -%}{%- set m = ((resta % 3600) // 60) | int -%}{%- set s = (resta % 60) | int -%}
+<div class="anillo{% if tam < 120 %} chico{% endif %}" data-vence="{{ vence | iso }}" data-total="{{ total }}">
+<svg width="{{ tam }}" height="{{ tam }}" viewBox="0 0 {{ tam }} {{ tam }}" role="img" aria-label="Tiempo que queda del plazo">
+<circle class="latido" cx="{{ c }}" cy="{{ c }}" r="{{ r }}" fill="none" stroke-width="3"/>
+<circle class="pista" cx="{{ c }}" cy="{{ c }}" r="{{ r }}" fill="none" stroke-width="{{ grosor }}"/>
+<circle class="avance" data-anillo data-largo="{{ largo }}" cx="{{ c }}" cy="{{ c }}" r="{{ r }}" fill="none" stroke-width="{{ grosor }}" stroke-linecap="round" stroke-dasharray="{{ (largo * fraccion) | round(1) }} {{ largo }}" transform="rotate(-90 {{ c }} {{ c }})"/>
+</svg>
+<div class="lectura"><b data-lectura>{% if resta <= 0 %}Vencido{% elif h >= 48 %}{{ h // 24 }} días{% else %}{{ h }}:{{ "%02d" % m }}:{{ "%02d" % s }}{% endif %}</b><small>{% if total >= 172800 %}de {{ (total // 86400) | int }} días{% else %}de {{ (total // 3600) | int }}:00:00{% endif %}</small></div>
+</div>
+{%- endmacro %}
+
+{% macro pildora(urgencia, etiqueta) -%}
+<span class="pildora u-{{ urgencia }}">{{ etiqueta }}</span>
+{%- endmacro %}
