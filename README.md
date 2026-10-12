@@ -26,6 +26,7 @@ En construcción (entrega: 28 de octubre de 2026). Avance actual:
 | Enrutamiento de reportes al delegado y al área dueña de los datos | Primera versión ([cómo funciona](#enrutamiento-y-evidencia)) |
 | Registro de evidencia encadenado (SHA-256) con verificación | Primera versión ([cómo funciona](#enrutamiento-y-evidencia)) |
 | Panel del delegado: bandeja en vivo, ficha del caso, correcciones, validación y evidencia | Primera versión ([cómo usarlo](#panel-del-delegado)) |
+| Borradores de reporte a la Agencia y a la ANCI, armados desde el caso sin IA | Primera versión ([cómo funcionan](#borradores-de-reporte)) |
 
 ## Cómo ejecutar
 
@@ -157,6 +158,25 @@ Librerías y recursos incluidos en el repositorio, sin cargar nada de internet: 
 - La cookie de sesión va firmada, no cifrada: contiene el usuario y la organización (no la contraseña ni datos de casos).
 - La IA todavía no indica en qué frase del mensaje se basó cada hecho; está planificado, con verificación por código.
 - En la demo, la llave del modo reservado se crea en memoria al arrancar y se pierde al detenerlo.
+
+## Borradores de reporte
+
+Cuando el motor decide que corresponde avisar a la Agencia o a la ANCI (o lo deja en «Revisar»), la ficha del caso ofrece un borrador para cada una. El delegado lo abre, lo revisa, lo completa y lo envía por el canal oficial: **el sistema no envía nada a ninguna autoridad**.
+
+- **Se arman con código, sin IA** (`src/privacidad/reportes/`): costo cero y siempre el mismo texto para el mismo caso. Usan los hechos vigentes (los del delegado si los corrigió) y los vencimientos que calculó el motor.
+- **No inventan:** lo que el sistema no sabe queda marcado «[Completar: …]» y se lista al costado.
+- **Agencia (art. 14 sexies):** responsable y contacto del delegado, naturaleza de la vulneración, efectos, categorías de datos, número aproximado de personas afectadas, medidas adoptadas y si corresponde avisar a cada persona.
+- **ANCI (arts. 9 y 27 de la Ley 21.663):** alerta temprana (3 horas), actualización (72 horas) e informe final (15 días corridos desde la alerta), cada uno con su vencimiento y los elementos que pide la ley.
+- **Sin datos personales en el reporte a la ANCI** (art. 27): el borrador nunca recibe el texto del reporte, el resumen de la IA ni la identidad de quien reportó; se arma solo con valores de lista cerrada, cifras y fechas escritas en palabras. Antes de mostrarlo, el código revisa que no queden RUT, correos, teléfonos ni fechas numéricas; si encuentra uno, no lo entrega y dice de qué tipo era (sin mostrarlo). El de la Agencia sigue la misma regla, con una sola excepción: el correo institucional del delegado.
+- **Revisión con evidencia:** «Marcar como revisado» anota en la cadena la huella SHA-256 del texto revisado (no el texto), cuántos campos quedaban por completar y el usuario. Si después cambian los hechos, el borrador cambia y la ficha avisa que hay que revisarlo de nuevo.
+- Se puede descargar como texto, copiar o imprimir.
+
+Límites conocidos:
+
+- El formato oficial de cada reporte lo fijan la Agencia y el reglamento de la Ley 21.663, que no están en el corpus: el borrador ordena el contenido que piden las leyes y hay que traspasarlo al formulario que corresponda.
+- No se modelan los operadores de importancia vital (actualización en 24 horas y plan de acción en 7 días, art. 9).
+- La revisión automática detecta RUT, correos, teléfonos y fechas; no reconoce nombres. Por eso el borrador de la ANCI no recibe ningún texto libre, y lo que el delegado agregue al completarlo queda bajo su responsabilidad (el borrador se lo recuerda).
+- No hay una cifra medida del tiempo que ahorra; no se publicará hasta medirla con usuarios.
 
 ## Publicación en internet
 

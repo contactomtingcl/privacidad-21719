@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block titulo %}Borrador para {{ nombre_destino }}{% endblock %}
+{% block cuerpo %}
+<a class="volver" href="{{ BASE }}/caso/{{ caso.id }}">← Volver al caso</a>
+<header class="cabecera">
+<div>
+<div class="acciones">
+<span class="pildora marca-d d-{{ b.decision }}">{{ "Corresponde" if b.decision == "si" else "Revisar" }}</span>
+<span class="mono suave">{{ caso.id }}</span>
+</div>
+<h1>Borrador para {{ nombre_destino }}</h1>
+<p class="suave">Armado por el sistema con reglas fijas, sin IA. Tú lo revisas, completas lo marcado y lo envías por el canal oficial: el sistema no envía nada.</p>
+</div>
+<div class="acciones">
+<a class="boton" href="{{ BASE }}/caso/{{ caso.id }}/borrador/{{ b.destino }}/descargar">Descargar texto</a>
+<button type="button" data-copiar="{{ b.texto() }}" data-copiado="Texto copiado">Copiar texto</button>
+<button type="button" data-imprimir>Imprimir</button>
+</div>
+</header>
+
+{% if error %}<div class="error" role="alert">{{ error }}</div>{% endif %}
+
+<section class="tarjeta avisos-borrador" aria-label="Antes de enviar">
+<h2>Antes de enviar</h2>
+<ul>{% for a in b.avisos %}<li>{{ a }}</li>{% endfor %}</ul>
+</section>
+
+<div class="columnas">
+<div class="principal">
+{% for s in b.secciones %}
+<section class="tarjeta seccion-borrador" aria-label="{{ s.titulo }}">
+<div class="cabecera"><h2>{{ s.titulo }}</h2>{% if s.vence %}<span class="suave">Vence el {{ s.vence | fecha }} a las {{ s.vence | hora }}</span>{% endif %}</div>
+<ul class="lineas-borrador">{% for linea in s.lineas %}<li>{{ linea | por_completar }}</li>{% endfor %}</ul>
+</section>
+{% endfor %}
+<details class="fuente tarjeta"><summary>Ver fuente legal</summary>{% for cita in b.citas %}<blockquote>{{ cita.norma | norma }}, art. {{ cita.articulo }}: «{{ cita.fragmento }}»</blockquote>{% endfor %}</details>
+</div>
+
+<aside class="lateral">
+<section class="tarjeta" aria-label="Por completar">
+<h2>Por completar ({{ b.por_completar | length }})</h2>
+<p class="suave">El sistema no lo sabe y no lo inventa. Complétalo al pasarlo al formulario oficial.</p>
+<ul>{% for p in b.por_completar %}<li>{{ p }}</li>{% endfor %}</ul>
+</section>
+
+<section class="tarjeta" aria-label="Revisión">
+<h2>Revisión</h2>
+{% if revision and revision.vigente %}
+<p>Revisado por {{ revision.por }} el {{ revision.momento | fecha }} a las {{ revision.momento | hora }}.</p>
+{% else %}
+{% if revision %}<p class="suave">Este borrador cambió después de la revisión del {{ revision.momento | fecha }} a las {{ revision.momento | hora }} (por ejemplo, porque se corrigieron hechos).</p>{% endif %}
+<p class="suave">Deja constancia de que lo revisaste. La evidencia guarda la huella del texto (no el texto) y cuántos campos quedaban por completar.</p>
+<form method="post" action="{{ BASE }}/caso/{{ caso.id }}/borrador/{{ b.destino }}/revisado">
+<input type="hidden" name="csrf" value="{{ ctx.csrf }}">
+<input type="hidden" name="huella" value="{{ b.huella }}">
+<button class="primario" type="submit">Marcar como revisado</button>
+</form>
+{% endif %}
+<p class="suave mono">Huella del texto: {{ b.huella | corto }}</p>
+</section>
+</aside>
+</div>
+{% endblock %}

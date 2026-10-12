@@ -47,7 +47,7 @@
     var texto = objetivo.getAttribute("data-copiar");
     if (navigator.clipboard) {
       navigator.clipboard.writeText(texto).then(function () {
-        objetivo.textContent = "Huella copiada";
+        objetivo.textContent = objetivo.getAttribute("data-copiado") || "Huella copiada";
       }, function () { /* sin permiso: queda visible para copiarla a mano */ });
     }
   });

@@ -16,6 +16,7 @@ Las reglas que sostienen el principio "la IA interpreta, el motor decide, la per
 
 from __future__ import annotations
 
+import hmac
 from collections.abc import Callable, Mapping
 from datetime import datetime
 from typing import Any
@@ -24,6 +25,7 @@ from cryptography.fernet import MultiFernet
 
 from .. import guardia
 from ..motor import Deber, HechosIncidente, decidir_incidente
+from .enrutamiento import ReglasEnrutamiento
 from .evidencia import Anotacion, Verificacion
 from .modelos import (
     Caso,
@@ -102,6 +104,7 @@ class AccionesDelegado:
     _reloj: Callable[[], datetime]
     _llaves: MultiFernet | None
     _enrutar: Callable[[Caso, datetime], None]
+    _enrutamiento: ReglasEnrutamiento
 
     # --- acceso ------------------------------------------------------------------------
 
@@ -237,6 +240,42 @@ class AccionesDelegado:
             ahora,
             por=por,
             deberes={d.id: decision_final(caso, d) for d in deberes_del_caso(caso)},
+        )
+        self._repo.guardar(caso)
+        return caso
+
+    def borradores(self, id_organizacion: str, id_caso: str) -> tuple[Caso, dict]:
+        """Borradores de reporte a la Agencia y a la ANCI, armados ahora desde el caso."""
+        from ..reportes import borradores_del_caso  # importación tardía: reportes usa este módulo
+
+        caso = self.caso_de_organizacion(id_organizacion, id_caso)
+        org = self._organizaciones[caso.id_organizacion]
+        reglas = self._enrutamiento.organizaciones[caso.id_organizacion]
+        return caso, borradores_del_caso(caso, org, reglas)
+
+    def marcar_borrador_revisado(
+        self, id_organizacion: str, id_caso: str, destino: str, huella: str, *, por: str
+    ) -> Caso:
+        """Deja constancia de que el delegado revisó un borrador. La evidencia guarda la huella
+        del texto revisado (nunca el texto) y cuántos campos quedaban por completar."""
+        from ..reportes import Borrador, huella_sin_digitos
+
+        caso, borradores = self.borradores(id_organizacion, id_caso)
+        actual = borradores.get(destino)
+        if not isinstance(actual, Borrador):
+            raise AccionInvalida("No hay un borrador para ese destino.")
+        if not hmac.compare_digest(huella.encode(), actual.huella.encode()):
+            raise AccionInvalida(
+                "El borrador cambió desde que lo abriste (por ejemplo, se corrigieron hechos). "
+                "Revísalo de nuevo."
+            )
+        caso.registrar(
+            "borrador_revisado",
+            self._reloj(),
+            destino=destino,
+            huella=huella_sin_digitos(actual.huella),
+            por_completar=len(actual.por_completar),
+            por=por,
         )
         self._repo.guardar(caso)
         return caso

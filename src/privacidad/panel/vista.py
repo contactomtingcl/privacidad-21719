@@ -15,6 +15,14 @@ from ..canal.evidencia import Anotacion
 from ..canal.modelos import ZONA_CHILE, Caso
 from ..deteccion import Enmascarador
 from ..motor import Deber
+from ..reportes import (
+    DESTINOS,
+    NOMBRE_DESTINO,
+    Borrador,
+    Revision,
+    SinBorrador,
+    ultima_revision,
+)
 
 ORDEN_URGENCIA = {"inmediata": 0, "alta": 1, "normal": 2}
 ETIQUETA_URGENCIA = {"inmediata": "Inmediata", "alta": "Alta", "normal": "Normal"}
@@ -87,6 +95,7 @@ EVENTOS = {
     "validacion_anulada": "La validación se anuló por un cambio",
     "identidad_abierta": "{por} abrió la identidad reservada",
     "editado_a_mano": "Editado a mano (alteración de la demo)",
+    "borrador_revisado": "{por} revisó un borrador de reporte",
 }
 
 
@@ -470,3 +479,40 @@ def ficha(caso: Caso, anotaciones: list[Anotacion], ahora: datetime) -> Ficha:
 
 def deber_por_id(caso: Caso, id_deber: str) -> Deber | None:
     return next((d for d in deberes_del_caso(caso) if d.id == id_deber), None)
+
+
+# --- borradores de reporte ----------------------------------------------------------------
+
+
+@dataclass
+class VistaBorrador:
+    destino: str
+    nombre: str
+    borrador: Borrador | None
+    motivo: str | None  # por qué no hay borrador
+    revision: Revision | None
+
+    @property
+    def estado(self) -> str:
+        if self.borrador is None:
+            return "No corresponde"
+        if self.revision and self.revision.vigente:
+            return f"Revisado por {self.revision.por} a las {hora(self.revision.momento)}"
+        if self.revision:
+            return "Cambió después de tu revisión: revísalo de nuevo"
+        n = len(self.borrador.por_completar)
+        return f"Listo para revisar · {n} campo{'s' if n != 1 else ''} por completar"
+
+
+def vista_borradores(caso: Caso, borradores: dict) -> list[VistaBorrador]:
+    salida = []
+    for destino in DESTINOS:
+        b = borradores.get(destino)
+        if isinstance(b, Borrador):
+            salida.append(
+                VistaBorrador(destino, NOMBRE_DESTINO[destino], b, None, ultima_revision(caso, b))
+            )
+        else:
+            motivo = b.motivo if isinstance(b, SinBorrador) else "No hay borrador."
+            salida.append(VistaBorrador(destino, NOMBRE_DESTINO[destino], None, motivo, None))
+    return salida

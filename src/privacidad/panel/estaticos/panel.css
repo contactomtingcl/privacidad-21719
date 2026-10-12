@@ -193,6 +193,7 @@ legend{font-size:13px;color:var(--tx2);padding:0 4px}
 .d-si{background:var(--amb);color:var(--on-amb)}
 .d-no{background:var(--line2);color:var(--tx)}
 .d-revisar{background:var(--blu);color:var(--on-blu)}
+.d-hecho{background:var(--acc);color:var(--on-acc)}
 .deber .cuerpo{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
 .deber .cuerpo p{margin:0;font-size:14px;color:var(--tx2)}
 .deber .quien{font-size:12px;color:var(--tx3)}
@@ -278,10 +279,21 @@ legend{font-size:13px;color:var(--tx2);padding:0 4px}
 @keyframes flujo{0%{stroke-dashoffset:12}100%{stroke-dashoffset:0}}
 @keyframes banner{0%{opacity:0;transform:scale(.98)}100%{opacity:1;transform:none}}
 
+/* --- borradores de reporte --------------------------------------------------- */
+.borrador-fila{align-items:center}
+.borrador-fila .boton{flex:none}
+.avisos-borrador{background:var(--amb-bg);border-color:var(--amb-line)}
+.avisos-borrador ul,.lineas-borrador{margin:10px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.avisos-borrador li{color:var(--amb-soft)}
+.lineas-borrador li{overflow-wrap:anywhere}
+mark.completar{background:var(--mark);color:var(--tx);border-radius:4px;padding:1px 4px}
+.seccion-borrador{animation:encender .4s ease-out both}
+
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 
 @media print{
   .menu,.acciones,.banda-demo,form,details.plegable,.volver{display:none!important}
+  mark.completar{background:none!important;border:1px dashed #999}
   html,body{background:#fff;color:#000}
   .tarjeta,.reloj,.estado-cadena{border:1px solid #999!important;background:#fff!important;color:#000!important}
   *{animation:none!important}

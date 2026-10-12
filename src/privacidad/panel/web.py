@@ -55,6 +55,7 @@ from ..canal.servicio import CanalReporte
 from ..canal.web import _leer_formulario, _uno
 from ..guardia import DatosNoSinteticosError
 from ..motor import HechosIncidente
+from ..reportes import DESTINOS, NOMBRE_DESTINO, Borrador, ultima_revision
 from . import vista
 from .usuarios import LimiteIntentos, RegistroUsuarios
 
@@ -122,6 +123,15 @@ def _marcadores(texto: str) -> Markup:
     return Markup(_MARCADOR.sub(lambda m: f"<mark>{m.group(0)}</mark>", seguro))
 
 
+_COMPLETAR = re.compile(r"\[Completar: [^\]]+\]")
+
+
+def _por_completar(texto: str) -> Markup:
+    """Escapa el texto y resalta lo que el delegado debe completar."""
+    seguro = str(escape(texto))
+    return Markup(_COMPLETAR.sub(lambda m: f'<mark class="completar">{m.group(0)}</mark>', seguro))
+
+
 def _entorno() -> Environment:
     entorno = Environment(
         loader=FileSystemLoader(CARPETA / "plantillas"), autoescape=True, undefined=StrictUndefined
@@ -134,6 +144,7 @@ def _entorno() -> Environment:
     entorno.filters["evento"] = lambda tipo: vista.EVENTOS.get(tipo, tipo).format(por="Delegado")
     entorno.filters["hora_iso"] = lambda texto: vista.hora(datetime.fromisoformat(texto))
     entorno.filters["marcadores"] = _marcadores
+    entorno.filters["por_completar"] = _por_completar
     entorno.globals.update(
         BASE=BASE,
         FILTROS=FILTROS,
@@ -385,12 +396,14 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
     ) -> HTMLResponse:
         caso = caso_o_404(ctx, id_caso)
         anotaciones = canal._repo.evidencia(caso.id)
+        _, borradores = canal.borradores(ctx.org.id, caso.id)
         return responder(
             "caso.html",
             status,
             ctx=ctx,
             organizaciones=organizaciones,
             f=vista.ficha(caso, anotaciones, reloj()),
+            borradores=vista.vista_borradores(caso, borradores),
             ahora=reloj(),
             seccion="bandeja",
             error=error,
@@ -401,7 +414,7 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
     async def caso(request: Request) -> Response:
         ctx = contexto(request)
         cambio = request.query_params.get("cambio")
-        if cambio not in ("corregido", "resuelto", "validado"):
+        if cambio not in ("corregido", "resuelto", "validado", "revisado"):
             cambio = None
         return ver_ficha(ctx, request.path_params["id"], cambio=cambio)
 
@@ -495,6 +508,64 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
             return ver_ficha(ctx, id_caso, status=400, error=str(e))
         return ver_ficha(ctx, id_caso, identidad=dict(identidad), cambio="identidad")
 
+    # --- borradores de reporte --------------------------------------------------------
+
+    def borrador_o_404(ctx: Contexto, id_caso: str, destino: str):
+        if destino not in DESTINOS:
+            raise HTTPException(404)
+        try:
+            caso, borradores = canal.borradores(ctx.org.id, id_caso)
+        except CasoAjeno as e:
+            raise HTTPException(404) from e
+        b = borradores[destino]
+        if not isinstance(b, Borrador):
+            raise HTTPException(404)
+        return caso, b
+
+    def ver_borrador_pagina(
+        ctx: Contexto, id_caso: str, destino: str, *, status: int = 200, error: str | None = None
+    ) -> HTMLResponse:
+        caso, b = borrador_o_404(ctx, id_caso, destino)
+        return responder(
+            "borrador.html",
+            status,
+            ctx=ctx,
+            organizaciones=organizaciones,
+            seccion="bandeja",
+            caso=caso,
+            b=b,
+            nombre_destino=NOMBRE_DESTINO[b.destino],
+            revision=ultima_revision(caso, b),
+            error=error,
+        )
+
+    async def ver_borrador(request: Request) -> Response:
+        ctx = contexto(request)
+        return ver_borrador_pagina(ctx, request.path_params["id"], request.path_params["destino"])
+
+    async def descargar_borrador(request: Request) -> Response:
+        ctx = contexto(request)
+        caso, b = borrador_o_404(ctx, request.path_params["id"], request.path_params["destino"])
+        return Response(
+            b.texto(),
+            media_type="text/plain; charset=utf-8",
+            headers=CABECERAS
+            | {"Content-Disposition": f'attachment; filename="borrador-{b.destino}-{caso.id}.txt"'},
+        )
+
+    async def marcar_revisado(request: Request) -> Response:
+        ctx = contexto(request)
+        datos = await formulario_seguro(request)
+        id_caso, destino = request.path_params["id"], request.path_params["destino"]
+        borrador_o_404(ctx, id_caso, destino)
+        try:
+            canal.marcar_borrador_revisado(
+                ctx.org.id, id_caso, destino, _uno(datos, "huella"), por=ctx.usuario
+            )
+        except AccionInvalida as e:
+            return ver_borrador_pagina(ctx, id_caso, destino, status=400, error=str(e))
+        return RedirectResponse(f"{BASE}/caso/{id_caso}?cambio=revisado", 303)
+
     # --- evidencia -------------------------------------------------------------------
 
     def datos_evidencia(
@@ -585,6 +656,9 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
         Route("/caso/{id}/resolver", resolver, methods=["POST"]),
         Route("/caso/{id}/validar", validar, methods=["POST"]),
         Route("/caso/{id}/identidad", abrir_identidad, methods=["POST"]),
+        Route("/caso/{id}/borrador/{destino}", ver_borrador, methods=["GET"]),
+        Route("/caso/{id}/borrador/{destino}/descargar", descargar_borrador, methods=["GET"]),
+        Route("/caso/{id}/borrador/{destino}/revisado", marcar_revisado, methods=["POST"]),
         Route("/canal", ver_canal, methods=["GET"]),
         Route("/evidencia", evidencia, methods=["GET"]),
         Route("/evidencia/revisar", evidencia_revisar, methods=["POST"]),

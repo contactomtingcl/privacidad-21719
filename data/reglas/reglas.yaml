@@ -1,7 +1,7 @@
 # Reglas legales del motor. Cada regla guarda su fuente (artículo y fragmento literal,
 # verificados contra el corpus por las pruebas), su versión y su vigencia.
 # Ningún plazo está escrito a mano en el código: se leen de aquí.
-version: "2026-10-10"
+version: "2026-10-11"
 
 vigencias:
   ley-21719:
@@ -69,6 +69,32 @@ reglas:
     descripcion: Los reportes a la ANCI no deben llevar datos personales.
     ley: ley-21663
     fuente: {norma: ley-21663, articulo: "27", fragmento: "Deberá omitirse en los reportes de incidentes de ciberseguridad todo dato o información personal"}
+
+  # --- contenido de los borradores de reporte (src/privacidad/reportes) ---------------
+  contenido_reporte_agencia:
+    descripcion: Qué debe describir el registro del reporte a la Agencia. El borrador ordena estos cinco elementos.
+    ley: ley-21719
+    fuente: {norma: ley-19628, articulo: 14 sexies, fragmento: "describiendo la naturaleza de las vulneraciones sufridas, sus efectos, las categorías de datos y el número aproximado de titulares afectados y las medidas adoptadas para gestionarlas y precaver incidentes futuros"}
+
+  anci_contenido_actualizacion:
+    descripcion: Qué debe incluir la actualización de 72 horas a la ANCI.
+    ley: ley-21663
+    fuente: {norma: ley-21663, articulo: "9", fragmento: "que incluya una evaluación inicial del incidente, su gravedad e impacto, así como indicadores de compromiso, si estuvieran disponibles"}
+
+  anci_contenido_informe_final:
+    descripcion: Elementos mínimos del informe final a la ANCI.
+    ley: ley-21663
+    fuente: {norma: ley-21663, articulo: "9", fragmento: "El tipo de amenaza o causa principal que probablemente haya causado el incidente"}
+
+  anci_criterios_efecto:
+    descripcion: Criterios para medir la importancia de los efectos de un incidente.
+    ley: ley-21663
+    fuente: {norma: ley-21663, articulo: "27", fragmento: "El número de personas afectadas"}
+
+  anci_ip_no_es_dato_personal:
+    descripcion: Para los reportes a la ANCI, la dirección IP no se considera dato personal.
+    ley: ley-21663
+    fuente: {norma: ley-21663, articulo: "27", fragmento: "no se considerará que la dirección IP sea un dato o información personal"}
 
   respuesta_solicitud:
     descripcion: Acusar recibo y responder la solicitud del titular.

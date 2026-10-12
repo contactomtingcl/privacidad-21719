@@ -34,6 +34,7 @@ Validado por {{ c.validacion.por }} a las {{ c.validacion.momento | hora }}</spa
 {% if error %}<div class="error" role="alert">{{ error }}</div>{% endif %}
 {% if cambio == "corregido" %}<div class="aviso" role="status">Corregiste los hechos. El motor volvió a decidir con ellos y quedó anotado en la evidencia.</div>{% endif %}
 {% if cambio == "resuelto" %}<div class="aviso" role="status">Resolviste la duda. Quedó anotado con su motivo.</div>{% endif %}
+{% if cambio == "revisado" %}<div class="aviso" role="status">Marcaste el borrador como revisado. Quedó anotado en la evidencia con la huella del texto.</div>{% endif %}
 {% if cambio == "validado" %}<div class="aviso" role="status">Validaste la decisión. Quedó anotada en la evidencia con tu usuario y la hora.</div>{% endif %}
 {% if identidad %}
 <section class="identidad" aria-label="Identidad reservada">
@@ -159,6 +160,23 @@ Validado por {{ c.validacion.por }} a las {{ c.validacion.momento | hora }}</spa
 </div>
 {% endfor %}
 </section>
+
+{% if c.tipo != "solicitud" %}
+<section class="tarjeta" aria-label="Borradores de reporte">
+<h2>Borradores de reporte</h2>
+<p class="suave">Armados por el sistema desde los hechos y los plazos, sin IA. Tú los revisas y los envías.</p>
+{% for v in borradores %}
+<div class="deber borrador-fila">
+<span class="pildora marca-d {% if not v.borrador %}d-no{% elif v.revision and v.revision.vigente %}d-hecho{% else %}d-{{ v.borrador.decision }}{% endif %}">{% if not v.borrador %}No{% elif v.revision and v.revision.vigente %}Revisado{% elif v.borrador.decision == "si" %}Sí{% else %}Revisar{% endif %}</span>
+<div class="cuerpo">
+<b>{{ v.nombre }}</b>
+<p>{% if v.borrador %}{{ v.estado }}.{% else %}{{ v.motivo }}{% endif %}</p>
+</div>
+{% if v.borrador %}<a class="boton" href="{{ BASE }}/caso/{{ c.id }}/borrador/{{ v.destino }}">Ver borrador</a>{% endif %}
+</div>
+{% endfor %}
+</section>
+{% endif %}
 </div>
 
 <aside class="lateral">
@@ -201,7 +219,7 @@ Validado por {{ c.validacion.por }} a las {{ c.validacion.momento | hora }}</spa
 <section class="tarjeta" aria-label="Evidencia del caso">
 <div class="cabecera"><h2>Evidencia</h2><a href="{{ BASE }}/evidencia">Ver la cadena</a></div>
 {% for h in f.linea %}
-<div class="hito {% if h.tipo in ('hechos_corregidos', 'deber_resuelto', 'identidad_abierta', 'validacion_anulada') %}delegado{% elif h.tipo == 'validado' %}validado{% endif %} {% if cambio and loop.last %}nuevo{% endif %}">
+<div class="hito {% if h.tipo in ('hechos_corregidos', 'deber_resuelto', 'identidad_abierta', 'validacion_anulada', 'borrador_revisado') %}delegado{% elif h.tipo == 'validado' %}validado{% endif %} {% if cambio and loop.last %}nuevo{% endif %}">
 <span class="punto" aria-hidden="true"></span>
 <span>{{ h.texto }}<small class="mono">{{ h.hora }} · {{ h.huella | corto }}</small></span>
 </div>
