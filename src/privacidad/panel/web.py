@@ -507,6 +507,20 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
             "alterada": alterada,
         }
 
+    async def ver_canal(request: Request) -> Response:
+        """El enlace del canal de la organización y su código QR, para repartirlo o mostrarlo."""
+        ctx = contexto(request)
+        raiz = f"{request.url.scheme}://{request.url.netloc}"
+        enlace = canal.enlace(ctx.org.id, raiz)
+        return responder(
+            "canal.html",
+            ctx=ctx,
+            organizaciones=organizaciones,
+            seccion="canal",
+            enlace=enlace,
+            qr=enlace[len(raiz) :] + "/qr.svg",
+        )
+
     async def evidencia(request: Request) -> Response:
         ctx = contexto(request)
         v, propias = canal.evidencia_de_organizacion(ctx.org.id)
@@ -571,6 +585,7 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
         Route("/caso/{id}/resolver", resolver, methods=["POST"]),
         Route("/caso/{id}/validar", validar, methods=["POST"]),
         Route("/caso/{id}/identidad", abrir_identidad, methods=["POST"]),
+        Route("/canal", ver_canal, methods=["GET"]),
         Route("/evidencia", evidencia, methods=["GET"]),
         Route("/evidencia/revisar", evidencia_revisar, methods=["POST"]),
         Route("/evidencia/simular", evidencia_simular, methods=["POST"]),

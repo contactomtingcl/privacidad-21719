@@ -311,6 +311,14 @@ class TestDemo(unittest.TestCase):
 
 
 class TestSinInterferencia(unittest.TestCase):
+    def test_pantalla_del_canal_con_enlace_firmado(self):
+        app, canal, _ = crear_panel_de_prueba(None, demo=True)
+        r = Navegador(app).pedir("GET", "/panel/canal")
+        self.assertEqual(r.status, 200)
+        enlace = canal.enlace("comercial-los-robles", "https://canal.ejemplo.cl")
+        self.assertIn(enlace, r.html)
+        self.assertIn(enlace.removeprefix("https://canal.ejemplo.cl") + "/qr.svg", r.html)
+
     def test_ruta_de_salud_para_el_hosting(self):
         app, *_ = crear_panel_de_prueba(None)
         r = Navegador(app).pedir("GET", "/salud")

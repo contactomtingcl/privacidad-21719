@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block titulo %}Canal y código QR{% endblock %}
+{% block cuerpo %}
+<header class="cabecera">
+<div>
+<h1>Canal y código QR</h1>
+<p class="suave">Por aquí reportan titulares, trabajadores y proveedores de {{ ctx.org.nombre }}. Cada reporte llega solo a la bandeja.</p>
+</div>
+</header>
+<div class="columnas">
+<section class="tarjeta qr" aria-label="Código QR del canal">
+<img src="{{ qr }}" width="280" height="280" alt="Código QR del canal de {{ ctx.org.nombre }}">
+<p class="suave">Escanéalo con la cámara del celular.</p>
+</section>
+<section class="tarjeta principal" aria-label="Enlace del canal">
+<h2>Enlace del canal</h2>
+<p class="huella-final">{{ enlace }}</p>
+<div class="acciones">
+<a class="boton primario" href="{{ enlace }}" target="_blank" rel="noopener">Abrir el canal</a>
+<button type="button" data-copiar="{{ enlace }}">Copiar enlace</button>
+</div>
+<p class="suave">El enlace va firmado: si alguien cambia una letra, deja de funcionar. Para reemplazarlo (por ejemplo, si se filtró), se sube su versión en la configuración y el anterior queda sin efecto.</p>
+</section>
+</div>
+{% endblock %}

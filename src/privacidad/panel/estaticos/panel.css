@@ -247,6 +247,9 @@ legend{font-size:13px;color:var(--tx2);padding:0 4px}
 .cadena .eslabon:nth-child(6),.escaneo .eslabon:nth-child(6) .bloque,.escaneo .eslabon:nth-child(6) .sello{animation-delay:.6s}
 .cadena .eslabon:nth-child(n+7),.escaneo .eslabon:nth-child(n+7) .bloque,.escaneo .eslabon:nth-child(n+7) .sello{animation-delay:.72s}
 
+.qr{flex:0 1 340px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.qr img{background:#fff;border-radius:12px;padding:12px;width:100%;max-width:280px;height:auto}
+
 /* --- ingreso ----------------------------------------------------------------- */
 .ingreso{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px}
 .ingreso .tarjeta{width:100%;max-width:420px;display:flex;flex-direction:column;gap:18px;padding:32px;animation:entrada .5s ease-out both}
