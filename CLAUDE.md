@@ -83,11 +83,16 @@ Usuarios con scrypt (`panel/usuarios.py`), comando `usuario`. Demo: `servir --de
 `data/demo/casos.yaml` (respuestas grabadas) y alteración real sobre una copia. Para revisar las
 pantallas: levantar la demo y tomar capturas con Playwright (Chromium en /opt/pw-browsers).
 
+Publicado (11 oct) en Render: https://privacidad-21719.onrender.com (panel en /panel/, canal y
+QR en /panel/canal). `render.yaml` + `Dockerfile`; se publica solo tras pasar la CI (checksPass).
+Plan 0.5c-512mb + disco 1 GB = US$7,25/mes, región Virginia. Secretos en el panel de Render
+(ANTHROPIC_API_KEY la pegó Matías). Dominio propio: comprarlo cuando se decida el nombre (~24 oct).
+Desde aquí la dirección se revisa con WebFetch (curl al dominio está bloqueado por el proxy).
+
 Pendiente técnico, en orden: respaldo de la IA (frase del mensaje que sostiene cada hecho,
 verificada por código; requiere cambiar el esquema y volver a medir), cifra de correcciones del
 delegado desde la evidencia, avisos por correo/Telegram a los destinos,
-borradores de reporte a la Agencia y a la ANCI, completar el motor (perfiles, simulador),
-publicación en internet con modo demo. Si se cumple la puerta de calidad del 23 de octubre:
+borradores de reporte a la Agencia y a la ANCI, completar el motor (perfiles, simulador). Si se cumple la puerta de calidad del 23 de octubre:
 red de cascada y sello de tiempo. Rediseño contrafactual e impacto de proyectos de ley entran
 seguro.
 
