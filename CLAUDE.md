@@ -50,13 +50,14 @@ Entrega: 28 de octubre de 2026. Demo Day: 29 de octubre. Nombre de trabajo
 - `claude-sonnet-5-5` no acepta forzar herramienta; `ClienteIA` reintenta solo.
 - Commits directos a `main`, con el autor configurado en el repositorio.
 
-## Estado al 11 de octubre de 2026 (noche)
+## Estado al 12 de octubre de 2026
 
 Hecho: corpus legal indexado (107 artículos) con verificador de citas, guardia de datos
 sintéticos, detección y enmascarado, inventario con IA (11 campos del DS 662), motor de
 reglas (Agencia, titulares, ANCI, plazos de solicitudes), interpretación con IA de
 solicitudes e incidentes, set de 150 casos y evaluación en tres niveles (iteración 2:
-IA + motor 76/77 deberes detectados). 378 pruebas (5 omitidas sin segno) en verde.
+IA + motor 76/77 deberes detectados; iteración 3 del 12 oct con frase de respaldo: 76/77, solicitudes
+98%). 391 pruebas (5 omitidas sin segno) en verde.
 
 Canal de reporte (primera versión, 10 oct): enlace firmado y QR (segno), confirmación al
 titular con menú fijo y, sin respuesta a los 5 días, lectura reversible: oposición + bloqueo
@@ -92,15 +93,20 @@ descarga en texto y «Marcar como revisado» (evento `borrador_revisado` con la 
 escrita con letras, para que la evidencia no la confunda con un teléfono). Nuevas fuentes en
 `reglas.yaml` (contenido de los reportes), versión 2026-10-11.
 
+Frase de respaldo (12 oct): la IA copia el fragmento del mensaje que sostiene cada hecho
+(incidentes) o derecho (solicitudes); `interpretacion/respaldo.py` verifica que esté en el texto
+enmascarado. `Caso.respaldos_ia` guarda las frases; la evidencia solo cuenta cuántas y cuántas
+verificadas. Panel: «Se basó en…», aviso si no está en el mensaje o si un dato afirmado no trae
+frase (`afirmados_incidente`). Medición: 179/179 frases verificadas en incidentes, 52/52 en
+solicitudes; 156/161 hechos afirmados con frase. Costo por incidente subió de US$0,006 a 0,008.
+
 Publicado (11 oct) en Render: https://privacidad-21719.onrender.com (panel en /panel/, canal y
 QR en /panel/canal). `render.yaml` + `Dockerfile`; se publica solo tras pasar la CI (checksPass).
 Plan 0.5c-512mb + disco 1 GB = US$7,25/mes, región Virginia. Secretos en el panel de Render
 (ANTHROPIC_API_KEY la pegó Matías). Dominio propio: comprarlo cuando se decida el nombre (~24 oct).
 Desde aquí la dirección se revisa con WebFetch (curl al dominio está bloqueado por el proxy).
 
-Pendiente técnico, en orden: respaldo de la IA (frase del mensaje que sostiene cada hecho,
-verificada por código; requiere cambiar el esquema y volver a medir), cifra de correcciones del
-delegado desde la evidencia, avisos por correo/Telegram a los destinos, completar el motor
+Pendiente técnico, en orden: cifra de correcciones del delegado desde la evidencia, avisos por correo/Telegram a los destinos, completar el motor
 (perfiles, operadores de importancia vital, simulador). Si se cumple la puerta de calidad del 23 de octubre:
 red de cascada y sello de tiempo. Rediseño contrafactual e impacto de proyectos de ley entran
 seguro.

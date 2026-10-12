@@ -156,7 +156,6 @@ Librerías y recursos incluidos en el repositorio, sin cargar nada de internet: 
 - Un solo rol (delegado). La vista para cada área (solo sus casos, nunca los reservados) queda para después.
 - Sin segundo factor de ingreso. El límite de intentos vive en memoria: se reinicia con el servidor.
 - La cookie de sesión va firmada, no cifrada: contiene el usuario y la organización (no la contraseña ni datos de casos).
-- La IA todavía no indica en qué frase del mensaje se basó cada hecho; está planificado, con verificación por código.
 - En la demo, la llave del modo reservado se crea en memoria al arrancar y se pierde al detenerlo.
 
 ## Borradores de reporte
@@ -193,19 +192,30 @@ Límites: el servidor está en Estados Unidos (región Virginia). Para un piloto
 
 El sistema se mide con 150 casos ficticios etiquetados (`data/evaluacion/`): 50 reportes de incidentes, 50 mensajes de titulares y 50 columnas de planillas. Se comparan tres niveles: reglas por palabras clave sin IA, la IA decidiendo sola con el texto legal a la vista, y el sistema propuesto (la IA interpreta y el motor de reglas decide).
 
-Resultado de la iteración 2 ([detalle](resultados/evaluacion.md)):
+Resultado de la iteración 3, del 12 de octubre, ya con la frase de respaldo ([detalle](resultados/evaluacion.md)):
 
 | Métrica | Sin IA | IA sola | IA + motor |
 | --- | --- | --- | --- |
-| Incidentes: deberes de aviso detectados | 62/77 | 70/77 | 76/77 |
-| Incidentes: casos con los tres deberes correctos | 58% | 32% | 96% |
-| Solicitudes: derecho identificado correctamente | 84% | 90% | 96% |
-| Solicitudes: plazo de respuesta correcto | 40/43 | 39/43 | 42/43 |
+| Incidentes: deberes de aviso detectados | 62/77 | 69/77 | 76/77 |
+| Incidentes: casos con los tres deberes correctos | 58% | 30% | 96% |
+| Solicitudes: derecho identificado correctamente | 84% | 96% | 98% |
+| Solicitudes: plazo de respuesta correcto | 40/43 | 40/43 | 43/43 |
 | Columnas: sensibles detectadas | 4/11 | 11/11 | 11/11 |
 
-Costo de IA del sistema propuesto: US$0,006 por incidente y menos de US$0,001 por solicitud. Cuando la IA decide sola, deja como "revisar" 27 de los 37 casos en que el aviso a la Agencia es obligatorio: no se equivoca hacia el "no", pero no decide.
+Costo de IA del sistema propuesto: US$0,008 por incidente (era US$0,006 antes de pedir la frase de respaldo) y menos de US$0,001 por solicitud. Cuando la IA decide sola, deja como "revisar" 27 de los 37 casos en que el aviso a la Agencia es obligatorio: no se equivoca hacia el "no", pero no decide.
 
-Límites: las etiquetas fueron redactadas con asistencia de IA y están pendientes de revisión del autor y de un abogado; las instrucciones a la IA y la línea base se escribieron conociendo el set, por lo que se agregará un set ciego escrito por otra persona. La primera medición, con sus errores, está en [`resultados/historial/`](resultados/historial/).
+Límites: las etiquetas fueron redactadas con asistencia de IA y están pendientes de revisión del autor y de un abogado; las instrucciones a la IA y la línea base se escribieron conociendo el set, por lo que se agregará un set ciego escrito por otra persona. Las mediciones anteriores, con sus errores, están en [`resultados/historial/`](resultados/historial/). Entre la iteración 2 y la 3 las cifras de solicitudes subieron un poco (de 96% a 98%), pero con una sola corrida no se puede atribuir ese cambio a la frase de respaldo: la IA no responde siempre igual y la columna «IA sola», que no cambió, también se movió.
+
+### Frase de respaldo
+
+La IA copia el fragmento del mensaje en que apoya cada hecho o derecho, y el código comprueba que ese fragmento esté en el texto enmascarado que recibió (`src/privacidad/interpretacion/respaldo.py`; ignora mayúsculas, tildes y puntuación, y exige palabras completas). La frase no decide nada. En el panel, cada hecho muestra su frase; si no está en el mensaje, o si la IA afirmó un dato sin citar ninguna, se le avisa al delegado.
+
+| Iteración 3 | Incidentes | Solicitudes |
+| --- | --- | --- |
+| Frases encontradas en el mensaje | 179/179 | 52/52 |
+| Hechos o derechos afirmados con frase verificada | 156/161 (96,9%) | 52/52 |
+
+Límite: que la frase esté en el mensaje no prueba que la conclusión sea correcta, solo que la IA se apoyó en algo que la persona escribió. El caso queda con las frases; la cadena de evidencia guarda solo cuántas hubo y cuántas se verificaron.
 
 ## Corpus legal
 
