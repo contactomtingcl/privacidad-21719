@@ -376,6 +376,8 @@ def vista_hechos(caso: Caso) -> list[VistaHecho]:
     ia = caso.hechos_incidente.model_dump() if caso.hechos_incidente else {}
     datos = vigentes.model_dump()
     afirmados = afirmados_incidente(vigentes)
+    # Solo se pide frase a la IA desde el 12 de octubre: un caso leído antes no se marca.
+    con_frases = any(e.tipo == "interpretado" and "respaldos" in e.detalle for e in caso.eventos)
     salida = []
     for campo, etiqueta in ETIQUETAS_HECHO.items():
         if not ia:
@@ -386,7 +388,7 @@ def vista_hechos(caso: Caso) -> list[VistaHecho]:
             origen = "propuesto por la IA"
         de_la_ia = origen == "propuesto por la IA"
         respaldo = caso.respaldos_ia.get(campo) if de_la_ia else None
-        sin_respaldo = de_la_ia and respaldo is None and campo in afirmados
+        sin_respaldo = con_frases and de_la_ia and respaldo is None and campo in afirmados
         salida.append(
             VistaHecho(campo, etiqueta, _valor(campo, datos[campo]), origen, respaldo, sin_respaldo)
         )

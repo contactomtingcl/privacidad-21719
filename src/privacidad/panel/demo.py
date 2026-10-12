@@ -12,6 +12,7 @@ Los reportes que llegan después, en vivo, usan la IA real si hay llave configur
 
 from __future__ import annotations
 
+import hashlib
 from datetime import datetime, timedelta
 from pathlib import Path
 from types import SimpleNamespace
@@ -63,6 +64,13 @@ class _RelojAtrasado:
 
     def __call__(self) -> datetime:
         return self.momento or ahora_chile()
+
+
+def version_demo(ruta: Path | None = None) -> str:
+    """Huella corta de los casos de la demo. Si cambian (por ejemplo, se agregan las frases de
+    respaldo), la demo arranca en una carpeta nueva y se vuelve a sembrar: los casos antiguos no
+    se borran (la evidencia no admite borrados), solo dejan de mostrarse."""
+    return hashlib.sha256((ruta or RAIZ_DEMO / "casos.yaml").read_bytes()).hexdigest()[:8]
 
 
 def sembrar(canal: CanalReporte, ruta: Path | None = None) -> int:

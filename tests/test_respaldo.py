@@ -118,6 +118,33 @@ class TestPanel(unittest.TestCase):
         self.assertIn("La IA no citó una frase del mensaje para este dato", ficha.html)
 
 
+class TestCasosAntiguos(unittest.TestCase):
+    def test_un_caso_leido_antes_de_las_frases_no_se_marca(self):
+        from privacidad.panel.vista import vista_hechos
+
+        canal, _, _ = crear_canal(cliente_con({"vulneracion": "entró con la cuenta"}))
+        caso = canal.recibir_incidente(MUNI, TEXTO)
+        self.assertTrue(any(h.sin_respaldo for h in vista_hechos(caso)))
+        for e in caso.eventos:  # así quedaba un caso del 11 de octubre
+            e.detalle.pop("respaldos", None)
+            e.detalle.pop("respaldos_verificados", None)
+        caso.respaldos_ia = {}
+        self.assertFalse(any(h.sin_respaldo for h in vista_hechos(caso)))
+
+    def test_la_demo_cambia_de_carpeta_si_cambian_sus_casos(self):
+        import tempfile
+        from pathlib import Path
+
+        from privacidad.panel.demo import version_demo
+
+        with tempfile.TemporaryDirectory() as d:
+            ruta = Path(d) / "casos.yaml"
+            ruta.write_text("casos: []", encoding="utf-8")
+            antes = version_demo(ruta)
+            ruta.write_text("casos: [] # cambio", encoding="utf-8")
+            self.assertNotEqual(antes, version_demo(ruta))
+
+
 class TestDemoYMedicion(unittest.TestCase):
     def test_todas_las_frases_grabadas_de_la_demo_estan_en_su_mensaje(self):
         canal, _, _ = crear_canal(ClienteFalso(), repositorio=RepositorioCasos())

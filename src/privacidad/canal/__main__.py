@@ -139,6 +139,11 @@ def comando_servir(args: argparse.Namespace) -> int:
     if secreto is None:
         return 2
     carpeta = Path(args.datos) if args.datos else None
+    if carpeta is not None and args.demo:
+        from ..panel.demo import version_demo
+
+        carpeta = carpeta / f"demo-{version_demo()}"
+        carpeta.mkdir(parents=True, exist_ok=True)
     organizaciones = cargar_organizaciones()
     try:
         llaves = _llaves()
