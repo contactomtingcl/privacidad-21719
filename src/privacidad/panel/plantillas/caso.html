@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import anillo, pildora %}
+{% from "macros.html" import anillo, pildora, respaldo %}
 {% block titulo %}Caso {{ f.caso.id }}{% endblock %}
 {% block cuerpo %}
 {% set c = f.caso %}
@@ -73,13 +73,13 @@ Validado por {{ c.validacion.por }} a las {{ c.validacion.momento | hora }}</spa
 
 <section class="tarjeta" aria-label="Lo que llegó">
 <h2>Lo que llegó</h2>
-<p class="suave">Así lo leyó la IA: los RUT, correos, teléfonos y fechas van tapados.</p>
+<p class="suave">Así lo leyó la IA: los RUT, correos, teléfonos y fechas van tapados. Cada hecho propuesto por la IA muestra la frase en que se basó; el sistema comprueba que esa frase esté en el mensaje.</p>
 <p class="mensaje">{{ f.texto_enmascarado | marcadores }}</p>
 
 {% if c.tipo == "solicitud" %}
 <h3>Lo que pide la persona</h3>
 {% if c.confirmacion and c.confirmacion.vigente %}
-<ul>{% for d in c.confirmacion.vigente %}<li>{{ ETIQUETAS_DERECHO[d] }}</li>{% endfor %}</ul>
+<ul class="derechos">{% for d in c.confirmacion.vigente %}<li>{{ ETIQUETAS_DERECHO[d] }}{% if d in c.confirmacion.propuesta %} {{ respaldo(c.respaldos_ia.get(d)) }}{% endif %}</li>{% endfor %}</ul>
 <p class="suave">Estado de la confirmación con la persona: {{ {"no_requerida": "no hizo falta", "pendiente": "esperando su respuesta", "confirmada": "confirmó", "corregida": "corrigió la lectura", "por_defecto": "no respondió; se aplicó la lectura reversible"}[c.confirmacion.estado] }}.</p>
 {% else %}
 <p class="suave">Todavía no hay una lectura de lo que pide. Revísala con la persona.</p>
@@ -93,6 +93,7 @@ Validado por {{ c.validacion.por }} a las {{ c.validacion.momento | hora }}</spa
 <div class="hecho {% if h.origen != 'propuesto por la IA' %}corregido{% endif %} {% if cambio == 'corregido' and h.origen != 'propuesto por la IA' %}cambio{% endif %}">
 <small>{{ h.etiqueta }} · <span class="origen">{{ h.origen }}</span></small>
 <b>{{ h.valor }}</b>
+{{ respaldo(h.respaldo) }}{% if h.sin_respaldo %}<span class="respaldo no-verificada">La IA no citó una frase del mensaje para este dato: revísalo.</span>{% endif %}
 </div>
 {% endfor %}
 </div>

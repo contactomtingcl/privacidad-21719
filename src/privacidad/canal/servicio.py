@@ -28,6 +28,7 @@ from ..ia.cliente import MODELO_EXTRACCION, MODELO_RAPIDO
 from ..interpretacion import extraer_hechos, interpretar_solicitud
 from ..interpretacion.comun import ClienteLLM
 from ..interpretacion.incidentes import ExtraccionIncidente
+from ..interpretacion.respaldo import resumen_respaldos
 from ..interpretacion.solicitudes import InterpretacionSolicitud
 from ..motor import HechosIncidente, HechosSolicitud, decidir_incidente, decidir_solicitud
 from . import confirmacion as conf
@@ -183,6 +184,7 @@ class CanalReporte(AccionesDelegado):
         interpretacion = self._interpretar_solicitud(texto)
         caso.costo_usd = interpretacion.costo_usd
         caso.resumen_ia = interpretacion.resumen
+        caso.respaldos_ia = interpretacion.respaldos
         hechos = interpretacion.hechos
         if hechos is None:
             # La IA no respondió: el plazo corre igual y el caso va a revisión humana.
@@ -212,6 +214,7 @@ class CanalReporte(AccionesDelegado):
                 derechos=list(hechos.derechos),
                 requiere_confirmacion=hechos.requiere_confirmacion,
                 modelo=self._modelo_solicitudes,
+                **resumen_respaldos(caso.respaldos_ia),
             )
             if caso.confirmacion.estado == "pendiente":
                 caso.registrar(
@@ -358,6 +361,7 @@ class CanalReporte(AccionesDelegado):
         extraccion = self._extraer(texto)
         caso.costo_usd = extraccion.costo_usd
         caso.resumen_ia = extraccion.resumen
+        caso.respaldos_ia = extraccion.respaldos
         if extraccion.hechos is None:
             caso.error_ia = extraccion.error
             posibles = decidir_incidente(_HECHOS_PEOR_CASO, org.perfil, ahora)
@@ -376,6 +380,7 @@ class CanalReporte(AccionesDelegado):
                 aviso_agencia=resultado.aviso_agencia.decision,
                 aviso_titulares=resultado.aviso_titulares.decision,
                 reporte_anci=resultado.reporte_anci.decision,
+                **resumen_respaldos(caso.respaldos_ia),
             )
         self._enrutar(caso, ahora)
         self._repo.guardar(caso)

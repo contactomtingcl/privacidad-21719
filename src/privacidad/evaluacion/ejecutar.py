@@ -16,6 +16,8 @@ from typing import Any
 import pandas as pd
 
 from ..interpretacion import extraer_hechos, interpretar_solicitud
+from ..interpretacion.incidentes import afirmados_incidente
+from ..interpretacion.respaldo import Respaldo
 from ..inventario import cargar_categorias, perfilar_dataframe
 from ..inventario.actividad import clasificar_ambiguas, combinar_clasificacion
 from ..motor import HechosSolicitud, decidir_incidente, decidir_solicitud
@@ -157,6 +159,28 @@ def metricas_incidentes(filas: list[dict[str, Any]], nivel: str) -> dict[str, An
     }
 
 
+def metricas_respaldo(lecturas: list[tuple[set[str], dict[str, Respaldo]]]) -> dict[str, Any]:
+    """Cuántas frases entregó la IA, cuántas están de verdad en el mensaje y qué parte de lo que
+    afirmó quedó sostenida por una frase verificada."""
+    frases = [r for _, respaldos in lecturas for r in respaldos.values()]
+    verificadas = sum(r.verificada for r in frases)
+    afirmados = sum(len(a) for a, _ in lecturas)
+    sostenidos = sum(
+        1 for a, respaldos in lecturas for c in a if c in respaldos and respaldos[c].verificada
+    )
+    return {
+        "frases_entregadas": len(frases),
+        "frases_verificadas": f"{verificadas}/{len(frases)}",
+        "frases_verificadas_pct": _pct(verificadas, len(frases)),
+        "afirmados_con_frase_verificada": f"{sostenidos}/{afirmados}",
+        "afirmados_con_frase_verificada_pct": _pct(sostenidos, afirmados),
+    }
+
+
+def _respaldos_json(respaldos: dict[str, Respaldo]) -> dict[str, Any]:
+    return {c: r.model_dump() for c, r in respaldos.items()}
+
+
 def _deberes(resultado) -> dict[str, str]:
     return {
         "aviso_agencia": resultado.aviso_agencia.decision,
@@ -190,6 +214,7 @@ def evaluar_incidentes(cliente=None, modelo: str | None = None) -> dict[str, Any
                 fila["ia_motor"] = _deberes(decidir_incidente(ext.hechos, caso.perfil))
             fila["ia_motor_error"] = ext.error
             fila["categorias_ia"] = ext.hechos.categorias_especiales if ext.hechos else None
+            fila["respaldos_ia"] = _respaldos_json(ext.respaldos)
             s = solas[i]
             fila["ia_sola"] = {d: getattr(s, d) or "sin_respuesta" for d in DEBERES}
             fila["ia_sola_error"] = s.error
@@ -197,6 +222,11 @@ def evaluar_incidentes(cliente=None, modelo: str | None = None) -> dict[str, Any
     niveles = ["base", "ia_sola", "ia_motor"] if cliente else ["base"]
     return {
         "metricas": {n: metricas_incidentes(filas, n) for n in niveles},
+        "respaldo": metricas_respaldo(
+            [(afirmados_incidente(e.hechos), e.respaldos) for e in extracciones if e.hechos]
+        )
+        if cliente
+        else {},
         "costo_usd": {
             "ia_sola": round(sum(s.costo_usd for s in solas), 4),
             "ia_motor": round(sum(e.costo_usd for e in extracciones), 4),
@@ -306,6 +336,7 @@ def evaluar_solicitudes(cliente=None, modelo: str | None = None) -> dict[str, An
                 else None
             )
             fila["ia_motor_error"] = interpretaciones[i].error
+            fila["respaldos_ia"] = _respaldos_json(interpretaciones[i].respaldos)
             s = solas[i]
             fila["ia_sola_error"] = s.error
             fila["ia_sola"] = {
@@ -322,6 +353,15 @@ def evaluar_solicitudes(cliente=None, modelo: str | None = None) -> dict[str, An
     niveles = ["base", "ia_sola", "ia_motor"] if cliente else ["base"]
     return {
         "metricas": {n: metricas_solicitudes(filas, n) for n in niveles},
+        "respaldo": metricas_respaldo(
+            [
+                (set(i.hechos.derechos), i.respaldos)
+                for i in interpretaciones
+                if i.hechos and i.hechos.es_solicitud
+            ]
+        )
+        if cliente
+        else {},
         "costo_usd": {
             "ia_sola": round(sum(s.costo_usd for s in solas), 4),
             "ia_motor": round(sum(i.costo_usd for i in interpretaciones), 4),

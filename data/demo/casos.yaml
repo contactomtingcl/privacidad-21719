@@ -21,6 +21,10 @@ casos:
         interrupcion_servicio: false
         titulares_aprox: 120
         resumen: Acceso indebido al sistema de beneficios sociales
+        respaldos:
+          datos_personales: mostró postulaciones de otras familias a una funcionaria de partes
+          vulneracion: Alguien entró con la cuenta [CORREO_1] desde fuera del municipio
+          ciberincidente: el sistema de beneficios mostró postulaciones de otras familias
 
   - org: municipalidad-piloto
     tipo: aviso_proveedor
@@ -47,6 +51,11 @@ casos:
         interrupcion_servicio: false
         titulares_aprox: 1
         resumen: Ficha social expuesta en el mesón de atención
+        respaldos:
+          datos_personales: la ficha social de un vecino
+          vulneracion: otra persona la fotografió
+          ciberincidente: dejó abierta en la pantalla del mesón de atención
+          titulares_aprox: la ficha social de un vecino
 
   - org: municipalidad-piloto
     tipo: solicitud
@@ -62,6 +71,8 @@ casos:
         derechos: [bloqueo]
         requiere_confirmacion: false
         resumen: Pide bloquear sus datos del registro de postulantes
+        respaldos:
+          bloqueo: dejen de usar mis datos del registro de postulantes mientras reviso mi caso
 
   - org: municipalidad-piloto
     tipo: solicitud
@@ -76,6 +87,8 @@ casos:
         derechos: [acceso]
         requiere_confirmacion: false
         resumen: Quiere saber qué datos suyos tiene la municipalidad
+        respaldos:
+          acceso: Quiero saber qué datos míos tiene la municipalidad y para qué los usan
 
   - org: comercial-los-robles
     tipo: incidente
@@ -97,6 +110,10 @@ casos:
         interrupcion_servicio: false
         titulares_aprox: 84
         resumen: Planilla del paseo enviada a un proveedor por error
+        respaldos:
+          datos_personales: con los datos y alergias de los hijos de los trabajadores
+          vulneracion: Envié por error la planilla del paseo de fin de año
+          categorias_especiales: alergias de los hijos de los trabajadores
 
   - org: comercial-los-robles
     tipo: solicitud
@@ -112,6 +129,8 @@ casos:
         requiere_confirmacion: true
         pregunta_confirmacion: ¿Quiere dejar de recibir publicidad o que borremos sus datos?
         resumen: No quiere recibir más publicidad
+        respaldos:
+          oposicion: Ya no quiero recibir sus correos de ofertas
 
   - org: comercial-los-robles
     tipo: incidente
@@ -131,3 +150,8 @@ casos:
         interrupcion_servicio: false
         titulares_aprox: 120
         resumen: Pendrive cifrado con la nómina, recuperado sin uso
+        respaldos:
+          datos_personales: la nómina de remuneraciones
+          vulneracion: Se perdió un pendrive con la nómina de remuneraciones
+          categorias_especiales: la nómina de remuneraciones
+          riesgo_mitigado: estaba cifrado con contraseña y lo encontramos al día siguiente sin señales de uso

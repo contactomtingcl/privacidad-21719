@@ -8,11 +8,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from ..motor import HechosSolicitud
 from ..motor.motor import Derecho
 from .comun import ClienteLLM, enmascarar, entrada_herramienta, sin_respuesta
+from .respaldo import Respaldo, leer_respaldos
 
 DERECHOS: tuple[str, ...] = Derecho.__args__
 
@@ -49,12 +50,16 @@ corrigen, borran o se resuelve su oposición, incluye también ese derecho.
 - Por privacidad, el texto trae marcadores como [RUT_1], [CORREO_1] o [TELEFONO_1] en lugar de \
 los datos. Cada marcador es un dato que el titular sí escribió: si dice "mi nuevo teléfono es \
 [TELEFONO_1]", la corrección está completa.
-- No calcules plazos: los calcula el sistema."""
+- No calcules plazos: los calcula el sistema.
+- En respaldos, para cada derecho que marques, copia el fragmento exacto del mensaje donde la \
+persona lo pide (de 3 a 20 palabras, sin cambiar ni resumir nada; los marcadores se copian tal \
+cual). El sistema comprueba que cada fragmento esté en el mensaje."""
 
 
 class InterpretacionSolicitud(BaseModel):
     hechos: HechosSolicitud | None
     resumen: str | None = None
+    respaldos: dict[str, Respaldo] = Field(default_factory=dict)  # derecho → frase
     costo_usd: float = 0.0
     error: str | None = None
 
@@ -77,21 +82,33 @@ def _herramienta() -> dict[str, Any]:
                     "type": "string",
                     "description": "Qué entendiste, en una frase para el delegado.",
                 },
+                "respaldos": {
+                    "type": "object",
+                    "description": "Fragmento textual del mensaje donde pide cada derecho.",
+                    "properties": {d: {"type": "string"} for d in DERECHOS},
+                },
             },
-            "required": ["es_solicitud", "derechos", "requiere_confirmacion", "resumen"],
+            "required": [
+                "es_solicitud",
+                "derechos",
+                "requiere_confirmacion",
+                "resumen",
+                "respaldos",
+            ],
         },
     }
 
 
 def interpretar_solicitud(texto: str, cliente: ClienteLLM, modelo: str) -> InterpretacionSolicitud:
+    visto = enmascarar(texto)
     try:
         r = cliente.llamar(
             modelo=modelo,
             sistema=SISTEMA,
-            mensajes=[{"role": "user", "content": f"Mensaje del titular:\n{enmascarar(texto)}"}],
+            mensajes=[{"role": "user", "content": f"Mensaje del titular:\n{visto}"}],
             herramientas=[_herramienta()],
             forzar_herramienta="interpretar_solicitud",
-            max_tokens=1000,
+            max_tokens=1500,
             proposito="canal: interpretar solicitud",
         )
     except Exception as e:  # la falla de la IA no detiene el caso
@@ -108,4 +125,8 @@ def interpretar_solicitud(texto: str, cliente: ClienteLLM, modelo: str) -> Inter
         requiere_confirmacion=bool(entrada.get("requiere_confirmacion")) and es_solicitud,
         pregunta_confirmacion=entrada.get("pregunta_confirmacion") or None,
     )
-    return InterpretacionSolicitud(hechos=hechos, resumen=entrada.get("resumen"), costo_usd=costo)
+    # Solo se guardan frases de los derechos que quedaron en la lectura.
+    respaldos = leer_respaldos(entrada.get("respaldos"), set(hechos.derechos), visto)
+    return InterpretacionSolicitud(
+        hechos=hechos, resumen=entrada.get("resumen"), respaldos=respaldos, costo_usd=costo
+    )

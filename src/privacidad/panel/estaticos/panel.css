@@ -177,6 +177,12 @@ a.fila:hover{background:var(--sel)}
 .hecho{border:1px solid var(--line2);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
 .hecho small{font-size:12px;color:var(--tx3)}
 .hecho .origen{color:var(--acc-tx)}
+.respaldo{font-size:13px;line-height:1.5;color:var(--tx2);overflow-wrap:anywhere}
+.respaldo.verificada::before{content:"✓ ";color:var(--acc-tx);font-weight:600}
+.respaldo.no-verificada{color:var(--red-tx)}
+.respaldo.no-verificada::before{content:"! ";font-weight:700}
+.respaldo mark{background:none;color:var(--amb-tx);font-family:"IBM Plex Mono",monospace}
+.derechos .respaldo{display:block;margin:2px 0 6px}
 .hecho.corregido{border-color:var(--amb-line);background:var(--amb-bg)}
 .hecho.corregido .origen{color:var(--amb-tx)}
 details.plegable>summary{list-style:none;cursor:pointer;min-height:44px;display:inline-flex;align-items:center}

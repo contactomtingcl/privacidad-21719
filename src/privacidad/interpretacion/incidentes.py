@@ -7,11 +7,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, Field, ValidationError
 
 from ..motor import HechosIncidente
 from ..motor.motor import CategoriaEspecial, Vulneracion
 from .comun import ClienteLLM, enmascarar, entrada_herramienta, sin_respuesta
+from .respaldo import Respaldo, leer_respaldos
 
 SISTEMA = """Lees reportes de incidentes escritos por personas de una organización chilena y \
 describes los hechos. No decides si hay que avisar a alguien: eso lo hace el sistema con \
@@ -40,12 +41,36 @@ sin evidencia de ataque.
 - interrupcion_servicio: el incidente impidió prestar un servicio a las personas.
 - titulares_aprox: número de personas afectadas si el texto lo dice; si no, omítelo.
 
-El texto puede traer marcadores como [RUT_1] en lugar de datos personales."""
+El texto puede traer marcadores como [RUT_1] en lugar de datos personales.
+
+En respaldos, para cada hecho que afirmas, copia el fragmento exacto del reporte que lo \
+sostiene (de 3 a 20 palabras, sin cambiar ni resumir nada; los marcadores se copian tal cual). \
+Si un hecho no sale de una frase concreta (por ejemplo, un "no" porque el texto no lo menciona), \
+no pongas respaldo para ese hecho. El sistema comprueba que cada fragmento esté en el texto."""
+
+
+CAMPOS_RESPALDO = set(HechosIncidente.model_fields)
+
+
+def afirmados_incidente(h: HechosIncidente) -> set[str]:
+    """Hechos que la IA afirma (los que deberían tener una frase que los sostenga). Un "no" por
+    omisión, como "no interrumpió el servicio", no necesita frase."""
+    afirmados = {
+        "datos_personales": h.datos_personales,
+        "vulneracion": h.vulneracion != "ninguna",
+        "categorias_especiales": bool(h.categorias_especiales),
+        "riesgo_mitigado": h.riesgo_mitigado,
+        "ciberincidente": h.ciberincidente != "no",
+        "interrupcion_servicio": h.interrupcion_servicio,
+        "titulares_aprox": h.titulares_aprox is not None,
+    }
+    return {campo for campo, si in afirmados.items() if si}
 
 
 class ExtraccionIncidente(BaseModel):
     hechos: HechosIncidente | None
     resumen: str | None = None
+    respaldos: dict[str, Respaldo] = Field(default_factory=dict)
     costo_usd: float = 0.0
     error: str | None = None
 
@@ -68,6 +93,11 @@ def _herramienta() -> dict[str, Any]:
                 "interrupcion_servicio": {"type": "boolean"},
                 "titulares_aprox": {"type": "integer"},
                 "resumen": {"type": "string", "description": "Qué pasó, en una frase."},
+                "respaldos": {
+                    "type": "object",
+                    "description": "Fragmento textual del reporte que sostiene cada hecho.",
+                    "properties": {c: {"type": "string"} for c in sorted(CAMPOS_RESPALDO)},
+                },
             },
             "required": [
                 "datos_personales",
@@ -77,20 +107,22 @@ def _herramienta() -> dict[str, Any]:
                 "ciberincidente",
                 "interrupcion_servicio",
                 "resumen",
+                "respaldos",
             ],
         },
     }
 
 
 def extraer_hechos(texto: str, cliente: ClienteLLM, modelo: str) -> ExtraccionIncidente:
+    visto = enmascarar(texto)
     try:
         r = cliente.llamar(
             modelo=modelo,
             sistema=SISTEMA,
-            mensajes=[{"role": "user", "content": f"Reporte:\n{enmascarar(texto)}"}],
+            mensajes=[{"role": "user", "content": f"Reporte:\n{visto}"}],
             herramientas=[_herramienta()],
             forzar_herramienta="registrar_hechos",
-            max_tokens=1000,
+            max_tokens=1500,
             proposito="incidentes: extraer hechos",
         )
     except Exception as e:
@@ -100,6 +132,7 @@ def extraer_hechos(texto: str, cliente: ClienteLLM, modelo: str) -> ExtraccionIn
     if not entrada:
         return ExtraccionIncidente(hechos=None, costo_usd=costo, error=sin_respuesta(r))
     resumen = entrada.pop("resumen", None)
+    respaldos = leer_respaldos(entrada.pop("respaldos", None), CAMPOS_RESPALDO, visto)
     entrada = {k: v for k, v in entrada.items() if v is not None}
     if not isinstance(entrada.get("titulares_aprox"), int):
         entrada.pop("titulares_aprox", None)  # dato informativo; no decide nada
@@ -107,4 +140,4 @@ def extraer_hechos(texto: str, cliente: ClienteLLM, modelo: str) -> ExtraccionIn
         hechos = HechosIncidente(**entrada)
     except ValidationError:
         return ExtraccionIncidente(hechos=None, costo_usd=costo, error="respuesta_invalida")
-    return ExtraccionIncidente(hechos=hechos, resumen=resumen, costo_usd=costo)
+    return ExtraccionIncidente(hechos=hechos, resumen=resumen, respaldos=respaldos, costo_usd=costo)

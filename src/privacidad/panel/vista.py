@@ -14,6 +14,8 @@ from ..canal.delegado import deberes_del_caso, decision_final, por_resolver
 from ..canal.evidencia import Anotacion
 from ..canal.modelos import ZONA_CHILE, Caso
 from ..deteccion import Enmascarador
+from ..interpretacion.incidentes import afirmados_incidente
+from ..interpretacion.respaldo import Respaldo
 from ..motor import Deber
 from ..reportes import (
     DESTINOS,
@@ -340,6 +342,8 @@ class VistaHecho:
     etiqueta: str
     valor: str
     origen: str  # "propuesto por la IA" | "corregido por ti" | "completado por ti"
+    respaldo: Respaldo | None = None  # solo si el valor sigue siendo el que propuso la IA
+    sin_respaldo: bool = False  # la IA lo afirmó sin citar una frase del mensaje
 
 
 def _valor(campo: str, v: Any) -> str:
@@ -371,6 +375,7 @@ def vista_hechos(caso: Caso) -> list[VistaHecho]:
         return []
     ia = caso.hechos_incidente.model_dump() if caso.hechos_incidente else {}
     datos = vigentes.model_dump()
+    afirmados = afirmados_incidente(vigentes)
     salida = []
     for campo, etiqueta in ETIQUETAS_HECHO.items():
         if not ia:
@@ -379,7 +384,12 @@ def vista_hechos(caso: Caso) -> list[VistaHecho]:
             origen = "corregido por ti"
         else:
             origen = "propuesto por la IA"
-        salida.append(VistaHecho(campo, etiqueta, _valor(campo, datos[campo]), origen))
+        de_la_ia = origen == "propuesto por la IA"
+        respaldo = caso.respaldos_ia.get(campo) if de_la_ia else None
+        sin_respaldo = de_la_ia and respaldo is None and campo in afirmados
+        salida.append(
+            VistaHecho(campo, etiqueta, _valor(campo, datos[campo]), origen, respaldo, sin_respaldo)
+        )
     return salida
 
 

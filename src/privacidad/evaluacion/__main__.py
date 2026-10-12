@@ -39,6 +39,32 @@ def _tabla(metricas: dict, filas: list[tuple[str, str]]) -> list[str]:
     return lineas
 
 
+def _respaldo(r: dict) -> list[str]:
+    """Frase de respaldo (solo IA + motor): la IA copia el fragmento del mensaje que sostiene
+    cada hecho y el código comprueba que esté en el texto."""
+    inc, sol = r["incidentes"].get("respaldo"), r["solicitudes"].get("respaldo")
+    if not inc or not sol:
+        return []
+    return [
+        "## Frase de respaldo de la IA (IA + motor)",
+        "",
+        "La IA copia el fragmento del mensaje en que apoya cada hecho o derecho; el código "
+        "comprueba que esté en el texto que la IA recibió (enmascarado). La frase no decide nada.",
+        "",
+        "| Métrica | Incidentes | Solicitudes |",
+        "| --- | --- | --- |",
+        f"| Frases entregadas | {inc['frases_entregadas']} | {sol['frases_entregadas']} |",
+        f"| Frases encontradas en el mensaje | {inc['frases_verificadas']} "
+        f"({inc['frases_verificadas_pct']}%) | {sol['frases_verificadas']} "
+        f"({sol['frases_verificadas_pct']}%) |",
+        f"| Hechos o derechos afirmados con frase verificada | "
+        f"{inc['afirmados_con_frase_verificada']} ({inc['afirmados_con_frase_verificada_pct']}%) "
+        f"| {sol['afirmados_con_frase_verificada']} "
+        f"({sol['afirmados_con_frase_verificada_pct']}%) |",
+        "",
+    ]
+
+
 def _markdown(r: dict) -> str:
     m = [
         "# Evaluación con el set etiquetado",
@@ -82,6 +108,7 @@ def _markdown(r: dict) -> str:
             ],
         ),
         "",
+        *_respaldo(r),
         "## Columnas de planillas (50 casos): ¿qué dato es?",
         "",
         *_tabla(

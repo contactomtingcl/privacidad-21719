@@ -16,6 +16,7 @@ from zoneinfo import ZoneInfo
 import yaml
 from pydantic import BaseModel, Field
 
+from ..interpretacion.respaldo import Respaldo
 from ..motor import (
     Deber,
     HechosIncidente,
@@ -146,6 +147,9 @@ class Caso(BaseModel):
     identidad: dict[str, str] | None = None  # solo si la persona no pidió reserva
     identidad_cifrada: str | None = None
     resumen_ia: str | None = None
+    # Frase del mensaje (enmascarado) en que la IA apoyó cada hecho o derecho, y si el código la
+    # encontró en el texto. Queda en el caso, nunca en la evidencia (solo sus cifras).
+    respaldos_ia: dict[str, Respaldo] = Field(default_factory=dict)
     error_ia: str | None = None
     costo_usd: float = 0.0
     hechos_solicitud: HechosSolicitud | None = None

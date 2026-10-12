@@ -18,3 +18,7 @@
 {% macro pildora(urgencia, etiqueta) -%}
 <span class="pildora u-{{ urgencia }}">{{ etiqueta }}</span>
 {%- endmacro %}
+
+{% macro respaldo(r) -%}
+{% if r %}<span class="respaldo {{ 'verificada' if r.verificada else 'no-verificada' }}">{% if r.verificada %}Se basó en{% else %}La IA citó algo que no está en el mensaje{% endif %}: «{{ r.frase | marcadores }}»</span>{% endif %}
+{%- endmacro %}
