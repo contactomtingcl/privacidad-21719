@@ -120,8 +120,9 @@ Sin `ANTHROPIC_API_KEY` el canal funciona igual y deja los casos en revisión; c
 - **Llave simétrica:** con Fernet, quien administra el servidor y tiene la llave puede abrir las identidades reservadas. Las pantallas lo dicen así ("solo se abren con una llave de acceso restringido"), no "solo el delegado". Pasar a un esquema donde el servidor solo pueda cifrar (llave pública del delegado) queda en el roadmap.
 - El cifrado protege los campos de nombre y contacto. Si la persona escribe su nombre dentro del relato, ese texto no se cifra; los nombres no se detectan automáticamente.
 - El código QR depende de `segno`; en entornos sin acceso a PyPI sus pruebas se omiten y solo corren en la integración continua.
-- Los avisos salen por correo solo si se configura un servidor (`PRIVACIDAD_SMTP_HOST`, `PRIVACIDAD_SMTP_PUERTO`, `PRIVACIDAD_SMTP_USUARIO`, `PRIVACIDAD_SMTP_CONTRASENA`); sin él, y en la demo, quedan en una bandeja de salida simulada. Aún no hay avisos por Telegram. No se publica una cifra de rendimiento del canal: no hay medición.
-- El servidor no registra IP ni el contenido de los mensajes, pero la publicación en internet (dominio, HTTPS, límite de envíos) aún no está hecha.
+- Los avisos salen por correo solo si se configura un servidor (`PRIVACIDAD_SMTP_HOST`, `PRIVACIDAD_SMTP_PUERTO`, `PRIVACIDAD_SMTP_USUARIO`, `PRIVACIDAD_SMTP_CONTRASENA`); sin él, y en la demo, quedan en una bandeja de salida simulada. Por Telegram salen solo si se configura `PRIVACIDAD_TELEGRAM_TOKEN` y el destino tiene chat. No se publica una cifra de rendimiento del canal: no hay medición.
+- El servidor no registra IP ni el contenido de los mensajes. La demo está publicada con HTTPS (ver «Publicación en internet»); falta un dominio propio y un límite de envíos por persona.
+- **Días hábiles:** los feriados nacionales de 2026 y 2027 están verificados (`data/reglas/feriados.yaml`, con sus fuentes). Fuera de ese rango, o si una ley nueva o una elección agrega un feriado, el plazo se muestra como fecha estimada hasta actualizar el calendario. No incluye feriados regionales.
 
 ## Enrutamiento y evidencia
 

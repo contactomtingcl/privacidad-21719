@@ -57,7 +57,7 @@ sintéticos, detección y enmascarado, inventario con IA (11 campos del DS 662),
 reglas (Agencia, titulares, ANCI, plazos de solicitudes), interpretación con IA de
 solicitudes e incidentes, set de 150 casos y evaluación en tres niveles (iteración 2:
 IA + motor 76/77 deberes detectados; iteración 3 del 12 oct con frase de respaldo: 76/77, solicitudes
-98%). 548 pruebas (5 omitidas sin segno) en verde.
+98%). 550 pruebas (5 omitidas sin segno) en verde.
 
 Canal de reporte (primera versión, 10 oct): enlace firmado y QR (segno), confirmación al
 titular con menú fijo y, sin respuesta a los 5 días, lectura reversible: oposición + bloqueo
@@ -198,5 +198,6 @@ propuesta, no el bloqueo. Parámetro `bloqueo_preventivo` en reglas.yaml (versi�
 Sigue pendiente de revisión legal si ese plazo corre desde el ingreso cuando no se pidió.
 
 Limitaciones conocidas: etiquetas del set sin revisión del autor ni de un abogado; falta
-un set ciego escrito por otra persona; feriados de `data/reglas/feriados.yaml` sin
-verificar en una fuente oficial.
+un set ciego escrito por otra persona. Feriados 2026-2027 verificados el 17 oct (reglas en DT y
+Diario Oficial; listas cotejadas con dos calendarios por año; gob.cl no abrió): `cubre_desde`/
+`cubre_hasta` y fuera de ese rango el plazo queda «a confirmar». Sin feriados regionales.

@@ -104,8 +104,20 @@ class TestSolicitud(unittest.TestCase):
             HechosSolicitud(es_solicitud=True, derechos=["supresion", "bloqueo"]), date(2026, 10, 9)
         )
         self.assertEqual(r.bloqueo.vence, date(2026, 10, 14))
-        self.assertTrue(r.bloqueo.a_confirmar)  # feriados aún sin verificar
+        self.assertFalse(r.bloqueo.a_confirmar)  # calendario verificado para 2026 y 2027
         self.assertIsNotNone(r.comunicar_terceros)
+
+    def test_traslados_y_feriado_adicional_de_2027(self):
+        # Martes 29 de junio de 2027: San Pedro y San Pablo pasa al lunes 28 (Ley 19.668).
+        self.assertEqual(sumar_dias_habiles(date(2027, 6, 25), 1)[0], date(2027, 6, 29))
+        # 18 y 19 de septiembre de 2027 caen sábado y domingo: el viernes 17 es feriado
+        # (Ley 20.983). Jueves 16 + 1 día hábil = lunes 20.
+        self.assertEqual(sumar_dias_habiles(date(2027, 9, 16), 1)[0], date(2027, 9, 20))
+
+    def test_fuera_del_calendario_verificado_queda_a_confirmar(self):
+        self.assertTrue(sumar_dias_habiles(date(2027, 12, 20), 2)[1])
+        self.assertFalse(sumar_dias_habiles(date(2027, 12, 30), 2)[1])  # termina en 2028
+        self.assertFalse(sumar_dias_habiles(date(2025, 12, 30), 2)[1])
 
     def test_no_solicitud_no_genera_plazos(self):
         r = decidir_solicitud(HechosSolicitud(es_solicitud=False), date(2026, 12, 2))

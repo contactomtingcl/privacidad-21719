@@ -1,27 +1,59 @@
 # Feriados nacionales de Chile para contar días hábiles (lunes a viernes que no son feriado).
-# ESTADO: pendiente de verificar contra una fuente oficial (gob.cl o la ley de cada feriado).
-# Mientras no se verifique, el sistema marca los plazos en días hábiles como "a confirmar".
-verificado: false
-fuente: "Por confirmar en https://www.gob.cl/noticias/feriados-2026-revisa-cuantos-habra-y-cuales-son-irrenunciables/"
+#
+# Verificado el 17-10-2026 para 2026 y 2027 (`cubre_desde` a `cubre_hasta`):
+# - Las reglas que mueven fechas se leyeron en fuentes oficiales: el traslado a lunes de San Pedro
+#   y San Pablo y del 12 de octubre (Ley 19.668, Dirección del Trabajo) y el feriado del viernes
+#   17 de septiembre cuando el 18 y el 19 caen sábado y domingo (Ley 20.983, Diario Oficial).
+# - La lista completa se cotejó con calendarios que citan la ley de cada feriado: 2026 con
+#   feriados.cl (fuente BCN) y Meganoticias (16 feriados, coinciden todos); 2027 con Buk y Laborix
+#   (17 feriados, coinciden todos).
+# - No se pudo abrir gob.cl desde el entorno de desarrollo.
+#
+# Fuera de este rango, o si se agrega un feriado por ley nueva o por elecciones, el motor marca
+# los plazos en días hábiles como «a confirmar». No incluye feriados regionales (7 de junio en
+# Arica y Parinacota; 20 de agosto en Chillán y Chillán Viejo): las organizaciones del piloto no
+# están en esas comunas.
+verificado: true
+cubre_desde: 2026-01-01
+cubre_hasta: 2027-12-31
+fuentes:
+  - "Dirección del Trabajo, traslado de feriados (Ley 19.668): https://dt.gob.cl/portal/1628/w3-article-60252.html"
+  - "Diario Oficial, Ley 20.983 (30-12-2016): https://www.diariooficial.interior.gob.cl/publicaciones/2016/12/30/41646/01/1161478.pdf"
+  - "feriados.cl, 2026 (cita la BCN): https://www.feriados.cl/"
+  - "Meganoticias, feriados 2026: https://www.meganoticias.cl/dato-util/509846-feriados-2026-chile-cuales-son-1ab-dcv-22-12-2025.html"
+  - "Buk, feriados 2027: https://www.buk.cl/blog/cuantos-feriados-tendra-chile"
+  - "Laborix, feriados 2027: https://laborix.cl/feriados-chile-2027"
 feriados:
-  2026-01-01: Año Nuevo
-  2026-04-03: Viernes Santo
-  2026-04-04: Sábado Santo
-  2026-05-01: Día Nacional del Trabajo
-  2026-05-21: Día de las Glorias Navales
-  2026-06-21: Día Nacional de los Pueblos Indígenas
-  2026-06-29: San Pedro y San Pablo
-  2026-07-16: Virgen del Carmen
-  2026-08-15: Asunción de la Virgen
-  2026-09-18: Independencia Nacional
-  2026-09-19: Glorias del Ejército
-  2026-10-12: Encuentro de Dos Mundos
-  2026-10-31: Día de las Iglesias Evangélicas y Protestantes
-  2026-11-01: Día de Todos los Santos
-  2026-12-08: Inmaculada Concepción
-  2026-12-25: Navidad
+  2026-01-01: Año Nuevo                                      # Ley 2.977
+  2026-04-03: Viernes Santo                                  # Ley 2.977
+  2026-04-04: Sábado Santo                                   # Ley 2.977
+  2026-05-01: Día Nacional del Trabajo                       # Código del Trabajo
+  2026-05-21: Día de las Glorias Navales                     # Ley 2.977
+  2026-06-21: Día Nacional de los Pueblos Indígenas          # Ley 21.357 (solsticio de invierno)
+  2026-06-29: San Pedro y San Pablo                          # Ley 19.668 (cae lunes)
+  2026-07-16: Virgen del Carmen                              # Ley 20.148
+  2026-08-15: Asunción de la Virgen                          # Ley 2.977
+  2026-09-18: Independencia Nacional                         # Ley 2.977
+  2026-09-19: Glorias del Ejército                           # Ley 20.629
+  2026-10-12: Encuentro de Dos Mundos                        # Ley 19.668 (cae lunes)
+  2026-10-31: Día de las Iglesias Evangélicas y Protestantes # Ley 20.299
+  2026-11-01: Día de Todos los Santos                        # Ley 2.977
+  2026-12-08: Inmaculada Concepción                          # Ley 2.977
+  2026-12-25: Navidad                                        # Ley 2.977
   2027-01-01: Año Nuevo
   2027-03-26: Viernes Santo
   2027-03-27: Sábado Santo
   2027-05-01: Día Nacional del Trabajo
   2027-05-21: Día de las Glorias Navales
+  2027-06-21: Día Nacional de los Pueblos Indígenas          # solsticio de invierno
+  2027-06-28: San Pedro y San Pablo                          # el 29 es martes: pasa al lunes (Ley 19.668)
+  2027-07-16: Virgen del Carmen
+  2027-08-15: Asunción de la Virgen
+  2027-09-17: Fiestas Patrias (feriado adicional)            # 18 y 19 caen sábado y domingo (Ley 20.983)
+  2027-09-18: Independencia Nacional
+  2027-09-19: Glorias del Ejército
+  2027-10-11: Encuentro de Dos Mundos                        # el 12 es martes: pasa al lunes (Ley 19.668)
+  2027-10-31: Día de las Iglesias Evangélicas y Protestantes
+  2027-11-01: Día de Todos los Santos
+  2027-12-08: Inmaculada Concepción
+  2027-12-25: Navidad

@@ -128,10 +128,29 @@ def cargar_reglas(ruta: Path | None = None) -> dict:
     return yaml.safe_load((ruta or RAIZ_REGLAS / "reglas.yaml").read_text(encoding="utf-8"))
 
 
+class CalendarioFeriados(BaseModel):
+    feriados: frozenset[date]
+    verificado: bool
+    cubre_desde: date | None = None
+    cubre_hasta: date | None = None
+
+    def verificado_entre(self, inicio: date, fin: date) -> bool:
+        """¿El calendario está verificado para todo el tramo? Fuera del rango cubierto no se
+        sabe si hay feriados nuevos, así que el plazo queda «a confirmar»."""
+        if not self.verificado or self.cubre_desde is None or self.cubre_hasta is None:
+            return False
+        return self.cubre_desde <= inicio and fin <= self.cubre_hasta
+
+
 @lru_cache(maxsize=1)
-def cargar_feriados(ruta: Path | None = None) -> tuple[frozenset[date], bool]:
+def cargar_feriados(ruta: Path | None = None) -> CalendarioFeriados:
     datos = yaml.safe_load((ruta or RAIZ_REGLAS / "feriados.yaml").read_text(encoding="utf-8"))
-    return frozenset(datos["feriados"]), bool(datos.get("verificado"))
+    return CalendarioFeriados(
+        feriados=frozenset(datos["feriados"]),
+        verificado=bool(datos.get("verificado")),
+        cubre_desde=datos.get("cubre_desde"),
+        cubre_hasta=datos.get("cubre_hasta"),
+    )
 
 
 def _regla(id_regla: str) -> dict:
@@ -157,14 +176,14 @@ def es_servicio_esencial(perfil: str) -> bool:
 
 def sumar_dias_habiles(inicio: date, dias: int) -> tuple[date, bool]:
     """Suma días hábiles (lunes a viernes no feriados). Devuelve la fecha y si el
-    calendario de feriados está verificado."""
-    feriados, verificado = cargar_feriados()
+    calendario de feriados está verificado para ese tramo."""
+    calendario = cargar_feriados()
     actual, contados = inicio, 0
     while contados < dias:
         actual += timedelta(days=1)
-        if actual.weekday() < 5 and actual not in feriados:
+        if actual.weekday() < 5 and actual not in calendario.feriados:
             contados += 1
-    return actual, verificado
+    return actual, calendario.verificado_entre(inicio, actual)
 
 
 # --- incidentes -----------------------------------------------------------
