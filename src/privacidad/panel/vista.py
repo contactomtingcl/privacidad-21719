@@ -118,6 +118,19 @@ EVENTOS = {
     "editado_a_mano": "Editado a mano (alteración de la demo)",
     "borrador_revisado": "{por} revisó un borrador de reporte",
     "envio_registrado": "{por} registró un envío",
+    "aviso": "Aviso a un destino",
+    "derivado": "{por} derivó el caso a un área",
+}
+ESTADOS_AVISO = {
+    "enviado": "aviso enviado por correo",
+    "simulado": "aviso en la bandeja de salida de la demo (no sale correo)",
+    "fallido": "el aviso falló",
+}
+MOTIVOS_DERIVACION = {
+    "datos_del_area": "Son datos que administra esa área",
+    "debe_actuar": "Esa área tiene que hacer algo",
+    "consulta": "Necesito consultarle",
+    "otro": "Otro motivo",
 }
 
 
@@ -662,6 +675,52 @@ def vista_envios(caso: Caso) -> list[VistaEnvio]:
 
 
 @dataclass
+class VistaDestino:
+    id: str
+    nombre: str
+    porque: str
+    estado_aviso: str | None  # None: todavía no hay aviso (por ejemplo, sin mensajero)
+    fallido: bool
+    asunto: str | None = None
+    cuerpo: str | None = None
+
+
+def vista_destinos(caso: Caso, organizacion: str, url_panel: str | None) -> list[VistaDestino]:
+    """A quién le llega el caso y si se le avisó. El aviso se vuelve a armar para mostrarlo:
+    es el mismo texto que salió (no lleva datos personales)."""
+    from ..canal.avisos import AvisoConDatosPersonales, armar_aviso
+    from ..canal.enrutamiento import NOMBRES_DEBER
+
+    if caso.asignacion is None:
+        return []
+    ultimo = {a.destino: a for a in caso.avisos}
+    derivadas = {d.area for d in caso.derivaciones}
+    salida = []
+    for d in caso.asignacion.destinos:
+        aviso = ultimo.get(d.id)
+        estado = None
+        if aviso:
+            estado = f"{ESTADOS_AVISO[aviso.estado].capitalize()} · {hora(aviso.momento)}"
+        try:
+            armado = armar_aviso(caso, d, organizacion, NOMBRES_DEBER, url_panel, d.id in derivadas)
+            asunto, cuerpo = armado.asunto, armado.cuerpo
+        except AvisoConDatosPersonales:
+            asunto = cuerpo = None
+        salida.append(
+            VistaDestino(
+                d.id,
+                d.nombre,
+                d.porque,
+                estado,
+                bool(aviso and aviso.estado == "fallido"),
+                asunto if aviso else None,
+                cuerpo if aviso else None,
+            )
+        )
+    return salida
+
+
+@dataclass
 class Paso:
     titulo: str
     texto: str
@@ -679,11 +738,11 @@ def pasos(caso: Caso) -> list[Paso]:
     elif not entregas:
         envio = Paso("Tú envías", "Nada que enviar", caso.validacion is not None)
     else:
-        envio = Paso(
-            "Tú envías",
-            f"{enviados} de {len(entregas)} enviado{'s' if len(entregas) != 1 else ''}",
-            enviados == len(entregas),
-        )
+        dudas = len(por_resolver(caso))
+        texto = f"{enviados} de {len(entregas)} enviado{'s' if len(entregas) != 1 else ''}"
+        if dudas:
+            texto += f", {dudas} por decidir"
+        envio = Paso("Tú envías", texto, enviados == len(entregas) and not dudas)
     return [
         Paso("Llegó por el canal", f"{hora(caso.ingreso)} · enlace o código QR", True),
         Paso(
@@ -713,13 +772,25 @@ class Hito:
     tipo: str
 
 
+def _nombres_destino(caso: Caso) -> dict[str, str]:
+    a = caso.asignacion
+    return {d.id: d.nombre for d in (a.destinos + a.sugeridas)} if a else {}
+
+
 def linea_de_tiempo(caso: Caso, anotaciones: list[Anotacion]) -> list[Hito]:
+    nombres = _nombres_destino(caso)
     salida = []
     for i, e in enumerate(caso.eventos):
         texto = EVENTOS.get(e.tipo, e.tipo).format(por=e.detalle.get("por", "El delegado"))
         if e.tipo == "enrutado":
             n = len(e.detalle.get("destinos", []))
-            texto = f"Enviado a {n} destino{'s' if n != 1 else ''}"
+            texto = f"Se decidió a quién le llega: {n} destino{'s' if n != 1 else ''}"
+        elif e.tipo == "aviso":
+            destino = nombres.get(e.detalle.get("destino", ""), "un destino")
+            texto = f"{destino}: {ESTADOS_AVISO.get(e.detalle.get('estado', ''), 'aviso')}"
+        elif e.tipo == "derivado":
+            area = nombres.get(e.detalle.get("area", ""), "un área")
+            texto = f"{e.detalle.get('por', 'El delegado')} derivó el caso a {area}"
         huella = anotaciones[i].huella if i < len(anotaciones) else ""
         salida.append(
             Hito(texto, e.momento.astimezone(ZONA_CHILE).strftime("%H:%M:%S"), huella, e.tipo)

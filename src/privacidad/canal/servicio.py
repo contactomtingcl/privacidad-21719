@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import copy
 import secrets
+import smtplib
 from collections.abc import Callable, Mapping
 from datetime import datetime
 
@@ -33,11 +34,17 @@ from ..interpretacion.respaldo import resumen_respaldos
 from ..interpretacion.solicitudes import InterpretacionSolicitud
 from ..motor import HechosIncidente, HechosSolicitud, decidir_incidente, decidir_solicitud
 from . import confirmacion as conf
+from .avisos import AvisoConDatosPersonales, Mensajero, armar_aviso
 from .confirmacion import RespuestaInvalida
 from .delegado import AccionesDelegado
 from .enlaces import enlace_canal, firma_valida
-from .enrutamiento import ReglasEnrutamiento, cargar_reglas_enrutamiento, enrutar
-from .modelos import Caso, Organizacion, TipoReporte, ahora_chile
+from .enrutamiento import (
+    NOMBRES_DEBER,
+    ReglasEnrutamiento,
+    cargar_reglas_enrutamiento,
+    enrutar,
+)
+from .modelos import AvisoRegistrado, Caso, Organizacion, TipoReporte, ahora_chile
 from .repositorio import RepositorioCasos
 from .reservado import cifrar_identidad
 
@@ -92,6 +99,8 @@ class CanalReporte(AccionesDelegado):
         modelo_solicitudes: str = MODELO_RAPIDO,
         modelo_incidentes: str = MODELO_EXTRACCION,
         enrutamiento: ReglasEnrutamiento | None = None,
+        mensajero: Mensajero | None = None,
+        url_panel: str | None = None,
     ) -> None:
         self._organizaciones = dict(organizaciones)
         self._enrutamiento = enrutamiento or cargar_reglas_enrutamiento()
@@ -106,6 +115,9 @@ class CanalReporte(AccionesDelegado):
         self._nuevo_id = nuevo_id
         self._modelo_solicitudes = modelo_solicitudes
         self._modelo_incidentes = modelo_incidentes
+        # Sin mensajero no se avisa a nadie (pruebas antiguas). La demo y el servidor usan uno.
+        self._mensajero = mensajero
+        self._url_panel = url_panel
 
     def con_repositorio(self, repositorio: RepositorioCasos) -> CanalReporte:
         """El mismo canal (organizaciones, IA, secretos, reglas) sobre otro almacén de casos. Lo
@@ -244,6 +256,32 @@ class CanalReporte(AccionesDelegado):
         caso.asignacion = nueva
         if anterior is None or anterior.para_evidencia() != nueva.para_evidencia():
             caso.registrar("enrutado", ahora, **nueva.para_evidencia())
+        self._avisar(caso, ahora)
+
+    def _avisar(self, caso: Caso, ahora: datetime) -> None:
+        """Avisa a cada destino que todavía no recibió aviso de este caso. Un fallo no detiene
+        el caso: queda anotado y el panel lo muestra."""
+        if self._mensajero is None or caso.asignacion is None:
+            return
+        ya = {a.destino for a in caso.avisos if a.estado != "fallido"}
+        derivadas = {d.area for d in caso.derivaciones}
+        org = self._organizaciones[caso.id_organizacion]
+        for destino in caso.asignacion.destinos:
+            if destino.id in ya:
+                continue
+            derivado = destino.id in derivadas
+            try:
+                aviso = armar_aviso(
+                    caso, destino, org.nombre, NOMBRES_DEBER, self._url_panel, derivado
+                )
+                self._mensajero.enviar(aviso)
+                estado = "simulado" if self._mensajero.simulado else "enviado"
+            except (AvisoConDatosPersonales, OSError, smtplib.SMTPException):
+                estado = "fallido"
+            caso.avisos.append(
+                AvisoRegistrado(destino=destino.id, estado=estado, momento=ahora, derivado=derivado)
+            )
+            caso.registrar("aviso", ahora, destino=destino.id, estado=estado, derivado=derivado)
 
     def _interpretar_solicitud(self, texto: str) -> InterpretacionSolicitud:
         if self._cliente is None:

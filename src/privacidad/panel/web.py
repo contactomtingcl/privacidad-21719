@@ -165,6 +165,7 @@ def _entorno() -> Environment:
         MOTIVOS_IDENTIDAD=vista.MOTIVOS_IDENTIDAD,
         CANALES_ENVIO=vista.CANALES_ENVIO,
         MOTIVO_SIN_LECTURA=vista.MOTIVO_SIN_LECTURA,
+        MOTIVOS_DERIVACION=vista.MOTIVOS_DERIVACION,
         VULNERACIONES=vista.VULNERACIONES,
         CATEGORIAS=vista.CATEGORIAS,
         CIBER=vista.CIBER,
@@ -467,6 +468,12 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
             error=error,
             cambio=cambio,
             identidad=identidad,
+            destinos=vista.vista_destinos(caso, ctx.org.nombre, ctx.canal._url_panel),
+            areas_derivar=[
+                (a.id, a.nombre)
+                for a in ctx.canal._enrutamiento.organizaciones[ctx.org.id].areas
+                if not caso.asignacion or a.id not in {d.id for d in caso.asignacion.destinos}
+            ],
             ahora_local=reloj().astimezone(ZONA_CHILE).strftime("%Y-%m-%dT%H:%M"),
             minimo_local=caso.ingreso.astimezone(ZONA_CHILE).strftime("%Y-%m-%dT%H:%M"),
         )
@@ -474,7 +481,7 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
     async def caso(request: Request) -> Response:
         ctx = contexto(request)
         cambio = request.query_params.get("cambio")
-        if cambio not in ("corregido", "resuelto", "validado", "revisado", "enviado"):
+        if cambio not in ("corregido", "resuelto", "validado", "revisado", "enviado", "derivado"):
             cambio = None
         return ver_ficha(ctx, request.path_params["id"], cambio=cambio)
 
@@ -557,6 +564,21 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
             )
 
         return await accion(request, hacer, "enviado")
+
+    async def derivar(request: Request) -> Response:
+        def hacer(ctx: Contexto, datos: dict, id_caso: str) -> None:
+            motivo = _uno(datos, "motivo")
+            if motivo not in vista.MOTIVOS_DERIVACION:
+                raise AccionInvalida("Elige por qué lo derivas.")
+            ctx.canal.derivar(
+                ctx.org.id,
+                id_caso,
+                _uno(datos, "area"),
+                motivo=motivo,  # type: ignore[arg-type]  # validado arriba
+                por=ctx.usuario,
+            )
+
+        return await accion(request, hacer, "derivado")
 
     async def abrir_identidad(request: Request) -> Response:
         ctx = contexto(request)
@@ -746,6 +768,7 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
         Route("/caso/{id}/resolver", resolver, methods=["POST"]),
         Route("/caso/{id}/validar", validar, methods=["POST"]),
         Route("/caso/{id}/enviado", registrar_envio, methods=["POST"]),
+        Route("/caso/{id}/derivar", derivar, methods=["POST"]),
         Route("/caso/{id}/identidad", abrir_identidad, methods=["POST"]),
         Route("/caso/{id}/borrador/{destino}", ver_borrador, methods=["GET"]),
         Route("/caso/{id}/borrador/{destino}/descargar", descargar_borrador, methods=["GET"]),

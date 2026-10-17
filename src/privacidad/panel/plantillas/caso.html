@@ -39,6 +39,7 @@ Validado por {{ c.validacion.por }} a las {{ c.validacion.momento | hora }}</spa
 {% if cambio == "resuelto" %}<div class="aviso" role="status">Resolviste la duda. Quedó anotado con su motivo.</div>{% endif %}
 {% if cambio == "revisado" %}<div class="aviso" role="status">Marcaste que revisaste el borrador. Quedó anotado en el registro (todavía no lo envías).</div>{% endif %}
 {% if cambio == "validado" %}<div class="aviso" role="status">Validaste la decisión. Quedó anotada en el registro con tu usuario y la hora. El sistema no envía nada: envía tú lo que corresponde.</div>{% endif %}
+{% if cambio == "derivado" %}<div class="aviso" role="status">Derivaste el caso. Al área le llega un aviso sin el mensaje ni datos de personas, y quedó en el registro.</div>{% endif %}
 {% if cambio == "enviado" %}<div class="aviso" role="status">Quedó registrado el envío, con su canal y su hora. El plazo de eso ya no cuenta en la urgencia del caso.</div>{% endif %}
 {% if identidad %}
 <section class="identidad" aria-label="Identidad reservada">
@@ -229,14 +230,31 @@ Validado por {{ c.validacion.por }} a las {{ c.validacion.momento | hora }}</spa
 <section class="tarjeta" aria-label="Se envió a">
 <h2>Se envió a</h2>
 {% if c.asignacion %}
-{% for d in c.asignacion.destinos %}
-<div class="destino"><b>{{ d.nombre }}</b><small>{{ d.porque }}</small></div>
+{% for d in destinos %}
+<div class="destino"><b>{{ d.nombre }}</b><small>{{ d.porque }}</small>
+{% if d.estado_aviso %}<small class="estado-aviso {% if d.fallido %}fallido{% endif %}">{{ d.estado_aviso }}</small>{% endif %}
+{% if d.asunto %}<details class="fuente"><summary>Ver el aviso</summary><p class="mono aviso-asunto">{{ d.asunto }}</p><pre class="aviso-cuerpo">{{ d.cuerpo }}</pre></details>{% endif %}
+</div>
 {% endfor %}
 {% if c.asignacion.sugeridas %}
 <p class="suave">Áreas sugeridas (no se les envió por ser reservado):</p>
 {% for d in c.asignacion.sugeridas %}<div class="destino"><b>{{ d.nombre }}</b><small>{{ d.porque }}</small></div>{% endfor %}
 {% endif %}
 <p class="suave">{{ c.asignacion.porque_urgencia }}</p>
+{% if areas_derivar %}
+<details class="plegable">
+<summary class="boton">Derivar a…</summary>
+<form class="desplegado" method="post" action="{{ BASE }}/caso/{{ c.id }}/derivar">
+<input type="hidden" name="csrf" value="{{ ctx.csrf }}">
+<div class="campo"><label for="area-derivar">Área</label>
+<select id="area-derivar" name="area" required><option value="" disabled selected>Elige…</option>{% for id, nombre in areas_derivar %}<option value="{{ id }}">{{ nombre }}</option>{% endfor %}</select></div>
+<div class="campo"><label for="motivo-derivar">¿Por qué?</label>
+<select id="motivo-derivar" name="motivo" required><option value="" disabled selected>Elige…</option>{% for k, v in MOTIVOS_DERIVACION.items() %}<option value="{{ k }}">{{ v }}</option>{% endfor %}</select></div>
+<p class="suave">Le llega un aviso sin el mensaje ni datos de personas{% if c.reservado %}, y sin la identidad de quien reportó{% endif %}. Queda en el registro.</p>
+<button class="primario" type="submit">Derivar</button>
+</form>
+</details>
+{% endif %}
 {% endif %}
 </section>
 

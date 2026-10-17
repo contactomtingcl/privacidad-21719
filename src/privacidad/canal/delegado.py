@@ -35,9 +35,11 @@ from .modelos import (
     Caso,
     Correccion,
     DecisionDelegado,
+    Derivacion,
     Envio,
     MotivoCorreccion,
     MotivoDecision,
+    MotivoDerivacion,
     MotivoIdentidad,
     Organizacion,
     Validacion,
@@ -273,6 +275,31 @@ class AccionesDelegado:
             enviado=momento.isoformat(),
         )
         self._enrutar(caso, ahora)  # la urgencia ya no cuenta lo que se envió
+        self._repo.guardar(caso)
+        return caso
+
+    def derivar(
+        self,
+        id_organizacion: str,
+        id_caso: str,
+        id_area: str,
+        *,
+        motivo: MotivoDerivacion,
+        por: str,
+    ) -> Caso:
+        """El delegado suma un área al caso. Le llega el mismo aviso que a las demás (sin el
+        mensaje ni la identidad, también en un caso reservado)."""
+        caso = self.caso_de_organizacion(id_organizacion, id_caso)
+        areas = {a.id for a in self._enrutamiento.organizaciones[id_organizacion].areas}
+        if id_area not in areas:
+            raise AccionInvalida("Esa área no existe en tu organización.")
+        ya = {d.id for d in caso.asignacion.destinos} if caso.asignacion else set()
+        if id_area in ya:
+            raise AccionInvalida("Esa área ya recibe este caso.")
+        ahora = self._reloj()
+        caso.derivaciones.append(Derivacion(area=id_area, motivo=motivo, por=por, momento=ahora))
+        caso.registrar("derivado", ahora, por=por, area=id_area, motivo=motivo)
+        self._enrutar(caso, ahora)
         self._repo.guardar(caso)
         return caso
 

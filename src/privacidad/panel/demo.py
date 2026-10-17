@@ -93,6 +93,8 @@ def sembrar(canal: CanalReporte, ruta: Path | None = None) -> int:
         modelo_solicitudes=MODELO_GRABADO,
         modelo_incidentes=MODELO_GRABADO,
         enrutamiento=canal._enrutamiento,
+        mensajero=canal._mensajero,
+        url_panel=canal._url_panel,
     )
     ahora = ahora_chile()
     for c in sorted(datos, key=lambda c: -c["hace_minutos"]):

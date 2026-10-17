@@ -190,3 +190,13 @@ class TestRespuestaALaPersona(unittest.TestCase):
         self.assertIn("Respuesta a la persona", html)
         self.assertIn("Respóndele tú por escrito a uno@example.com antes del", html)
         self.assertIn("El sistema no envía la respuesta.", html)
+
+
+class TestPasoConDudas(unittest.TestCase):
+    def test_no_se_marca_listo_si_queda_una_duda(self):
+        canal, *_ = crear_canal(ClienteFalso(registrar_hechos=DUDOSO))
+        caso = canal.recibir_incidente(MUNI, "Se vio una planilla de otra área.")
+        caso = canal.registrar_envio(MUNI, caso.id, "aviso_agencia", canal="correo", por=POR)
+        paso = vista.pasos(caso)[-1]
+        self.assertEqual(paso.texto, "1 de 1 enviado, 1 por decidir")
+        self.assertFalse(paso.listo)

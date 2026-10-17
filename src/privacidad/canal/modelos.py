@@ -43,6 +43,8 @@ MotivoCorreccion = Literal[
     "error_ia", "informacion_nueva", "confirmado_por_area", "otro", "ia_no_leyo"
 ]
 MotivoDecision = Literal["datos_revisados", "consulta_area", "criterio_delegado", "otro"]
+MotivoDerivacion = Literal["datos_del_area", "debe_actuar", "consulta", "otro"]
+EstadoAviso = Literal["enviado", "simulado", "fallido"]
 MotivoIdentidad = Literal["contactar_a_quien_reporto", "requerimiento_de_autoridad", "otro"]
 # Por dónde se envió (o se hizo) algo que corresponde. Lista cerrada: va a la evidencia.
 CanalEnvio = Literal["correo", "portal_oficial", "carta", "en_persona", "sistemas_internos", "otro"]
@@ -141,6 +143,25 @@ class Validacion(BaseModel):
     momento: datetime
 
 
+class Derivacion(BaseModel):
+    """El delegado derivó el caso a un área que el enrutamiento no eligió (o que era sugerida)."""
+
+    area: str
+    motivo: MotivoDerivacion
+    por: str
+    momento: datetime
+
+
+class AvisoRegistrado(BaseModel):
+    """Constancia de un aviso a un destino. El texto del aviso no se guarda: se puede volver a
+    armar con `avisos.armar_aviso` y no lleva datos personales."""
+
+    destino: str
+    estado: EstadoAviso
+    momento: datetime
+    derivado: bool = False
+
+
 class Envio(BaseModel):
     """El delegado dejó constancia de que envió (o hizo) algo que corresponde. El sistema no
     envía nada: solo registra lo que la persona dice que hizo, con la hora que indica."""
@@ -183,6 +204,8 @@ class Caso(BaseModel):
     decisiones: dict[str, DecisionDelegado] = Field(default_factory=dict)
     validacion: Validacion | None = None
     envios: dict[str, Envio] = Field(default_factory=dict)  # deber (o paso de la ANCI) → envío
+    derivaciones: list[Derivacion] = Field(default_factory=list)
+    avisos: list[AvisoRegistrado] = Field(default_factory=list)
     eventos: list[Evento] = Field(default_factory=list)
 
     def registrar(self, tipo: str, momento: datetime, /, **detalle: Any) -> None:

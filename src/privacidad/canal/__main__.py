@@ -170,17 +170,30 @@ def comando_servir(args: argparse.Namespace) -> int:
         llaves = reservado.cargar_llaves(Fernet.generate_key())
     cliente = _cliente_ia(carpeta)
     repositorio = RepositorioCasos(carpeta)
+    base_url = args.base_url or f"http://127.0.0.1:{args.puerto}"
+    from .avisos import mensajero_desde_entorno
+
+    mensajero = mensajero_desde_entorno()
     canal = CanalReporte(
         organizaciones=organizaciones,
         repositorio=repositorio,
         cliente=cliente,
         secreto_enlaces=secreto,
         llaves_reservadas=llaves,
+        mensajero=mensajero,
+        url_panel=base_url,
     )
-    base_url = args.base_url or f"http://127.0.0.1:{args.puerto}"
     print("Canal de reporte (prototipo con datos ficticios)")
     print(f"  IA: {'activa' if cliente else 'apagada (los casos quedan en revisión)'}")
     print(f"  Modo reservado: {'activo' if llaves else 'no disponible'}")
+    print(
+        "  Avisos: "
+        + (
+            "bandeja de salida simulada (sin servidor de correo)"
+            if mensajero.simulado
+            else "correo"
+        )
+    )
     print(f"  Casos: {'en la carpeta ' + str(carpeta) if carpeta else 'solo en memoria'}")
     if args.demo and not repositorio.listar():
         from ..panel.demo import sembrar

@@ -28,10 +28,16 @@ from ..motor import Deber
 from .modelos import RAIZ_CANAL, ZONA_CHILE, Asignacion, Caso, Destino, Urgencia
 
 TipoRecibe = Literal["solicitud", "incidente", "aviso_proveedor", "ciberincidente"]
+MOTIVOS_DERIVACION = {
+    "datos_del_area": "son datos que administra esa área",
+    "debe_actuar": "esa área tiene que hacer algo",
+    "consulta": "necesito consultarle",
+    "otro": "otro motivo",
+}
 
 NOMBRES_DEBER = {
     "aviso_agencia": "aviso a la Agencia",
-    "aviso_titulares": "aviso a los titulares",
+    "aviso_titulares": "aviso a cada persona afectada",
     "reporte_anci": "primer aviso a la ANCI",
     "anci_alerta_temprana": "primer aviso a la ANCI",
     "anci_actualizacion": "actualización a la ANCI",
@@ -236,6 +242,25 @@ def enrutar(caso: Caso, reglas: ReglasEnrutamiento, ahora: datetime) -> Asignaci
         if not areas:
             porque_delegado += " Ninguna área coincide: el delegado decide a quién derivarlo."
         destinos, sugeridas = areas, []
+    # Las derivaciones del delegado se suman siempre (también en un reservado: lo decidió él).
+    por_id = {a.id: a for a in org.areas}
+    for d in caso.derivaciones:
+        area = por_id.get(d.area)
+        if area is None or any(x.id == d.area for x in destinos):
+            continue
+        destinos.append(
+            Destino(
+                rol="area",
+                id=area.id,
+                nombre=area.nombre,
+                contacto=area.contacto,
+                porque=f"Lo derivó el delegado: {MOTIVOS_DERIVACION[d.motivo]}.",
+                motivos=[f"derivado:{d.motivo}"],
+            )
+        )
+        sugeridas = [s for s in sugeridas if s.id != d.area]
+    if caso.derivaciones and "Ninguna área coincide" in porque_delegado:
+        porque_delegado = "Recibe todos los casos y valida cada decisión."
     delegado = Destino(
         rol="delegado",
         id="delegado",
