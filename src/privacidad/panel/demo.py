@@ -125,4 +125,31 @@ def sembrar(canal: CanalReporte, ruta: Path | None = None) -> int:
                     por=USUARIO_SEMILLA,
                 )
             semilla.validar(c["org"], caso.id, por=USUARIO_SEMILLA)
+    sembrar_inventario(canal, ahora)
     return len(datos)
+
+
+# La planilla del paseo queda fuera a propósito: es la que se sube en vivo en la demo.
+PRECARGADAS = ("nomina_trabajadores.xlsx", "clientes_marketing.csv", "proveedores.csv")
+ORG_INVENTARIO = "comercial-los-robles"
+
+
+def sembrar_inventario(canal: CanalReporte, ahora: datetime) -> int:
+    """Precarga el inventario de la empresa ficticia con planillas de ejemplo (respuestas de la
+    IA grabadas). Devuelve cuántas cargó."""
+    from ..inventario import servicio
+
+    if ORG_INVENTARIO not in canal._organizaciones:
+        return 0
+    for i, nombre in enumerate(PRECARGADAS):
+        registro = servicio.procesar(
+            nombre,
+            (servicio.DATOS_DEMO / nombre).read_bytes(),
+            "",
+            id_organizacion=ORG_INVENTARIO,
+            por=USUARIO_SEMILLA,
+            cliente=None,
+            ahora=ahora - timedelta(days=3, minutes=10 * i),
+        )
+        canal._repo.guardar_actividad(registro)
+    return len(PRECARGADAS)

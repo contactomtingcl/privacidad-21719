@@ -39,13 +39,21 @@ class Navegador:
         self.app = app
         self.cookie: str | None = None
 
-    def pedir(self, metodo, ruta, datos=None, *, cabeceras=None, origen=True):
+    def pedir_crudo(self, metodo, ruta, cuerpo: bytes, tipo: str):
+        """POST con un cuerpo ya armado (por ejemplo, multipart para subir un archivo)."""
+        return self.pedir(metodo, ruta, cuerpo_crudo=(cuerpo, tipo))
+
+    def pedir(self, metodo, ruta, datos=None, *, cabeceras=None, origen=True, cuerpo_crudo=None):
         cuerpo = urlencode(datos or {}, doseq=True).encode() if metodo == "POST" else b""
+        tipo = b"application/x-www-form-urlencoded"
+        if cuerpo_crudo is not None:
+            cuerpo, tipo_texto = cuerpo_crudo
+            tipo = tipo_texto.encode()
         ruta, _, consulta = ruta.partition("?")
         encabezados = [(b"host", HOST.encode())]
         if metodo == "POST":
             encabezados += [
-                (b"content-type", b"application/x-www-form-urlencoded"),
+                (b"content-type", tipo),
                 (b"content-length", str(len(cuerpo)).encode()),
             ]
             if origen:

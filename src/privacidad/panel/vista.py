@@ -739,6 +739,86 @@ def vista_destinos(caso: Caso, organizacion: str, url_panel: str | None) -> list
     return salida
 
 
+# --- inventario -----------------------------------------------------------------------
+
+CAMPOS_DS662 = {
+    "tipo_datos": "i. Tipo de datos",
+    "ambito_territorial": "ii. Ámbito territorial",
+    "bases_de_datos": "iii. Bases de datos",
+    "categorias_titulares": "iv. A quiénes pertenecen los datos",
+    "fines": "v. Para qué se usan",
+    "fuente": "vi. De dónde vienen",
+    "base_licitud": "vii. Base legal para usarlos",
+    "destinatarios": "viii. Con quién se comparten",
+    "transferencias_internacionales": "ix. Envíos fuera de Chile",
+    "plazo_supresion": "x. Cuándo se borran",
+    "decisiones_automatizadas": "xi. Decisiones automatizadas",
+}
+BASES_LICITUD = {
+    "consentimiento": "Consentimiento",
+    "consentimiento_expreso": "Consentimiento expreso",
+    "obligacion_financiera": "Obligación económica o financiera",
+    "obligacion_legal": "Obligación legal",
+    "contrato": "Contrato",
+    "interes_legitimo": "Interés legítimo",
+    "defensa_de_derechos": "Defensa de derechos",
+    "no_determinada": "No determinada",
+}
+ORIGEN_CAMPO = {
+    "calculado": "calculado",
+    "ia": "propuesto por la IA",
+    "pendiente": "pendiente",
+    "persona": "completado por ti",
+}
+ORIGEN_INVENTARIO = {
+    "grabada": (
+        "Planilla de ejemplo: la IA respondió antes y la respuesta quedó grabada (demo sin "
+        "conexión)."
+    ),
+    "ia": "La IA leyó los encabezados y la forma de los valores, nunca los valores.",
+    "sin_ia": "Sin IA disponible: lo que necesita contexto quedó pendiente.",
+}
+
+
+def valor_campo(clave: str, valor: Any) -> str:
+    if valor is None or valor == "":
+        return "—"
+    if clave == "base_licitud":
+        return BASES_LICITUD.get(str(valor), str(valor))
+    if isinstance(valor, bool):
+        return "Sí" if valor else "No"
+    if isinstance(valor, list):
+        return "; ".join(str(v) for v in valor) or "—"
+    return str(valor)
+
+
+@dataclass
+class VistaCampo:
+    clave: str
+    etiqueta: str
+    valor: str
+    origen: str
+    nota: str | None
+    citas: list[Any]
+
+
+def campos_ds662(actividad: Any) -> list[VistaCampo]:
+    salida = []
+    for clave, etiqueta in CAMPOS_DS662.items():
+        c = getattr(actividad, clave)
+        salida.append(
+            VistaCampo(
+                clave,
+                etiqueta,
+                valor_campo(clave, c.valor),
+                ORIGEN_CAMPO.get(c.origen, c.origen),
+                c.nota,
+                list(c.citas),
+            )
+        )
+    return salida
+
+
 # --- simulador de escenarios ---------------------------------------------------------
 
 EJEMPLOS_SIMULADOR = {

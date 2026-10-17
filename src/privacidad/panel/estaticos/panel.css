@@ -369,3 +369,34 @@ button:disabled,button:disabled:hover{opacity:.5;cursor:not-allowed;border-color
 .fila-sim .pildora{align-self:flex-start}
 .consecuencias{margin:0;padding-left:18px;font-size:13px;line-height:1.5;color:var(--tx2)}
 @media (max-width:760px){.fila-sim{grid-template-columns:1fr}.fila-sim.titulos{display:none}}
+/* Inventario */
+.fila-inventario{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--line);color:var(--tx);text-decoration:none}
+.fila-inventario:first-of-type{border-top:0}
+.fila-inventario span{display:flex;flex-direction:column;gap:4px}
+.fila-inventario span:last-child{flex-direction:row;flex-wrap:wrap;justify-content:flex-end}
+.fila-inventario small{color:var(--tx3);font-size:12px}
+.fila-inventario:hover b{text-decoration:underline}
+.ejemplo{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+.ejemplo .mono{font-size:13px}
+input[type=file]{min-height:44px;padding:8px 0;color:var(--tx2)}
+.comparacion-minima{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:10px}
+.tarjeta.interior{background:var(--bg);box-shadow:none}
+.cifras-minima{display:grid;grid-template-columns:1fr auto;gap:6px 12px;margin:8px 0}
+.cifras-minima dt{color:var(--tx2);font-size:13px}.cifras-minima dd{margin:0;font:500 15px "IBM Plex Mono",monospace;text-align:right}
+.si-se-filtra{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.si-se-filtra small{display:block;color:var(--tx3);font-size:12px;margin-top:2px}
+.fila-col{display:grid;grid-template-columns:1fr 1fr 2fr;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:14px}
+.fila-col.titulos{border-top:0;font-size:12px;color:var(--tx3)}
+.fila-col span{display:flex;flex-direction:column;gap:3px}
+.fila-col small{color:var(--tx3);font-size:12px}
+.campos-ds662{margin:0}
+.campos-ds662 dt{margin-top:12px;font-size:13px;color:var(--tx2)}
+.campos-ds662 dt small.origen{color:var(--acc-tx);font-size:11px;margin-left:4px}
+.campos-ds662 dt small.origen.pendiente{color:var(--amb-tx)}
+.campos-ds662 dd{margin:2px 0 0;font-size:14px;line-height:1.5}
+.campos-ds662 dd small{display:block;color:var(--tx3);font-size:12px}
+@media (max-width:760px){.fila-col{grid-template-columns:1fr}}
+.planilla-mencionada{margin-top:12px;padding:12px 14px;border:1px solid var(--line2);border-left:3px solid var(--acc);border-radius:10px}
+.planilla-mencionada p{margin:0 0 4px;font-size:14px;line-height:1.5}
+.tabla-columnas{overflow-x:auto}
+.fila-col .pildora{align-self:flex-start}

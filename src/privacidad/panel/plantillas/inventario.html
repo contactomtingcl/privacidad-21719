@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block titulo %}Inventario de datos{% endblock %}
+{% block cuerpo %}
+<header class="cabecera">
+<div>
+<h1>Inventario de datos</h1>
+<p class="quien-decide">{{ icono("info", 16) }}<span>Sube una planilla y el sistema arma su registro con los 11 campos del Decreto 662. La IA ve los encabezados y la forma de los valores, nunca los valores. La planilla no se guarda: solo el registro.</span></p>
+</div>
+</header>
+{% if error %}<div class="error" role="alert">{{ error }}</div>{% endif %}
+
+<div class="columnas">
+<div class="principal">
+<section class="tarjeta" aria-labelledby="titulo-registros">
+<h2 id="titulo-registros">Planillas registradas</h2>
+{% for r in registros %}
+{% set altas = r.actividad.alertas | selectattr("nivel", "equalto", "alta") | list %}
+<a class="fila-inventario" href="{{ BASE }}/inventario/{{ r.id }}">
+<span><b>{{ r.archivo }}</b><small>{{ r.resumen.filas }} filas · {{ r.actividad.columnas | selectattr("categoria") | rejectattr("categoria", "in", ["no_personal", "persona_juridica"]) | list | length }} columnas con datos personales · subida a las {{ r.subida | hora }}</small></span>
+<span>{% if altas %}<span class="pildora marca-d d-si">{{ altas | length }} alerta{{ "s" if altas | length != 1 else "" }} alta{{ "s" if altas | length != 1 else "" }}</span>{% endif %}
+{% if r.validada_por %}<span class="pildora marca-d d-hecho">Validado</span>{% else %}<span class="pildora marca-d d-pendiente">Por validar</span>{% endif %}</span>
+</a>
+{% else %}
+<p class="suave">Todavía no hay planillas en el inventario de {{ ctx.org.nombre }}.</p>
+{% endfor %}
+</section>
+</div>
+
+<aside class="lateral">
+<section class="tarjeta" aria-labelledby="titulo-subir">
+<h2 id="titulo-subir">Subir una planilla</h2>
+<form method="post" action="{{ BASE }}/inventario/subir" enctype="multipart/form-data">
+<input type="hidden" name="csrf" value="{{ ctx.csrf }}">
+<div class="campo"><label for="archivo">Planilla (Excel .xlsx o CSV, hasta 2 MB)</label>
+<input id="archivo" name="archivo" type="file" accept=".xlsx,.csv" required></div>
+<div class="campo"><label for="descripcion">¿Para qué se usa y con quién se comparte?</label>
+<textarea id="descripcion" name="descripcion" maxlength="600" placeholder="Por ejemplo: la usa Recursos Humanos para el paseo de fin de año y la comparte con la empresa de eventos."></textarea></div>
+<p class="suave">Solo datos ficticios: si la planilla parece tener RUT, correos o teléfonos reales, se rechaza sin guardar nada.</p>
+<button class="primario" type="submit">Subir y analizar</button>
+</form>
+</section>
+{% if ejemplos %}
+<section class="tarjeta" aria-labelledby="titulo-ejemplos">
+<h2 id="titulo-ejemplos">Planillas de ejemplo</h2>
+<p class="suave">Datos ficticios de Comercial Los Robles. Puedes descargarlas y subirlas, o analizarlas directo.</p>
+{% for nombre in ejemplos %}
+<div class="ejemplo">
+<span class="mono">{{ nombre }}</span>
+<div class="acciones">
+<a class="boton" href="{{ BASE }}/inventario/ejemplo/{{ nombre }}">Descargar</a>
+<form method="post" action="{{ BASE }}/inventario/ejemplo"><input type="hidden" name="csrf" value="{{ ctx.csrf }}"><input type="hidden" name="archivo" value="{{ nombre }}"><button type="submit">Analizar</button></form>
+</div>
+</div>
+{% endfor %}
+</section>
+{% endif %}
+</aside>
+</div>
+{% endblock %}

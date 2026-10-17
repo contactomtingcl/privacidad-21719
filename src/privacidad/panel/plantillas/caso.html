@@ -81,6 +81,12 @@ Validado por {{ c.validacion.por }} a las {{ c.validacion.momento | hora }}</spa
 <p class="suave">Así lo leyó la IA, con los datos personales tapados.</p>
 <details class="fuente"><summary>Cómo se lee</summary><p class="suave">Los RUT, correos, teléfonos y fechas van tapados antes de llegar a la IA. Cada hecho propuesto por la IA muestra la frase del mensaje en que se basó, y el sistema comprueba que esa frase esté en el mensaje.</p></details>
 <p class="mensaje">{{ f.texto_enmascarado | marcadores }}</p>
+{% for p in planillas %}
+<div class="planilla-mencionada">
+<p><b>¿Es esta planilla?</b> El mensaje parece nombrar <a href="{{ BASE }}/inventario/{{ p.id }}">{{ p.archivo }}</a>, del inventario: {{ p.resumen.filas }} filas{% if p.resumen.menores_de_14 %}, datos de {{ p.resumen.menores_de_14 }} niños o niñas menores de 14{% endif %}{% set sens = p.actividad.tipo_datos.nota %}{% if sens and "sensibles:" in sens %}, {{ sens.split(". ")[0] | lower }}{% endif %}.</p>
+<p class="suave">Es una sugerencia por las palabras del mensaje: si es la planilla, úsala para completar cuántas personas y qué datos se vieron afectados.</p>
+</div>
+{% endfor %}
 
 {% if c.tipo == "solicitud" %}
 <h3>Lo que pide la persona</h3>

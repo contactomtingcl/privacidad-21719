@@ -366,7 +366,7 @@ def calcular_alertas(perfil: PerfilPlanilla, actividad: ActividadTratamiento) ->
                 mensaje=(
                     "La planilla tiene datos sensibles ("
                     + ", ".join(etiquetas[c].etiqueta.lower() for c in sensibles)
-                    + "). Requieren consentimiento expreso del titular, salvo excepción legal."
+                    + "). Requieren consentimiento expreso de la persona, salvo excepción legal."
                 ),
                 cita=Cita(norma="ley-19628", articulo="16"),
             )
@@ -378,7 +378,7 @@ def calcular_alertas(perfil: PerfilPlanilla, actividad: ActividadTratamiento) ->
                 mensaje=(
                     f"Hay datos de {perfil.menores.menores_de_14} niños o niñas menores de 14 "
                     "años: se requiere consentimiento de sus padres o representantes legales, y "
-                    "ante una filtración hay que avisar a cada titular a través de ellos."
+                    "ante una filtración hay que avisar a cada niño o niña a través de ellos."
                 ),
                 cita=Cita(norma="ley-19628", articulo="16 quater"),
             )
@@ -414,7 +414,7 @@ def calcular_alertas(perfil: PerfilPlanilla, actividad: ActividadTratamiento) ->
                 nivel="informativa",
                 mensaje=(
                     "Contiene datos económicos o financieros: ante una filtración hay que avisar "
-                    "también a cada titular."
+                    "también a cada persona."
                 ),
                 cita=Cita(norma="ley-19628", articulo="14 sexies"),
             )

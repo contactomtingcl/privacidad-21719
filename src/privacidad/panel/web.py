@@ -56,6 +56,7 @@ from ..canal.servicio import CanalReporte
 from ..canal.web import _leer_formulario, _uno
 from ..guardia import DatosNoSinteticosError
 from ..iconos import icono
+from ..inventario import servicio as inventario
 from ..motor import HechosIncidente, escenarios
 from ..reportes import DESTINOS, NOMBRE_DESTINO, Borrador, ultima_revision
 from ..reportes.borradores import PERFILES
@@ -167,6 +168,8 @@ def _entorno() -> Environment:
         CANALES_ENVIO=vista.CANALES_ENVIO,
         MOTIVO_SIN_LECTURA=vista.MOTIVO_SIN_LECTURA,
         MOTIVOS_DERIVACION=vista.MOTIVOS_DERIVACION,
+        ORIGEN_INVENTARIO=vista.ORIGEN_INVENTARIO,
+        DECISION=vista.DECISION,
         VULNERACIONES=vista.VULNERACIONES,
         CATEGORIAS=vista.CATEGORIAS,
         CIBER=vista.CIBER,
@@ -470,6 +473,9 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
             cambio=cambio,
             identidad=identidad,
             destinos=vista.vista_destinos(caso, ctx.org.nombre, ctx.canal._url_panel),
+            planillas=inventario.planillas_mencionadas(
+                caso.texto, ctx.canal._repo.actividades(ctx.org.id)
+            ),
             areas_derivar=[
                 (a.id, a.nombre)
                 for a in ctx.canal._enrutamiento.organizaciones[ctx.org.id].areas
@@ -565,6 +571,127 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
             )
 
         return await accion(request, hacer, "enviado")
+
+    # --- inventario ----------------------------------------------------------------
+
+    def registro_o_404(ctx: Contexto, id_registro: str):
+        for r in ctx.canal._repo.actividades(ctx.org.id):
+            if r.id == id_registro:
+                return r
+        raise HTTPException(404)
+
+    def ver_inventario(ctx: Contexto, status: int = 200, error: str | None = None) -> Response:
+        return responder(
+            "inventario.html",
+            status,
+            ctx=ctx,
+            organizaciones=organizaciones,
+            seccion="inventario",
+            registros=list(reversed(ctx.canal._repo.actividades(ctx.org.id))),
+            ejemplos=inventario.ejemplos(),
+            error=error,
+        )
+
+    async def inventario_inicio(request: Request) -> Response:
+        return ver_inventario(contexto(request))
+
+    async def procesar_planilla(
+        ctx: Contexto, nombre: str, contenido: bytes, descripcion: str
+    ) -> Response:
+        try:
+            registro = await run_in_threadpool(
+                inventario.procesar,
+                nombre,
+                contenido,
+                descripcion,
+                id_organizacion=ctx.org.id,
+                por=ctx.usuario,
+                cliente=ctx.canal._cliente,
+                ahora=reloj(),
+            )
+        except inventario.PlanillaInvalida as e:
+            return ver_inventario(ctx, 400, str(e))
+        except DatosNoSinteticosError:
+            return ver_inventario(
+                ctx,
+                400,
+                "La planilla parece tener datos reales (RUT, correos o teléfonos). Este prototipo "
+                "solo acepta datos ficticios: no se guardó nada.",
+            )
+        ctx.canal._repo.guardar_actividad(registro)
+        return RedirectResponse(f"{BASE}/inventario/{registro.id}?nuevo=1", 303)
+
+    async def subir_planilla(request: Request) -> Response:
+        ctx = contexto(request)
+        try:
+            formulario = await request.form(max_files=1, max_fields=4)
+        except Exception as e:  # multipart mal formado
+            raise HTTPException(400) from e
+        enviado = str(formulario.get("csrf", ""))
+        guardado = request.session.get("csrf", "")
+        if not guardado or not hmac.compare_digest(enviado, guardado) or not mismo_origen(request):
+            raise HTTPException(403)
+        archivo = formulario.get("archivo")
+        if archivo is None or isinstance(archivo, str) or not archivo.filename:
+            return ver_inventario(ctx, 400, "Elige una planilla para subir.")
+        contenido = await archivo.read(inventario.TAMANO_MAXIMO + 1)
+        await archivo.close()
+        return await procesar_planilla(
+            ctx, archivo.filename, contenido, str(formulario.get("descripcion", ""))
+        )
+
+    async def usar_ejemplo(request: Request) -> Response:
+        ctx = contexto(request)
+        datos = await formulario_seguro(request)
+        nombre = _uno(datos, "archivo")
+        if nombre not in inventario.ejemplos():
+            raise HTTPException(404)
+        contenido = (inventario.DATOS_DEMO / nombre).read_bytes()
+        return await procesar_planilla(ctx, nombre, contenido, "")
+
+    async def descargar_ejemplo(request: Request) -> Response:
+        contexto(request)
+        nombre = request.path_params["archivo"]
+        if nombre not in inventario.ejemplos():
+            raise HTTPException(404)
+        tipo = (
+            "text/csv"
+            if nombre.endswith(".csv")
+            else "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+        return Response(
+            (inventario.DATOS_DEMO / nombre).read_bytes(),
+            media_type=tipo,
+            headers={**CABECERAS, "Content-Disposition": f'attachment; filename="{nombre}"'},
+        )
+
+    async def ver_actividad(request: Request) -> Response:
+        ctx = contexto(request)
+        registro = registro_o_404(ctx, request.path_params["id"])
+        return responder(
+            "actividad.html",
+            ctx=ctx,
+            organizaciones=organizaciones,
+            seccion="inventario",
+            r=registro,
+            campos=vista.campos_ds662(registro.actividad),
+            minima=inventario.version_minima(
+                registro, ctx.org.perfil, ctx.org.operador_importancia_vital
+            ),
+            etiquetas=inventario.cargar_categorias(),
+            nuevo=request.query_params.get("nuevo") == "1",
+            validado=request.query_params.get("validado") == "1",
+        )
+
+    async def validar_actividad(request: Request) -> Response:
+        ctx = contexto(request)
+        await formulario_seguro(request)
+        registro = registro_o_404(ctx, request.path_params["id"])
+        if registro.validada_por is None:
+            registro.validada_por = ctx.usuario
+            registro.validada_en = reloj()
+            ctx.canal._repo.guardar_actividad(registro)
+        return RedirectResponse(f"{BASE}/inventario/{registro.id}?validado=1", 303)
 
     async def simulador(request: Request) -> Response:
         """Mismo incidente, ley vigente y postergación lado a lado. No guarda nada."""
@@ -827,6 +954,12 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
         Route("/caso/{id}/borrador/{destino}/revisado", marcar_revisado, methods=["POST"]),
         Route("/canal", ver_canal, methods=["GET"]),
         Route("/simulador", simulador, methods=["GET"]),
+        Route("/inventario", inventario_inicio, methods=["GET"]),
+        Route("/inventario/subir", subir_planilla, methods=["POST"]),
+        Route("/inventario/ejemplo", usar_ejemplo, methods=["POST"]),
+        Route("/inventario/ejemplo/{archivo}", descargar_ejemplo, methods=["GET"]),
+        Route("/inventario/{id}", ver_actividad, methods=["GET"]),
+        Route("/inventario/{id}/validar", validar_actividad, methods=["POST"]),
         Route("/evidencia", evidencia, methods=["GET"]),
         Route("/evidencia/revisar", evidencia_revisar, methods=["POST"]),
         Route("/evidencia/simular", evidencia_simular, methods=["POST"]),

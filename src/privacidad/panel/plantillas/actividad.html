@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block titulo %}{{ r.archivo }}{% endblock %}
+{% block cuerpo %}
+{% set a = r.actividad %}
+<a class="volver" href="{{ BASE }}/inventario">← Volver al inventario</a>
+<header class="cabecera">
+<div>
+<p class="suave">Subida por {{ r.por }} el {{ r.subida | fecha }} a las {{ r.subida | hora }} · {{ r.resumen.filas }} filas</p>
+<h1>{{ r.archivo }}</h1>
+<p class="quien-decide">{{ icono("info", 16) }}<span>{{ ORIGEN_INVENTARIO[r.origen_ia] }} Las edades, los datos de menores y las alertas los calcula el sistema, no la IA.</span></p>
+</div>
+<div class="acciones">
+{% if r.validada_por %}
+<span class="boton visto" role="status">Registro validado por {{ r.validada_por }} a las {{ r.validada_en | hora }}</span>
+{% else %}
+<form method="post" action="{{ BASE }}/inventario/{{ r.id }}/validar"><input type="hidden" name="csrf" value="{{ ctx.csrf }}"><button class="primario" type="submit">Validar el registro</button></form>
+{% endif %}
+<button type="button" data-imprimir>Imprimir</button>
+</div>
+</header>
+{% if nuevo %}<div class="aviso" role="status">La planilla se analizó y se descartó: quedó solo este registro. Revísalo y valídalo.</div>{% endif %}
+{% if validado %}<div class="aviso" role="status">Validaste el registro. Si la planilla cambia, súbela de nuevo.</div>{% endif %}
+
+{% if a.alertas %}
+<section class="tarjeta" aria-labelledby="titulo-alertas">
+<h2 id="titulo-alertas">Lo que hay que mirar</h2>
+{% for al in a.alertas %}
+<div class="deber">
+<span class="pildora marca-d {% if al.nivel == 'alta' %}d-si{% elif al.nivel == 'media' %}d-revisar{% else %}d-no{% endif %}">{{ {"alta": "Alta", "media": "Media", "informativa": "Informativa"}[al.nivel] }}</span>
+<div class="cuerpo"><p>{{ al.mensaje }}</p>{% if al.cita %}<small class="suave">{{ al.cita.norma | norma }}, art. {{ al.cita.articulo }}</small>{% endif %}</div>
+</div>
+{% endfor %}
+</section>
+{% endif %}
+
+<section class="tarjeta" aria-labelledby="titulo-minima">
+<h2 id="titulo-minima">Versión mínima de la planilla</h2>
+{% if minima.quitadas %}
+<p>Si se quitan las columnas que no se necesitan para la finalidad, el motor vuelve a decidir qué habría que hacer si la planilla se filtrara. Es una propuesta: decide tú si de verdad no se necesitan.</p>
+<ul>{% for nombre, motivo in minima.quitadas %}<li><b>{{ nombre }}</b>: {{ motivo }}</li>{% endfor %}</ul>
+<div class="comparacion-minima">
+{% for titulo, e in (("Hoy", minima.antes), ("Versión mínima", minima.despues)) %}
+<div class="tarjeta interior">
+<h3>{{ titulo }}</h3>
+<dl class="cifras-minima">
+<dt>Columnas con datos personales</dt><dd>{{ e.columnas_personales }}</dd>
+<dt>Datos personales en la planilla</dt><dd>{{ "{:,}".format(e.datos_personales).replace(",", ".") }}</dd>
+<dt>Columnas con RUT u otro identificador</dt><dd>{{ e.identificadores | length }}</dd>
+<dt>Columnas con datos sensibles</dt><dd>{{ e.columnas_sensibles | length }}</dd>
+<dt>Columnas con datos de menores</dt><dd>{{ e.de_menores | length }}</dd>
+</dl>
+<p class="suave">Si se filtrara, el motor decide:</p>
+<ul class="si-se-filtra">
+<li><span class="pildora marca-d d-{{ e.si_se_filtra.aviso_agencia.decision }}">{{ DECISION[e.si_se_filtra.aviso_agencia.decision] }}</span> Avisar a la Agencia</li>
+<li><span class="pildora marca-d d-{{ e.si_se_filtra.aviso_titulares.decision }}">{{ DECISION[e.si_se_filtra.aviso_titulares.decision] }}</span> Avisar a cada persona afectada <small>{{ e.si_se_filtra.aviso_titulares.porque }}</small></li>
+</ul>
+</div>
+{% endfor %}
+</div>
+{% else %}
+<p class="suave">{% if r.origen_ia == "sin_ia" %}Sin IA no se evaluó qué columnas son necesarias para la finalidad.{% else %}Todas las columnas parecen necesarias para la finalidad descrita.{% endif %}</p>
+{% endif %}
+</section>
+
+<div class="columnas">
+<div class="principal">
+<section class="tarjeta" aria-labelledby="titulo-columnas">
+<h2 id="titulo-columnas">Columnas</h2>
+<div class="tabla-columnas">
+<div class="fila-col titulos" aria-hidden="true"><span>Columna</span><span>Qué dato es</span><span>¿Se necesita?</span></div>
+{% for c in a.columnas %}
+<div class="fila-col">
+<span><b>{{ c.nombre }}</b><small>{{ "calculado" if c.origen == "calculado" else "propuesto por la IA" }}</small></span>
+<span>{% if c.categoria in etiquetas %}{{ etiquetas[c.categoria].etiqueta }}{% if etiquetas[c.categoria].sensible is true %} <span class="pildora marca-d d-si">Sensible</span>{% endif %}{% elif c.categoria == "no_personal" %}No es un dato personal{% elif c.categoria == "persona_juridica" %}De una empresa, no de una persona{% else %}—{% endif %}</span>
+<span>{% if c.necesaria is true %}Sí{% elif c.necesaria is false %}<b>No.</b> {{ c.motivo_innecesaria }}{% else %}—{% endif %}</span>
+</div>
+{% endfor %}
+</div>
+</section>
+</div>
+<aside class="lateral">
+<section class="tarjeta" aria-labelledby="titulo-ds662">
+<h2 id="titulo-ds662">Registro (Decreto 662, art. 3)</h2>
+<dl class="campos-ds662">
+{% for c in campos %}
+<dt>{{ c.etiqueta }} <small class="origen {% if c.origen == 'pendiente' %}pendiente{% endif %}">{{ c.origen }}</small></dt>
+<dd>{{ c.valor }}{% if c.nota %}<small>{{ c.nota }}</small>{% endif %}</dd>
+{% endfor %}
+</dl>
+</section>
+</aside>
+</div>
+{% endblock %}

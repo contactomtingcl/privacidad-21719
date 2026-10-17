@@ -16,6 +16,7 @@ import sqlite3
 import threading
 from datetime import UTC
 from pathlib import Path
+from typing import Any
 
 from . import evidencia
 from .modelos import Caso
@@ -42,6 +43,11 @@ class RepositorioCasos:
                 "CREATE TABLE IF NOT EXISTS casos ("
                 "id TEXT PRIMARY KEY, id_organizacion TEXT NOT NULL, "
                 "ingreso_utc TEXT NOT NULL, datos TEXT NOT NULL)"
+            )
+            self._con.execute(
+                "CREATE TABLE IF NOT EXISTS actividades ("
+                "id TEXT PRIMARY KEY, id_organizacion TEXT NOT NULL, "
+                "subida_utc TEXT NOT NULL, datos TEXT NOT NULL)"
             )
         evidencia.crear_tablas(self._con)
         if carpeta is not None:
@@ -94,6 +100,32 @@ class RepositorioCasos:
             cabeza_esperada,
             organizaciones=[id_organizacion] if id_organizacion else None,
         )
+
+    # --- inventario: registros de actividades (sin los valores de las planillas) ---------
+
+    def guardar_actividad(self, registro: Any) -> None:
+        """Guarda un `inventario.servicio.RegistroActividad` (o lo reemplaza)."""
+        with self._cerrojo, self._con:
+            self._con.execute(
+                "INSERT OR REPLACE INTO actividades (id, id_organizacion, subida_utc, datos) "
+                "VALUES (?, ?, ?, ?)",
+                (
+                    registro.id,
+                    registro.id_organizacion,
+                    registro.subida.astimezone(UTC).isoformat(),
+                    registro.model_dump_json(),
+                ),
+            )
+
+    def actividades(self, id_organizacion: str) -> list[Any]:
+        from ..inventario.servicio import RegistroActividad
+
+        with self._cerrojo:
+            filas = self._con.execute(
+                "SELECT datos FROM actividades WHERE id_organizacion = ? ORDER BY subida_utc, id",
+                (id_organizacion,),
+            ).fetchall()
+        return [RegistroActividad.model_validate_json(f[0]) for f in filas]
 
     def copiar_a(self, destino: Path) -> None:
         """Copia completa y consistente de la base (API de respaldo de SQLite). La usa la demo
