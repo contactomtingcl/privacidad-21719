@@ -109,6 +109,7 @@ def crear_panel_de_prueba(
     reloj_sesion=None,
     repositorio=None,
     reloj=None,
+    salas=None,
 ):
     canal, reloj_canal, llaves = crear_canal(cliente, repositorio=repositorio, reloj=reloj)
     if usuarios is None and not demo:
@@ -121,6 +122,7 @@ def crear_panel_de_prueba(
         demo=demo,
         https=True,
         limite=limite or LimiteIntentos(),
+        salas=salas(canal) if callable(salas) else salas,
     )
     if reloj_sesion is not None:
         config.reloj_sesion = reloj_sesion

@@ -17,6 +17,7 @@ está configurada el reporte se rechaza, nunca se guarda la identidad en claro.
 
 from __future__ import annotations
 
+import copy
 import secrets
 from collections.abc import Callable, Mapping
 from datetime import datetime
@@ -105,6 +106,13 @@ class CanalReporte(AccionesDelegado):
         self._nuevo_id = nuevo_id
         self._modelo_solicitudes = modelo_solicitudes
         self._modelo_incidentes = modelo_incidentes
+
+    def con_repositorio(self, repositorio: RepositorioCasos) -> CanalReporte:
+        """El mismo canal (organizaciones, IA, secretos, reglas) sobre otro almacén de casos. Lo
+        usan las salas de la demo: una copia propia por participante."""
+        copia = copy.copy(self)
+        copia._repo = repositorio
+        return copia
 
     # --- enlaces ---------------------------------------------------------------------
 

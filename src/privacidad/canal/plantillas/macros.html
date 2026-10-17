@@ -10,8 +10,8 @@
 </ul>
 {% endmacro %}
 
-{% macro formulario_confirmacion(caso, titulo) %}
-<form method="post" action="/seguimiento/{{ caso.id }}/confirmar">
+{% macro formulario_confirmacion(caso, titulo, sufijo="") %}
+<form method="post" action="/seguimiento/{{ caso.id }}/confirmar{{ sufijo }}">
 <fieldset><legend>{{ titulo }}</legend>
 {% for clave, etiqueta in ETIQUETAS_DERECHO.items() %}
 {{ opcion("derechos", clave, etiqueta, clave in caso.confirmacion.vigente) }}

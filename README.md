@@ -139,6 +139,8 @@ python -m privacidad.canal servir --datos casos-demo                 # modo real
 
 La **demo** carga casos ficticios (`data/demo/casos.yaml`) por el mismo canal que un reporte real, con las respuestas de la IA grabadas (cada evento las marca como `respuesta-grabada`). Funciona sin conexión y sin costo, muestra un aviso visible y no abre identidades reservadas. Su botón "Simular una alteración" cambia de verdad una copia de la base y corre la misma verificación; la base real no se toca.
 
+Cada participante de la demo recibe **su propia copia limpia** de los casos (una «sala», `src/privacidad/panel/salas.py`): lo que corrige o valida uno no lo ve el siguiente. El enlace y el QR que muestra su panel llevan `?sala=…`, así que un reporte enviado desde el teléfono llega a la misma copia. «Reiniciar la sesión de demo» entrega una copia nueva. Las salas son copias desechables de datos ficticios: se borran enteras tras 2 días sin uso o al pasar de 200.
+
 ### Seguridad
 
 - Contraseñas guardadas como huella **scrypt** (`hashlib`, biblioteca estándar) con sal propia; comparación en tiempo constante. Un usuario inexistente tarda lo mismo que uno real.
@@ -169,7 +171,7 @@ Si la cadena no calza, la cifra no se calcula. Límite: con datos ficticios mide
 ### Límites conocidos
 
 - Un solo rol (delegado). La vista para cada área (solo sus casos, nunca los reservados) queda para después.
-- La demo pública es una sola para todos: lo que corrige o valida una persona lo ven las siguientes. Para pruebas con varios usuarios hace falta reiniciar los casos entre una y otra.
+- En la demo, cada sala vive en la carpeta de datos del servidor: si el hosting reinicia sin disco persistente, las salas abiertas se pierden y la siguiente visita parte con una copia nueva.
 - Sin segundo factor de ingreso. El límite de intentos vive en memoria: se reinicia con el servidor.
 - La cookie de sesión va firmada, no cifrada: contiene el usuario y la organización (no la contraseña ni datos de casos).
 - En la demo, la llave del modo reservado se crea en memoria al arrancar y se pierde al detenerlo.

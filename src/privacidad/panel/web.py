@@ -59,6 +59,7 @@ from ..iconos import icono
 from ..motor import HechosIncidente
 from ..reportes import DESTINOS, NOMBRE_DESTINO, Borrador, ultima_revision
 from . import vista
+from .salas import SalasDemo
 from .usuarios import LimiteIntentos, RegistroUsuarios
 
 BASE = "/panel"
@@ -92,6 +93,9 @@ class ConfigPanel:
     secreto_sesion: str
     usuarios: RegistroUsuarios | None = None
     demo: bool = False
+    # Solo en demo: una copia limpia de los casos por participante (ver `salas.py`). Sin ella, la
+    # demo usa la base única del canal (así la usan las pruebas antiguas).
+    salas: SalasDemo | None = None
     https: bool = True
     limite: LimiteIntentos = field(default_factory=LimiteIntentos)
     inactividad: timedelta = timedelta(minutes=30)
@@ -110,6 +114,8 @@ class Contexto:
     org: Organizacion
     csrf: str
     demo: bool
+    canal: CanalReporte
+    sala: str | None = None
 
 
 NORMAS = {
@@ -241,7 +247,16 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
             raise NoAutenticado(expirada=True)
         if refrescar:
             s["ultimo"] = ahora
-        return Contexto(s["u"], organizaciones[s["org"]], s["csrf"], config.demo)
+        propio, sala = canal, None
+        if config.demo and config.salas is not None:
+            sala = s.get("sala")
+            propio = config.salas.canal(sala) if sala else None
+            if propio is None:  # sesión nueva, reiniciada o sala ya limpiada: copia limpia
+                sala = config.salas.crear()
+                s["sala"] = sala
+                propio = config.salas.canal(sala)
+            assert propio is not None
+        return Contexto(s["u"], organizaciones[s["org"]], s["csrf"], config.demo, propio, sala)
 
     def mismo_origen(request: Request) -> bool:
         origen = request.headers.get("origin")
@@ -341,14 +356,14 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
             return None
         destinos = []
         if f.relojes[0].titulo == vista.TITULO_RELOJ_ANCI:
-            _, borradores = canal.borradores(ctx.org.id, f.caso.id)
+            _, borradores = ctx.canal.borradores(ctx.org.id, f.caso.id)
             if isinstance(borradores.get("anci"), Borrador):
                 destinos.append("anci")
         return vista.siguiente_paso(f, destinos)
 
     def datos_bandeja(ctx: Contexto, filtro: str, desde: datetime | None) -> dict[str, Any]:
         ahora = reloj()
-        casos = vista.ordenar(canal.casos_de_organizacion(ctx.org.id))
+        casos = vista.ordenar(ctx.canal.casos_de_organizacion(ctx.org.id))
         abiertos = [c for c in casos if c.validacion is None]
         if filtro == "validados":
             elegidos = [c for c in casos if c.validacion is not None]
@@ -360,7 +375,7 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
         urgente = next(
             (c for c in abiertos if c.asignacion and c.asignacion.urgencia != "normal"), None
         )
-        verificacion, _ = canal.evidencia_de_organizacion(ctx.org.id)
+        verificacion, _ = ctx.canal.evidencia_de_organizacion(ctx.org.id)
         ficha_urgente = vista.ficha(urgente, [], ahora) if urgente else None
         return {
             "filas": filas,
@@ -408,7 +423,7 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
 
     def caso_o_404(ctx: Contexto, id_caso: str):
         try:
-            return canal.caso_de_organizacion(ctx.org.id, id_caso)
+            return ctx.canal.caso_de_organizacion(ctx.org.id, id_caso)
         except CasoAjeno as e:
             raise HTTPException(404) from e
 
@@ -422,8 +437,8 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
         identidad: dict | None = None,
     ) -> HTMLResponse:
         caso = caso_o_404(ctx, id_caso)
-        anotaciones = canal._repo.evidencia(caso.id)
-        _, borradores = canal.borradores(ctx.org.id, caso.id)
+        anotaciones = ctx.canal._repo.evidencia(caso.id)
+        _, borradores = ctx.canal.borradores(ctx.org.id, caso.id)
         return responder(
             "caso.html",
             status,
@@ -470,7 +485,7 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
 
     async def corregir(request: Request) -> Response:
         def hacer(ctx: Contexto, datos: dict, id_caso: str) -> None:
-            canal.corregir_hechos(
+            ctx.canal.corregir_hechos(
                 ctx.org.id,
                 id_caso,
                 _hechos_del_formulario(datos),
@@ -483,7 +498,7 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
 
     async def resolver(request: Request) -> Response:
         def hacer(ctx: Contexto, datos: dict, id_caso: str) -> None:
-            canal.resolver_deber(
+            ctx.canal.resolver_deber(
                 ctx.org.id,
                 id_caso,
                 _uno(datos, "deber"),
@@ -496,7 +511,7 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
 
     async def validar(request: Request) -> Response:
         def hacer(ctx: Contexto, datos: dict, id_caso: str) -> None:
-            canal.validar(ctx.org.id, id_caso, por=ctx.usuario)
+            ctx.canal.validar(ctx.org.id, id_caso, por=ctx.usuario)
 
         return await accion(request, hacer, "validado")
 
@@ -525,7 +540,7 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
         if motivo not in vista.MOTIVOS_IDENTIDAD:
             return ver_ficha(ctx, id_caso, status=400, error="Elige un motivo.")
         try:
-            identidad = canal.abrir_identidad(
+            identidad = ctx.canal.abrir_identidad(
                 ctx.org.id,
                 id_caso,
                 motivo=motivo,  # type: ignore[arg-type]
@@ -541,7 +556,7 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
         if destino not in DESTINOS:
             raise HTTPException(404)
         try:
-            caso, borradores = canal.borradores(ctx.org.id, id_caso)
+            caso, borradores = ctx.canal.borradores(ctx.org.id, id_caso)
         except CasoAjeno as e:
             raise HTTPException(404) from e
         b = borradores[destino]
@@ -586,7 +601,7 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
         id_caso, destino = request.path_params["id"], request.path_params["destino"]
         borrador_o_404(ctx, id_caso, destino)
         try:
-            canal.marcar_borrador_revisado(
+            ctx.canal.marcar_borrador_revisado(
                 ctx.org.id, id_caso, destino, _uno(datos, "huella"), por=ctx.usuario
             )
         except AccionInvalida as e:
@@ -609,19 +624,22 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
         """El enlace del canal de la organización y su código QR, para repartirlo o mostrarlo."""
         ctx = contexto(request)
         raiz = f"{request.url.scheme}://{request.url.netloc}"
-        enlace = canal.enlace(ctx.org.id, raiz)
+        enlace = ctx.canal.enlace(ctx.org.id, raiz)
+        # En la demo, el enlace lleva la sala: el reporte enviado desde el teléfono llega a la
+        # misma copia que el participante ve en su panel.
+        sufijo = f"?sala={ctx.sala}" if ctx.sala else ""
         return responder(
             "canal.html",
             ctx=ctx,
             organizaciones=organizaciones,
             seccion="canal",
-            enlace=enlace,
-            qr=enlace[len(raiz) :] + "/qr.svg",
+            enlace=enlace + sufijo,
+            qr=enlace[len(raiz) :] + "/qr.svg" + sufijo,
         )
 
     async def evidencia(request: Request) -> Response:
         ctx = contexto(request)
-        v, propias = canal.evidencia_de_organizacion(ctx.org.id)
+        v, propias = ctx.canal.evidencia_de_organizacion(ctx.org.id)
         return responder(
             "evidencia.html",
             ctx=ctx,
@@ -636,7 +654,7 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
     async def evidencia_revisar(request: Request) -> Response:
         ctx = contexto(request)
         await formulario_seguro(request)
-        v, propias = await run_in_threadpool(canal.evidencia_de_organizacion, ctx.org.id)
+        v, propias = await run_in_threadpool(ctx.canal.evidencia_de_organizacion, ctx.org.id)
         return responder("_verificacion.html", ctx=ctx, escaneo=True, **datos_evidencia(v, propias))
 
     async def evidencia_simular(request: Request) -> Response:
@@ -644,7 +662,7 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
         if not ctx.demo:
             raise HTTPException(404)
         await formulario_seguro(request)
-        v, propias, n = await run_in_threadpool(_simular_alteracion, canal, ctx.org.id)
+        v, propias, n = await run_in_threadpool(_simular_alteracion, ctx.canal, ctx.org.id)
         return responder(
             "_verificacion.html", ctx=ctx, escaneo=True, **datos_evidencia(v, propias, n)
         )

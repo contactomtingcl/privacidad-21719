@@ -116,7 +116,7 @@ def _llaves() -> MultiFernet | None:
 VARIABLE_SECRETO_PANEL = "PRIVACIDAD_SECRETO_PANEL"
 
 
-def _config_panel(args: argparse.Namespace, carpeta: Path | None, base_url: str):
+def _config_panel(args: argparse.Namespace, carpeta: Path | None, base_url: str, canal=None):
     """Configuración del panel del delegado, o None si no hay con qué abrirlo."""
     from ..panel import ConfigPanel, RegistroUsuarios
     from ..panel.usuarios import NOMBRE_ARCHIVO as ARCHIVO_USUARIOS
@@ -127,12 +127,24 @@ def _config_panel(args: argparse.Namespace, carpeta: Path | None, base_url: str)
         print(f"  Panel: sin {VARIABLE_SECRETO_PANEL}; las sesiones se cierran al reiniciar.")
     https = base_url.startswith("https://")
     if args.demo:
-        return ConfigPanel(secreto_sesion=secreto, demo=True, https=https)
+        return ConfigPanel(
+            secreto_sesion=secreto, demo=True, https=https, salas=_salas_demo(carpeta, canal)
+        )
     if carpeta is None or not (carpeta / ARCHIVO_USUARIOS).is_file():
         print("  Panel: apagado (no hay usuarios; créalos con el comando `usuario`).")
         return None
     usuarios = RegistroUsuarios(carpeta / ARCHIVO_USUARIOS)
     return ConfigPanel(secreto_sesion=secreto, usuarios=usuarios, https=https)
+
+
+def _salas_demo(carpeta: Path | None, canal: CanalReporte | None):
+    """Una copia limpia de la demo por participante (ver `panel/salas.py`). Necesita carpeta."""
+    if carpeta is None or canal is None:
+        return None
+    from ..panel.demo import sembrar
+    from ..panel.salas import SalasDemo
+
+    return SalasDemo(carpeta / "salas", canal.con_repositorio, sembrar)
 
 
 def comando_servir(args: argparse.Namespace) -> int:
@@ -176,7 +188,9 @@ def comando_servir(args: argparse.Namespace) -> int:
         print(
             f"  Demo: {sembrar(canal)} casos ficticios cargados con respuestas grabadas de la IA."
         )
-    panel = _config_panel(args, carpeta, base_url)
+    panel = _config_panel(args, carpeta, base_url, canal)
+    if panel is not None and panel.salas is not None:
+        print("  Demo: cada participante recibe su propia copia limpia de los casos.")
     for org in organizaciones.values():
         print(f"  {org.nombre}: {canal.enlace(org.id, base_url)}")
     if panel is not None:

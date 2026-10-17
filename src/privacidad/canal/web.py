@@ -160,9 +160,26 @@ def crear_app(canal: CanalReporte, base_url: str, panel: Any = None) -> Starlett
     Con `panel` (un `privacidad.panel.web.ConfigPanel`) monta también el panel del delegado en
     `/panel`."""
     plantillas = crear_entorno()
+    # Demo pública: cada participante tiene su sala (copia propia de los casos ficticios). El
+    # enlace y el QR que muestra su panel llevan `?sala=…`; sin ese dato, o con una sala que no
+    # existe, se usa la base única del canal. Desde aquí nunca se crean salas.
+    salas = getattr(panel, "salas", None) if panel is not None and panel.demo else None
+
+    def canal_de(request: Request) -> CanalReporte:
+        sala = request.query_params.get("sala")
+        if salas is not None and sala:
+            propio = salas.canal(sala)
+            if propio is not None:
+                return propio
+        return canal
+
+    def sufijo(request: Request) -> str:
+        sala = request.query_params.get("sala")
+        return f"?sala={sala}" if salas is not None and salas.existe(sala) else ""
 
     def pagina(nombre: str, status: int = 200, **contexto: Any) -> HTMLResponse:
         contexto.setdefault("error", None)
+        contexto.setdefault("sufijo", "")
         contexto.setdefault("dias_espera", dias_de_espera())
         return HTMLResponse(plantillas.get_template(nombre).render(**contexto), status)
 
@@ -171,14 +188,17 @@ def crear_app(canal: CanalReporte, base_url: str, panel: Any = None) -> Starlett
 
     def organizacion(request: Request) -> Organizacion:
         try:
-            return canal.organizacion_por_enlace(
+            return canal_de(request).organizacion_por_enlace(
                 request.path_params["org"], request.path_params["firma"]
             )
         except OrganizacionDesconocida as e:
             raise HTTPException(404) from e
 
     def formulario(
-        org: Organizacion, valores: dict[str, str], error: str | None = None, status: int = 200
+        org: Organizacion,
+        valores: dict[str, str],
+        error: str | None = None,
+        status: int = 200,
     ) -> HTMLResponse:
         return pagina(
             "formulario.html",
@@ -189,15 +209,17 @@ def crear_app(canal: CanalReporte, base_url: str, panel: Any = None) -> Starlett
             reservado_disponible=canal.reservado_disponible,
         )
 
-    def seguimiento_html(caso: Caso, error: str | None = None, status: int = 200) -> HTMLResponse:
-        return pagina("seguimiento.html", status, caso=caso, error=error)
+    def seguimiento_html(
+        request: Request, caso: Caso, error: str | None = None, status: int = 200
+    ) -> HTMLResponse:
+        return pagina("seguimiento.html", status, caso=caso, error=error, sufijo=sufijo(request))
 
     def caso_de(request: Request) -> Caso:
         id_caso = request.path_params["id"]
         if not id_caso_valido(id_caso):
             raise HTTPException(404)
         try:
-            return canal.seguimiento(id_caso)
+            return canal_de(request).seguimiento(id_caso)
         except CasoNoEncontrado as e:
             raise HTTPException(404) from e
 
@@ -217,6 +239,7 @@ def crear_app(canal: CanalReporte, base_url: str, panel: Any = None) -> Starlett
 
     async def enviar_formulario(request: Request) -> Response:
         org = organizacion(request)
+        canal = canal_de(request)
         datos = await _leer_formulario(request)
         valores = {k: _uno(datos, k) for k in ("tipo", "texto", "nombre", "contacto", "reservado")}
         tipo = valores["tipo"] or "solicitud"
@@ -254,12 +277,13 @@ def crear_app(canal: CanalReporte, base_url: str, panel: Any = None) -> Starlett
             return formulario(org, valores, "El modo reservado no está disponible.", 400)
         except RespuestaInvalida as e:
             return formulario(org, valores, str(e), 400)
-        return RedirectResponse(f"/seguimiento/{caso.id}", status_code=303)
+        return RedirectResponse(f"/seguimiento/{caso.id}{sufijo(request)}", status_code=303)
 
     async def ver_qr(request: Request) -> Response:
         org = organizacion(request)
         try:
-            svg = qr.svg_qr(canal.enlace(org.id, base_url), f"Código QR del canal de {org.nombre}")
+            enlace = canal_de(request).enlace(org.id, base_url) + sufijo(request)
+            svg = qr.svg_qr(enlace, f"Código QR del canal de {org.nombre}")
         except RuntimeError as e:
             raise HTTPException(503) from e
         return Response(
@@ -267,7 +291,7 @@ def crear_app(canal: CanalReporte, base_url: str, panel: Any = None) -> Starlett
         )
 
     async def ver_seguimiento(request: Request) -> Response:
-        return seguimiento_html(await run_in_threadpool(caso_de, request))
+        return seguimiento_html(request, await run_in_threadpool(caso_de, request))
 
     async def confirmar(request: Request) -> Response:
         id_caso = request.path_params["id"]
@@ -276,7 +300,7 @@ def crear_app(canal: CanalReporte, base_url: str, panel: Any = None) -> Starlett
         datos = await _leer_formulario(request)
         try:
             await run_in_threadpool(
-                canal.responder_confirmacion,
+                canal_de(request).responder_confirmacion,
                 id_caso,
                 derechos=datos.get("derechos", []),
                 detalle=_uno(datos, "detalle"),
@@ -285,11 +309,11 @@ def crear_app(canal: CanalReporte, base_url: str, panel: Any = None) -> Starlett
             raise HTTPException(404) from e
         except DatosNoSinteticosError:
             caso = await run_in_threadpool(caso_de, request)
-            return seguimiento_html(caso, MENSAJE_NO_SINTETICO, 400)
+            return seguimiento_html(request, caso, MENSAJE_NO_SINTETICO, 400)
         except RespuestaInvalida as e:
             caso = await run_in_threadpool(caso_de, request)
-            return seguimiento_html(caso, str(e), 400)
-        return RedirectResponse(f"/seguimiento/{id_caso}", status_code=303)
+            return seguimiento_html(request, caso, str(e), 400)
+        return RedirectResponse(f"/seguimiento/{id_caso}{sufijo(request)}", status_code=303)
 
     async def error_http(_: Request, exc: Exception) -> Response:
         assert isinstance(exc, HTTPException)

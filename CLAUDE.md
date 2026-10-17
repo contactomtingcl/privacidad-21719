@@ -57,7 +57,7 @@ sintéticos, detección y enmascarado, inventario con IA (11 campos del DS 662),
 reglas (Agencia, titulares, ANCI, plazos de solicitudes), interpretación con IA de
 solicitudes e incidentes, set de 150 casos y evaluación en tres niveles (iteración 2:
 IA + motor 76/77 deberes detectados; iteración 3 del 12 oct con frase de respaldo: 76/77, solicitudes
-98%). 416 pruebas (5 omitidas sin segno) en verde.
+98%). 428 pruebas (5 omitidas sin segno) en verde.
 
 Canal de reporte (primera versión, 10 oct): enlace firmado y QR (segno), confirmación al
 titular con menú fijo y, sin respuesta a los 5 días, lectura reversible: oposición + bloqueo
@@ -120,8 +120,13 @@ vencidos (sin base legal), «casos pendientes»/«resueltos» (inexactos). Pendi
 Cifra de correcciones (17 oct): `canal/correcciones.py` cuenta desde la cadena verificada
 (corregidos frente a la IA, motivo, cambió un deber, validados sin corrección, completados sin
 IA, confirmaciones de titulares). Pantalla Evidencia y comando `correcciones`. Aún sin cifra
-medida: sale de las pruebas con usuarios. Ojo: la demo pública es compartida; las correcciones
-de un participante las ve el siguiente (falta reiniciar casos entre pruebas).
+medida: sale de las pruebas con usuarios.
+
+Copia limpia por participante (17 oct): `panel/salas.py`. En `servir --demo`, cada sesión nueva del
+panel recibe su «sala» (carpeta `salas/<id>` con su sqlite, sembrada al crearla; 0,08 s y 80 KB).
+Enlace y QR del panel llevan `?sala=…`; el canal público usa esa sala solo si existe (nunca la crea).
+«Reiniciar la sesión de demo» = sala nueva. Limpieza: 2 días sin uso o más de 200. `CanalReporte.
+con_repositorio` reutiliza el canal sobre otro almacén.
 
 Auditoría de comprensión del delegado (17 oct, artifact "Auditoría de comprensión del delegado
 — Privacidad 21.719"): 6 graves (G1-G6), 13 de lenguaje (I1-I13), 5 menores. Decisiones de
@@ -130,8 +135,7 @@ enviar lo que corresponde) y «Derivar a…» un área (mismo correo que los avi
 identidad). Criterio: un texto o botón de una función planificada para la versión final se
 conserva («Se envió a» se queda porque vienen los avisos); se cambia solo si no llegará.
 
-Pendiente técnico, en orden: (sáb 17) registro de evidencia por organización + copia limpia de
-la demo por participante + textos y diseño de la auditoría; (dom 18) «Ya lo envié», formulario
+Pendiente técnico, en orden: (sáb 17) registro de evidencia por organización + textos y diseño de la auditoría; (dom 18) «Ya lo envié», formulario
 vacío si la IA no leyó, cómo responder a la persona; (19-20) avisos por correo/Telegram a los
 destinos + «Derivar a…»; completar el motor
 (perfiles, operadores de importancia vital, simulador). Si se cumple la puerta de calidad del 23 de octubre:
