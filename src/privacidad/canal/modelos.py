@@ -93,6 +93,7 @@ class Destino(BaseModel):
     contacto: str
     porque: str
     motivos: list[str] = Field(default_factory=list)  # claves de regla, para la evidencia
+    telegram: str | None = None  # id de chat para avisos por Telegram, si se configuró
 
 
 class Asignacion(BaseModel):

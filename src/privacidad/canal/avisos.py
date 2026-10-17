@@ -16,6 +16,9 @@ Cómo sale:
 - Con `PRIVACIDAD_SMTP_HOST` configurado, por correo con `smtplib` (biblioteca estándar), con
   STARTTLS y usuario y contraseña si se indican. La contraseña vive en una variable de entorno,
   nunca en el repositorio.
+- Con `PRIVACIDAD_TELEGRAM_TOKEN` (el token del bot, en una variable de entorno), además por
+  Telegram a los destinos que tienen `telegram` (id de chat) en `data/canal/enrutamiento.yaml`,
+  con `urllib` (biblioteca estándar) contra la API de bots de Telegram.
 - Sin servidor de correo (la demo y las pruebas), el aviso queda en una bandeja de salida
   simulada: se arma igual, se registra como «simulado» y no sale a ninguna parte. Los correos de
   la demo son ficticios (dominios `.example`).
@@ -26,8 +29,11 @@ el panel lo muestra.
 
 from __future__ import annotations
 
+import json
 import os
 import smtplib
+import urllib.parse
+import urllib.request
 from dataclasses import dataclass, field
 from datetime import datetime
 from email.message import EmailMessage
@@ -57,6 +63,7 @@ class Aviso:
     destino: str  # id del destino
     asunto: str
     cuerpo: str
+    telegram: str | None = None  # id de chat de Telegram del destino, si tiene
 
 
 class Mensajero(Protocol):
@@ -99,17 +106,67 @@ class CorreoSMTP:
             smtp.send_message(mensaje)
 
 
+@dataclass
+class Telegram:
+    """Envía el aviso a un chat de Telegram con la API de bots (urllib, biblioteca estándar)."""
+
+    token: str
+    timeout: float = 10.0
+    simulado: bool = False
+    api: str = "https://api.telegram.org"
+
+    def enviar(self, aviso: Aviso) -> None:
+        if not aviso.telegram:
+            return
+        datos = urllib.parse.urlencode(
+            {"chat_id": aviso.telegram, "text": f"{aviso.asunto}\n\n{aviso.cuerpo}"}
+        ).encode()
+        url = f"{self.api}/bot{self.token}/sendMessage"
+        with urllib.request.urlopen(url, data=datos, timeout=self.timeout) as respuesta:
+            cuerpo = json.loads(respuesta.read().decode("utf-8") or "{}")
+        if not cuerpo.get("ok"):
+            raise OSError("Telegram no aceptó el mensaje")
+
+
+@dataclass
+class Varios:
+    """Correo (o bandeja simulada) y, si se configuró, Telegram. Si uno falla, el aviso falla."""
+
+    canales: list[Mensajero]
+
+    @property
+    def simulado(self) -> bool:
+        return all(c.simulado for c in self.canales)
+
+    def enviar(self, aviso: Aviso) -> None:
+        for canal in self.canales:
+            canal.enviar(aviso)
+
+
+def salio_de_verdad(mensajero: Mensajero, aviso: Aviso) -> bool:
+    """¿Salió por algún canal real? Telegram solo cuenta si el destino tiene chat."""
+    if isinstance(mensajero, Varios):
+        return any(salio_de_verdad(c, aviso) for c in mensajero.canales)
+    if isinstance(mensajero, Telegram):
+        return bool(aviso.telegram)
+    return not mensajero.simulado
+
+
 def mensajero_desde_entorno() -> Mensajero:
     host = os.environ.get("PRIVACIDAD_SMTP_HOST")
-    if not host:
-        return BandejaSalida()
-    return CorreoSMTP(
-        host=host,
-        puerto=int(os.environ.get("PRIVACIDAD_SMTP_PUERTO", "587")),
-        usuario=os.environ.get("PRIVACIDAD_SMTP_USUARIO"),
-        contrasena=os.environ.get("PRIVACIDAD_SMTP_CONTRASENA"),
-        remitente=os.environ.get("PRIVACIDAD_SMTP_REMITENTE", "avisos@privacidad.example"),
+    correo: Mensajero = (
+        CorreoSMTP(
+            host=host,
+            puerto=int(os.environ.get("PRIVACIDAD_SMTP_PUERTO", "587")),
+            usuario=os.environ.get("PRIVACIDAD_SMTP_USUARIO"),
+            contrasena=os.environ.get("PRIVACIDAD_SMTP_CONTRASENA"),
+            remitente=os.environ.get("PRIVACIDAD_SMTP_REMITENTE", "avisos@privacidad.example"),
+        )
+        if host
+        else BandejaSalida()
     )
+    token = os.environ.get("PRIVACIDAD_TELEGRAM_TOKEN")
+    return Varios([correo, Telegram(token)]) if token else correo
 
 
 def _cuando(valor: datetime) -> str:
@@ -165,7 +222,13 @@ def armar_aviso(
     cuerpo = "\n".join(lineas)
     asunto = f"[{urgencia.capitalize()}] Caso {caso.id}: {tipo.lower()}"
     revisar_aviso(asunto + "\n" + cuerpo)
-    return Aviso(para=destino.contacto, destino=destino.id, asunto=asunto, cuerpo=cuerpo)
+    return Aviso(
+        para=destino.contacto,
+        destino=destino.id,
+        asunto=asunto,
+        cuerpo=cuerpo,
+        telegram=destino.telegram,
+    )
 
 
 __all__ = [
@@ -173,8 +236,11 @@ __all__ = [
     "AvisoConDatosPersonales",
     "BandejaSalida",
     "CorreoSMTP",
+    "Telegram",
+    "Varios",
     "Mensajero",
     "armar_aviso",
+    "salio_de_verdad",
     "mensajero_desde_entorno",
     "revisar_aviso",
 ]

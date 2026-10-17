@@ -56,6 +56,7 @@ class Area(BaseModel):
     id: str
     nombre: str
     contacto: str
+    telegram: str | None = None
     datos: str
     palabras: list[str] = Field(default_factory=list)
     recibe: list[TipoRecibe] = Field(default_factory=list)
@@ -64,6 +65,7 @@ class Area(BaseModel):
 class Delegado(BaseModel):
     cargo: str
     contacto: str
+    telegram: str | None = None
 
 
 class ReglasOrganizacion(BaseModel):
@@ -223,6 +225,7 @@ def _destino_area(area: Area, caso: Caso) -> Destino | None:
         contacto=area.contacto,
         porque=porque[0].upper() + porque[1:] + ".",
         motivos=motivos,
+        telegram=area.telegram,
     )
 
 
@@ -257,6 +260,7 @@ def enrutar(caso: Caso, reglas: ReglasEnrutamiento, ahora: datetime) -> Asignaci
                 contacto=area.contacto,
                 porque=f"Lo derivó el delegado: {MOTIVOS_DERIVACION[d.motivo]}.",
                 motivos=[f"derivado:{d.motivo}"],
+                telegram=area.telegram,
             )
         )
         sugeridas = [s for s in sugeridas if s.id != d.area]
@@ -267,6 +271,7 @@ def enrutar(caso: Caso, reglas: ReglasEnrutamiento, ahora: datetime) -> Asignaci
         id="delegado",
         nombre=org.delegado.cargo,
         contacto=org.delegado.contacto,
+        telegram=org.delegado.telegram,
         porque=porque_delegado,
         motivos=["siempre"] + (["reservado"] if caso.reservado else []),
     )

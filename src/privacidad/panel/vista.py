@@ -124,7 +124,7 @@ EVENTOS = {
     "derivado": "{por} derivó el caso a un área",
 }
 ESTADOS_AVISO = {
-    "enviado": "aviso enviado por correo",
+    "enviado": "aviso enviado",
     "simulado": "aviso en la bandeja de salida de la demo (no sale correo)",
     "fallido": "el aviso falló",
 }

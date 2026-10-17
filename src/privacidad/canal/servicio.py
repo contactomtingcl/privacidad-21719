@@ -34,7 +34,7 @@ from ..interpretacion.respaldo import resumen_respaldos
 from ..interpretacion.solicitudes import InterpretacionSolicitud
 from ..motor import HechosIncidente, HechosSolicitud, decidir_incidente, decidir_solicitud
 from . import confirmacion as conf
-from .avisos import AvisoConDatosPersonales, Mensajero, armar_aviso
+from .avisos import AvisoConDatosPersonales, Mensajero, armar_aviso, salio_de_verdad
 from .cascada import AccionesCascada
 from .confirmacion import RespuestaInvalida
 from .delegado import AccionesDelegado
@@ -276,7 +276,7 @@ class CanalReporte(AccionesDelegado, AccionesCascada):
                     caso, destino, org.nombre, NOMBRES_DEBER, self._url_panel, derivado
                 )
                 self._mensajero.enviar(aviso)
-                estado = "simulado" if self._mensajero.simulado else "enviado"
+                estado = "enviado" if salio_de_verdad(self._mensajero, aviso) else "simulado"
             except (AvisoConDatosPersonales, OSError, smtplib.SMTPException):
                 estado = "fallido"
             caso.avisos.append(

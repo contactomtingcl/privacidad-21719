@@ -192,3 +192,43 @@ class TestRepositorio(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestTelegram(unittest.TestCase):
+    def test_envia_con_urllib_solo_si_hay_chat(self):
+        from privacidad.canal.avisos import Aviso, Telegram
+
+        t = Telegram(token="token-de-prueba")
+        with mock.patch("urllib.request.urlopen") as abrir:
+            t.enviar(Aviso("a@x.example", "area", "Asunto", "Cuerpo"))
+            abrir.assert_not_called()
+            abrir.return_value.__enter__.return_value.read.return_value = b'{"ok": true}'
+            t.enviar(Aviso("a@x.example", "area", "Asunto", "Cuerpo", telegram="123"))
+            url = abrir.call_args[0][0]
+            self.assertIn("/bottoken-de-prueba/sendMessage", url)
+            self.assertIn(b"chat_id=123", abrir.call_args[1]["data"])
+
+    def test_rechazo_de_telegram_es_un_fallo(self):
+        from privacidad.canal.avisos import Aviso, Telegram
+
+        with mock.patch("urllib.request.urlopen") as abrir:
+            abrir.return_value.__enter__.return_value.read.return_value = b'{"ok": false}'
+            with self.assertRaises(OSError):
+                Telegram(token="t").enviar(Aviso("a@x.example", "a", "A", "C", telegram="1"))
+
+    def test_con_token_se_suma_a_la_bandeja(self):
+        from privacidad.canal.avisos import Varios
+
+        with mock.patch.dict("os.environ", {"PRIVACIDAD_TELEGRAM_TOKEN": "t"}, clear=True):
+            m = mensajero_desde_entorno()
+        self.assertIsInstance(m, Varios)
+        self.assertFalse(m.simulado)
+
+
+class TestEstadoReal(unittest.TestCase):
+    def test_solo_telegram_sin_chat_no_cuenta_como_enviado(self):
+        from privacidad.canal.avisos import Aviso, Telegram, Varios, salio_de_verdad
+
+        m = Varios([BandejaSalida(), Telegram(token="t")])
+        self.assertFalse(salio_de_verdad(m, Aviso("a@x.example", "a", "A", "C")))
+        self.assertTrue(salio_de_verdad(m, Aviso("a@x.example", "a", "A", "C", telegram="1")))

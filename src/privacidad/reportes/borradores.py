@@ -223,9 +223,7 @@ def _registros_posibles(caso: Caso, reglas: ReglasOrganizacion) -> list[str]:
 
 
 def _avisos_comunes(decision: str, deber: Deber) -> list[str]:
-    avisos = [
-        "El sistema no lo envía: revísalo, complétalo y envíalo por el canal oficial."
-    ]
+    avisos = ["El sistema no lo envía: revísalo, complétalo y envíalo por el canal oficial."]
     if decision == "revisar":
         avisos.append(
             "El motor no pudo decidir este deber («Decide tú»): decide en la ficha si "
