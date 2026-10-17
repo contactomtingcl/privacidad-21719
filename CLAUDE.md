@@ -50,14 +50,14 @@ Entrega: 28 de octubre de 2026. Demo Day: 29 de octubre. Nombre de trabajo
 - `claude-sonnet-5-5` no acepta forzar herramienta; `ClienteIA` reintenta solo.
 - Commits directos a `main`, con el autor configurado en el repositorio.
 
-## Estado al 12 de octubre de 2026
+## Estado al 17 de octubre de 2026
 
 Hecho: corpus legal indexado (107 artículos) con verificador de citas, guardia de datos
 sintéticos, detección y enmascarado, inventario con IA (11 campos del DS 662), motor de
 reglas (Agencia, titulares, ANCI, plazos de solicitudes), interpretación con IA de
 solicitudes e incidentes, set de 150 casos y evaluación en tres niveles (iteración 2:
 IA + motor 76/77 deberes detectados; iteración 3 del 12 oct con frase de respaldo: 76/77, solicitudes
-98%). 391 pruebas (5 omitidas sin segno) en verde.
+98%). 416 pruebas (5 omitidas sin segno) en verde.
 
 Canal de reporte (primera versión, 10 oct): enlace firmado y QR (segno), confirmación al
 titular con menú fijo y, sin respuesta a los 5 días, lectura reversible: oposición + bloqueo
@@ -106,7 +106,24 @@ Plan 0.5c-512mb + disco 1 GB = US$7,25/mes, región Virginia. Secretos en el pan
 (ANTHROPIC_API_KEY la pegó Matías). Dominio propio: comprarlo cuando se decida el nombre (~24 oct).
 Desde aquí la dirección se revisa con WebFetch (curl al dominio está bloqueado por el proxy).
 
-Pendiente técnico, en orden: cifra de correcciones del delegado desde la evidencia, avisos por correo/Telegram a los destinos, completar el motor
+Claridad tras la mentora de Diseño (17 oct, Andrea Vásquez; decisión de Matías: se aplica solo
+lo que mejora la comprensión sin cambiar lógica ni exactitud legal). Bandeja: «Casos con fecha
+límite legal» (vencidos aparte de los que vencen en <3 h), «Por validar» (= por validar + sin
+lectura de la IA), «Validados» (nunca «resueltos»: el sistema no envía nada); evidencia como botón
+con estado y alarma si no calza; tema en el menú lateral; filtro solo «Urgencia según plazo»;
+si el plazo venció, «el deber sigue» + borrador ANCI. Canal: ícono, para quién y ejemplo por opción;
+«Qué pasa después de enviar» con 30 días + prórroga leídos de `reglas.yaml` (`fuente_prorroga`,
+versión 2026-10-17). Íconos de Lucide (ISC) en `src/privacidad/iconos/`. No aplicado: tope de
+vencidos (sin base legal), «casos pendientes»/«resueltos» (inexactos). Pendiente: ficha del caso
+(menos texto, primero decisión y plazo), paleta de marca con el nombre definitivo.
+
+Cifra de correcciones (17 oct): `canal/correcciones.py` cuenta desde la cadena verificada
+(corregidos frente a la IA, motivo, cambió un deber, validados sin corrección, completados sin
+IA, confirmaciones de titulares). Pantalla Evidencia y comando `correcciones`. Aún sin cifra
+medida: sale de las pruebas con usuarios. Ojo: la demo pública es compartida; las correcciones
+de un participante las ve el siguiente (falta reiniciar casos entre pruebas).
+
+Pendiente técnico, en orden: reinicio de la demo para pruebas con usuarios, avisos por correo/Telegram a los destinos, completar el motor
 (perfiles, operadores de importancia vital, simulador). Si se cumple la puerta de calidad del 23 de octubre:
 red de cascada y sello de tiempo. Rediseño contrafactual e impacto de proyectos de ley entran
 seguro.

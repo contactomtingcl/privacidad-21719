@@ -27,6 +27,7 @@ En construcción (entrega: 28 de octubre de 2026). Avance actual:
 | Registro de evidencia encadenado (SHA-256) con verificación | Primera versión ([cómo funciona](#enrutamiento-y-evidencia)) |
 | Panel del delegado: bandeja en vivo, ficha del caso, correcciones, validación y evidencia | Primera versión ([cómo usarlo](#panel-del-delegado)) |
 | Borradores de reporte a la Agencia y a la ANCI, armados desde el caso sin IA | Primera versión ([cómo funcionan](#borradores-de-reporte)) |
+| Cifra de correcciones del delegado, contada desde la evidencia | Primera versión ([cómo se cuenta](#cuánto-corrige-la-persona-a-la-ia)) |
 
 ## Cómo ejecutar
 
@@ -48,6 +49,8 @@ El canal de reporte tiene su propia guía más abajo.
 ## Canal de reporte
 
 Cada organización tiene un enlace propio, firmado, que se reparte también como código QR. Quien lo abre elige si quiere ejercer un derecho sobre sus datos o avisar de un incidente, y recibe un código de seguimiento para volver.
+
+Cada opción trae un ícono, para quién es y un ejemplo de una línea, sin instrucciones largas. Antes de enviar, la pantalla dice qué pasa después y promete solo lo que el sistema hace: el código de seguimiento, que el mensaje llega de inmediato a la persona encargada de protección de datos y, si se ejerce un derecho, el plazo legal de respuesta (30 días corridos, prorrogables una vez por 30; ambos se leen de `data/reglas/reglas.yaml`, con su fuente verificada en el art. 11).
 
 Cómo funciona, en cuatro reglas:
 
@@ -113,9 +116,9 @@ Límites conocidos:
 
 El panel vive en el mismo programa que el canal, en la dirección `/panel`. Tiene tres pantallas:
 
-- **Bandeja:** los casos ordenados por urgencia, con el plazo más cercano corriendo en vivo. Cada 5 segundos revisa si llegó algo nuevo: un reporte enviado por el código QR aparece solo, con un aviso.
+- **Bandeja:** los casos ordenados por urgencia, con el plazo más cercano corriendo en vivo. Cada 5 segundos revisa si llegó algo nuevo: un reporte enviado por el código QR aparece solo, con un aviso. Arriba, tres cifras con nombres exactos: «Casos con fecha límite legal» (separa los vencidos de los que vencen en menos de 3 horas), «Por validar» (incluye, con su aviso, los que la IA no pudo leer) y «Validados» (no «resueltos»: el sistema no envía nada a las autoridades). Si el plazo más cercano venció, la pantalla dice que el deber sigue y ofrece el paso siguiente (por ejemplo, el borrador para la ANCI). El estado de la cadena de evidencia va en el botón «Revisar evidencia», y si no calza aparece una alarma.
 - **Ficha del caso:** lo que llegó (tal como lo leyó la IA, con los datos tapados), los hechos que propuso la IA, lo que decidió el motor con su artículo, a quién se envió y por qué, y la línea de tiempo con la huella de cada anotación.
-- **Evidencia:** revisa la cadena completa y muestra las últimas anotaciones de la organización.
+- **Evidencia:** revisa la cadena completa, muestra las últimas anotaciones de la organización y la cifra de correcciones (ver abajo).
 
 Lo que puede hacer el delegado, siempre con la regla "la IA interpreta, el motor decide, la persona valida":
 
@@ -147,13 +150,26 @@ La **demo** carga casos ficticios (`data/demo/casos.yaml`) por el mismo canal qu
 
 ### Diseño y accesibilidad
 
-Tema oscuro y claro (botón de sol), uso completo con teclado, urgencia escrita además de coloreada y el lenguaje de la ley solo en "Ver fuente legal". Las animaciones son solo CSS, muestran cambios que ya ocurrieron (un caso que llega, un plazo que se recalcula, la cadena que se revisa) y se apagan si el equipo pide "reducir movimiento". La ficha se puede imprimir como expediente.
+Tema oscuro y claro (botón en el menú lateral, lejos de las acciones importantes), uso completo con teclado, urgencia escrita además de coloreada y el lenguaje de la ley solo en "Ver fuente legal". Las animaciones son solo CSS, muestran cambios que ya ocurrieron (un caso que llega, un plazo que se recalcula, la cadena que se revisa) y se apagan si el equipo pide "reducir movimiento". La ficha se puede imprimir como expediente.
 
-Librerías y recursos incluidos en el repositorio, sin cargar nada de internet: [htmx 2.0.11](https://htmx.org) (licencia 0BSD), fuentes IBM Plex Sans y Mono y Space Grotesk (SIL Open Font License). Sus licencias están junto a los archivos, en `src/privacidad/panel/estaticos/`.
+Librerías y recursos incluidos en el repositorio, sin cargar nada de internet: [htmx 2.0.11](https://htmx.org) (licencia 0BSD), fuentes IBM Plex Sans y Mono y Space Grotesk (SIL Open Font License), con sus licencias en `src/privacidad/panel/estaticos/`, e íconos de [Lucide](https://lucide.dev) (licencia ISC), con la suya en `src/privacidad/iconos/svg/`. Los íconos acompañan siempre a un texto; nunca lo reemplazan.
+
+### Cuánto corrige la persona a la IA
+
+La pantalla Evidencia y el comando `python -m privacidad.canal correcciones --carpeta casos-demo [--org ORGANIZACION]` cuentan, **solo desde la cadena de evidencia y después de verificarla**:
+
+- de los incidentes que la IA leyó, cuántos terminaron con algún hecho distinto de lo que propuso la IA (cambiar un hecho y devolverlo a lo que dijo la IA no cuenta) y qué hechos fueron;
+- cuántos por el motivo «La IA leyó mal el mensaje» (los demás motivos, como información nueva, no son errores de la IA);
+- cuántas correcciones hicieron que el motor decidiera distinto sobre avisar a la Agencia, a las personas o a la ANCI;
+- cuántos casos validó el delegado sin corregir nada;
+- aparte: incidentes que la IA no pudo leer y el delegado completó, dudas del motor resueltas, y lecturas de solicitudes confirmadas o corregidas por la propia persona.
+
+Si la cadena no calza, la cifra no se calcula. Límite: con datos ficticios mide el mecanismo, no el acierto real de la IA. **Todavía no hay una cifra medida para el deck**: saldrá de las pruebas con usuarios, guardada con su fecha.
 
 ### Límites conocidos
 
 - Un solo rol (delegado). La vista para cada área (solo sus casos, nunca los reservados) queda para después.
+- La demo pública es una sola para todos: lo que corrige o valida una persona lo ven las siguientes. Para pruebas con varios usuarios hace falta reiniciar los casos entre una y otra.
 - Sin segundo factor de ingreso. El límite de intentos vive en memoria: se reinicia con el servidor.
 - La cookie de sesión va firmada, no cifrada: contiene el usuario y la organización (no la contraseña ni datos de casos).
 - En la demo, la llave del modo reservado se crea en memoria al arrancar y se pierde al detenerlo.
