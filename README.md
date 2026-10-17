@@ -36,6 +36,12 @@ Funciona sin conexión y sin llave de IA: la demo usa respuestas de la IA grabad
 6. **Proveedores (red)** → «Abrir el canal del proveedor» y reporta un incidente: llega un caso a cada organización cliente (cambia de organización arriba), cada una con sus plazos.
 7. **Canal y código QR** → «Simular caída de la IA» y envía un reporte: no se pierde, queda «Sin lectura de la IA» con los plazos corriendo.
 
+## Documentos de la entrega
+
+- [Arquitectura técnica](docs/arquitectura.md): diagrama, modelos, rutas, datos y dependencias.
+- [Declaración de uso de IA](docs/uso-de-ia.md): qué hace y qué no hace la IA, prompts, datasets y supervisión humana.
+- [Checklist de ejecución responsable](docs/checklist-responsable.md): privacidad, seguridad, sesgo, accesibilidad y evaluación de impacto.
+
 ## Estado
 
 En construcción (entrega: 28 de octubre de 2026). Avance actual:
@@ -223,7 +229,7 @@ Si la cadena no calza, la cifra no se calcula. Límite: con datos ficticios mide
 En `/panel/inventario` se sube una planilla (.xlsx o .csv, hasta 2 MB) o se analiza una de ejemplo (`data/sinteticos/comercial-los-robles/`).
 
 - Pasa por la guardia de datos sintéticos, se perfila (edades y menores calculados por código) y **se descarta**: queda solo el registro de la actividad (11 campos del Decreto 662, columnas y alertas) y un resumen sin valores.
-- La IA ve los encabezados y la forma de los valores, nunca los valores. Las planillas de ejemplo usan la respuesta de la IA grabada en `resultados/inventario_demo.json` (se reconocen por su huella SHA-256); las alertas se calculan siempre con código.
+- La IA ve los encabezados y la forma de los valores, nunca los valores. Las planillas de ejemplo usan la respuesta de la IA grabada en `data/demo/inventario_grabado.json` (copia de `resultados/inventario_demo.json`) (se reconocen por su huella SHA-256); las alertas se calculan siempre con código.
 - **Versión mínima:** quita las columnas que el registro marca como innecesarias y el motor vuelve a decidir qué habría que hacer si la planilla se filtrara. En la base de clientes de ejemplo, sin las columnas de compras deja de corresponder avisar a cada persona; en la del paseo se quita el RUT de los niños, pero los deberes siguen (hay datos de salud y de menores).
 - El delegado valida el registro. La ficha de un caso sugiere la planilla que el mensaje parece nombrar, sin cambiar ningún hecho ni deber.
 
@@ -258,7 +264,6 @@ Cuando el motor decide que corresponde avisar a la Agencia o a la ANCI (o lo dej
 Límites conocidos:
 
 - El formato oficial de cada reporte lo fijan la Agencia y el reglamento de la Ley 21.663, que no están en el corpus: el borrador ordena el contenido que piden las leyes y hay que traspasarlo al formulario que corresponda.
-- No se modelan los operadores de importancia vital (actualización en 24 horas y plan de acción en 7 días, art. 9).
 - La revisión automática detecta RUT, correos, teléfonos y fechas; no reconoce nombres. Por eso el borrador de la ANCI no recibe ningún texto libre, y lo que el delegado agregue al completarlo queda bajo su responsabilidad (el borrador se lo recuerda).
 - No hay una cifra medida del tiempo que ahorra; no se publicará hasta medirla con usuarios.
 
@@ -332,7 +337,7 @@ Límites conocidos: la guardia detecta RUT escritos con guion y no puede reconoc
 ## Trabajo previo y uso de IA
 
 - **Trabajo previo del autor:** el diseño se inspira en la experiencia previa del autor con sistemas de enrutamiento de alertas y con la arquitectura "la IA interpreta, el motor decide, la persona valida" de su proyecto [Motor de Ejecutabilidad](https://github.com/contactomtingcl/motor-ejecutabilidad) (Claude Impact Lab 2026). No se reutiliza código de otros proyectos: todo el código de este repositorio se escribe desde cero durante ProductIA, a partir del 10 de octubre de 2026, y es de autoría individual.
-- **Uso de IA en el desarrollo:** el código se escribe con asistencia de Claude (Anthropic) bajo dirección y revisión del autor. La declaración completa de uso de IA (modelos, prompts, datos y supervisión humana) se publicará en `docs/`.
+- **Uso de IA en el desarrollo:** el código se escribe con asistencia de Claude (Anthropic) bajo dirección y revisión del autor. La declaración completa de uso de IA (modelos, prompts, datos y supervisión humana) está en [docs/uso-de-ia.md](docs/uso-de-ia.md).
 
 ## Licencia
 
