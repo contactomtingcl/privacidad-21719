@@ -8,6 +8,32 @@ Privacidad 21.719 sabe qué datos personales tiene una organización, recibe en 
 
 > **Principio de diseño:** la IA interpreta, el motor de reglas decide y la persona valida. Ningún plazo ni deber legal depende de la respuesta de un modelo de IA.
 
+## Inicio rápido
+
+**Demo publicada (sin instalar nada):** https://privacidad-21719.onrender.com/panel/ — solo datos ficticios, sin contraseña. Cada visitante recibe su propia copia de los casos. El servicio puede tardar cerca de un minuto en despertar.
+
+**En tu computador** (Python 3.12 o superior):
+
+```bash
+git clone https://github.com/contactomtingcl/privacidad-21719 && cd privacidad-21719
+python3 -m venv .venv && source .venv/bin/activate
+pip install -e ".[dev]"
+python -m privacidad.canal secreto                       # crea el secreto de los enlaces
+export PRIVACIDAD_SECRETO_ENLACES="$(cat secreto-enlaces.key)"
+python -m privacidad.canal servir --demo --datos casos-demo
+# abre http://127.0.0.1:8080/panel/
+```
+
+Funciona sin conexión y sin llave de IA: la demo usa respuestas de la IA grabadas. Con `ANTHROPIC_API_KEY` configurada, los reportes nuevos los lee la IA real. Pruebas: `pytest -q` (o `PYTHONPATH=src python -m unittest discover -s tests -t .`).
+
+**Recorrido sugerido (5 minutos):**
+
+1. **Inventario de datos** → «Analizar» junto a `paseo_fin_de_anio.xlsx`: columnas clasificadas, 61 menores de 14 años calculados por código, registro con los 11 campos del Decreto 662 y la **versión mínima** de la planilla, con lo que decidiría el motor si se filtrara.
+2. **Bandeja** → el caso «Planilla del paseo enviada a un proveedor por error»: hechos propuestos por la IA con la frase en que se basó, deberes decididos por el motor con su artículo, la sugerencia «¿Es esta planilla?», los borradores para la Agencia y la ANCI, «Validar decisión» y «Ya lo envié».
+3. **Canal y código QR** → abre el canal (o escanea el QR con el teléfono) y envía un reporte: aparece solo en la bandeja.
+4. **Registro de lo actuado** → «Simular una alteración»: la cadena SHA-256 detecta el cambio.
+5. **Simulador de escenarios** → el mismo incidente con la ley vigente y con la postergación en trámite (Boletín 18.623-07), lado a lado.
+
 ## Estado
 
 En construcción (entrega: 28 de octubre de 2026). Avance actual:
@@ -87,7 +113,7 @@ Sin `ANTHROPIC_API_KEY` el canal funciona igual y deja los casos en revisión; c
 - **Llave simétrica:** con Fernet, quien administra el servidor y tiene la llave puede abrir las identidades reservadas. Las pantallas lo dicen así ("solo se abren con una llave de acceso restringido"), no "solo el delegado". Pasar a un esquema donde el servidor solo pueda cifrar (llave pública del delegado) queda en el roadmap.
 - El cifrado protege los campos de nombre y contacto. Si la persona escribe su nombre dentro del relato, ese texto no se cifra; los nombres no se detectan automáticamente.
 - El código QR depende de `segno`; en entornos sin acceso a PyPI sus pruebas se omiten y solo corren en la integración continua.
-- Aún no hay avisos por correo o Telegram: el enrutamiento decide quién recibe cada caso y el delegado lo ve en el panel, pero las áreas todavía no reciben nada. No se publica una cifra de rendimiento del canal: no hay medición.
+- Los avisos salen por correo solo si se configura un servidor (`PRIVACIDAD_SMTP_HOST`, `PRIVACIDAD_SMTP_PUERTO`, `PRIVACIDAD_SMTP_USUARIO`, `PRIVACIDAD_SMTP_CONTRASENA`); sin él, y en la demo, quedan en una bandeja de salida simulada. Aún no hay avisos por Telegram. No se publica una cifra de rendimiento del canal: no hay medición.
 - El servidor no registra IP ni el contenido de los mensajes, pero la publicación en internet (dominio, HTTPS, límite de envíos) aún no está hecha.
 
 ## Enrutamiento y evidencia
@@ -120,17 +146,19 @@ Límites conocidos:
 
 ## Panel del delegado
 
-El panel vive en el mismo programa que el canal, en la dirección `/panel`. Tiene tres pantallas:
+El panel vive en el mismo programa que el canal, en la dirección `/panel`. Sus pantallas principales (además del Inventario y el Simulador, descritos más abajo):
 
-- **Bandeja:** los casos ordenados por urgencia, con el plazo más cercano corriendo en vivo. Cada 5 segundos revisa si llegó algo nuevo: un reporte enviado por el código QR aparece solo, con un aviso. Arriba, tres cifras con nombres exactos: «Casos con fecha límite legal» (separa los vencidos de los que vencen en menos de 3 horas), «Por validar» (incluye, con su aviso, los que la IA no pudo leer) y «Validados» (no «resueltos»: el sistema no envía nada a las autoridades). Si el plazo más cercano venció, la pantalla dice que el deber sigue y ofrece el paso siguiente (por ejemplo, el borrador para la ANCI). El estado de la cadena de evidencia va en el botón «Revisar evidencia», y si no calza aparece una alarma.
-- **Ficha del caso:** lo que llegó (tal como lo leyó la IA, con los datos tapados), los hechos que propuso la IA, lo que decidió el motor con su artículo, a quién se envió y por qué, y la línea de tiempo con la huella de cada anotación.
-- **Evidencia:** revisa la cadena de la organización, muestra las últimas anotaciones de la organización y la cifra de correcciones (ver abajo).
+- **Bandeja:** los casos ordenados por urgencia, con el plazo más cercano corriendo en vivo. Cada 5 segundos revisa si llegó algo nuevo: un reporte enviado por el código QR aparece solo, con un aviso. Arriba, tres cifras con nombres exactos: «Casos con fecha límite legal» (separa los vencidos de los que vencen en menos de 3 horas), «Por validar» (incluye, con su aviso, los que la IA no pudo leer) y «Validados» (no «resueltos»: el sistema no envía nada a las autoridades). Si el plazo más cercano venció, la pantalla dice que el deber sigue y ofrece el paso siguiente (por ejemplo, el borrador para la ANCI). El estado del registro de lo actuado va en el botón «Ver registro», y si no calza aparece una alarma. Un caso validado sigue en la bandeja («Falta enviar») hasta que el delegado registra cada envío.
+- **Ficha del caso:** arriba, qué te toca hacer; lo que llegó (tal como lo leyó la IA, con los datos tapados), los hechos que propuso la IA, lo que decidió el motor con su artículo, «Lo que tienes que enviar», a quién le llegó (con el estado de cada aviso y el texto que salió) y el registro de lo actuado.
+- **Registro de lo actuado:** revisa la cadena de la organización, muestra las últimas anotaciones de la organización y la cifra de correcciones (ver abajo).
 
 Lo que puede hacer el delegado, siempre con la regla "la IA interpreta, el motor decide, la persona valida":
 
 - **Corregir hechos**, nunca plazos: el motor vuelve a decidir desde que se supo del incidente. La propuesta de la IA se conserva para comparar.
-- **Resolver dudas:** lo que el motor deja en "Revisar" se decide con un sí o un no y un motivo.
-- **Validar:** no se puede mientras quede una duda; si después se corrige algo, la validación se anula y queda anotado.
+- **Resolver dudas:** lo que el motor deja en «Decide tú» se decide con «Corresponde» o «No corresponde» y un motivo.
+- **Validar:** el botón aparece desactivado con lo que falta mientras quede una duda o falten los hechos; si después se corrige algo, la validación se anula y queda anotado. Validar no es enviar: el sistema no envía nada a las autoridades.
+- **«Ya lo envié»:** por cada cosa que corresponde (aviso a la Agencia, a cada persona, cada paso de la ANCI, la respuesta a una solicitud), el delegado registra el canal y la hora. La urgencia deja de contarlo.
+- **«Derivar a…»:** suma un área al caso con un motivo de lista cerrada. Le llega un aviso sin el mensaje ni datos de personas (en un reservado, tampoco la identidad).
 - **Abrir una identidad reservada:** pide de nuevo la contraseña y un motivo, y queda en la evidencia.
 
 Cada acción deja un evento en la cadena con el usuario y un motivo de una lista cerrada. Las notas libres quedan solo en el caso, nunca en la cadena.
@@ -181,6 +209,23 @@ Si la cadena no calza, la cifra no se calcula. Límite: con datos ficticios mide
 - Sin segundo factor de ingreso. El límite de intentos vive en memoria: se reinicia con el servidor.
 - La cookie de sesión va firmada, no cifrada: contiene el usuario y la organización (no la contraseña ni datos de casos).
 - En la demo, la llave del modo reservado se crea en memoria al arrancar y se pierde al detenerlo.
+
+## Inventario de datos
+
+En `/panel/inventario` se sube una planilla (.xlsx o .csv, hasta 2 MB) o se analiza una de ejemplo (`data/sinteticos/comercial-los-robles/`).
+
+- Pasa por la guardia de datos sintéticos, se perfila (edades y menores calculados por código) y **se descarta**: queda solo el registro de la actividad (11 campos del Decreto 662, columnas y alertas) y un resumen sin valores.
+- La IA ve los encabezados y la forma de los valores, nunca los valores. Las planillas de ejemplo usan la respuesta de la IA grabada en `resultados/inventario_demo.json` (se reconocen por su huella SHA-256); las alertas se calculan siempre con código.
+- **Versión mínima:** quita las columnas que el registro marca como innecesarias y el motor vuelve a decidir qué habría que hacer si la planilla se filtrara. En la base de clientes de ejemplo, sin las columnas de compras deja de corresponder avisar a cada persona; en la del paseo se quita el RUT de los niños, pero los deberes siguen (hay datos de salud y de menores).
+- El delegado valida el registro. La ficha de un caso sugiere la planilla que el mensaje parece nombrar, sin cambiar ningún hecho ni deber.
+
+## Simulador de escenarios
+
+En `/panel/simulador` se compara un incidente (de ejemplo o de un caso real de la bandeja) con la ley vigente y con el proyecto de postergación, según la fecha en que se supo, el tipo de organización y si es operador de importancia vital o empresa de menor tamaño.
+
+- Lo que corresponde hacer no cambia: lo decide el motor. Cambia desde cuándo es exigible (Ley 21.719: 1 de diciembre de 2026 vigente; 1 de diciembre de 2027 en el proyecto) y qué sanción se arriesga (arts. 34 ter k, 34 quáter f, 35 y 44, y la amonestación del primer año del artículo sexto transitorio; Ley 21.663 arts. 38 y 40). Todas las citas se verifican contra el corpus.
+- El reporte a la ANCI (Ley 21.663) ya es exigible y ningún escenario lo cambia.
+- El proyecto (Boletín 18.623-07, en trámite en el Senado) se cita desde un extracto guardado en `data/normas/proyectos/`, con su enlace oficial, y la pantalla dice que no es ley. Reglas en `data/reglas/escenarios.yaml`.
 
 ## Borradores de reporte
 
