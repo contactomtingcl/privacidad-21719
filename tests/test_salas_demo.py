@@ -194,3 +194,58 @@ class TestConRepositorio(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestCaidaIA(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.app, self.canal, _ = crear_panel_de_prueba(None, demo=True, salas=self.crear_salas)
+
+    def crear_salas(self, canal):
+        self.salas = SalasDemo(Path(self.tmp.name), canal.con_repositorio, sembrar)
+        return self.salas
+
+    def tearDown(self):
+        self.salas.cerrar()
+        self.tmp.cleanup()
+
+    def test_simular_y_restablecer_solo_en_la_sala(self):
+        a, b = Navegador(self.app), Navegador(self.app)
+        html = a.pedir("GET", "/panel/canal").html
+        self.assertIn("Simular caída de la IA", html)
+        b.pedir("GET", "/panel/canal")
+        r = a.pedir(
+            "POST", "/panel/demo/ia", {"csrf": a.pedir("GET", "/panel/").csrf(), "caida": "1"}
+        )
+        self.assertEqual(r.status, 303)
+        self.assertIn("la IA está caída (simulado)", a.pedir("GET", "/panel/canal").html)
+        self.assertIn("la IA funciona", b.pedir("GET", "/panel/canal").html)
+        enlace = re.search(
+            r'href="https://canal\.ejemplo\.cl(/canal/[^"]+)"', a.pedir("GET", "/panel/canal").html
+        ).group(1)
+        r = Navegador(self.app).pedir(
+            "POST",
+            enlace.replace("&amp;", "&"),
+            {"tipo": "incidente", "texto": "Accedieron sin permiso al servidor de la empresa."},
+        )
+        self.assertEqual(r.status, 303)
+        id_caso = r.cabeceras["location"].split("/")[2].split("?")[0]
+        caso = None
+        for s in list(self.salas._abiertas):
+            caso = caso or self.salas.canal(s)._repo.obtener(id_caso)
+        self.assertIsNone(caso.hechos_incidente)
+        self.assertEqual(caso.estado, "requiere_revision")
+        self.assertTrue(caso.asignacion is not None)
+        a.pedir("POST", "/panel/demo/ia", {"csrf": a.pedir("GET", "/panel/").csrf(), "caida": "0"})
+        self.assertIn("la IA funciona", a.pedir("GET", "/panel/canal").html)
+
+    def test_fuera_de_la_demo_no_existe(self):
+        app, *_ = crear_panel_de_prueba(None)
+        nav = Navegador(app)
+        from .panel_apoyo import entrar
+
+        entrar(nav)
+        csrf = nav.pedir("GET", "/panel/").csrf()
+        self.assertEqual(
+            nav.pedir("POST", "/panel/demo/ia", {"csrf": csrf, "caida": "1"}).status, 404
+        )

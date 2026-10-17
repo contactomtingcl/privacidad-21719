@@ -127,6 +127,12 @@ class CanalReporte(AccionesDelegado, AccionesCascada):
         copia._repo = repositorio
         return copia
 
+    def con_cliente(self, cliente: ClienteLLM | None) -> CanalReporte:
+        """El mismo canal con otro cliente de IA (la demo lo usa para simular una caída)."""
+        copia = copy.copy(self)
+        copia._cliente = cliente
+        return copia
+
     # --- enlaces ---------------------------------------------------------------------
 
     @property

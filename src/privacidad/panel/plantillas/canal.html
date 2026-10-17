@@ -22,4 +22,16 @@
 <p class="suave">El enlace va firmado: si alguien cambia una letra, deja de funcionar. Si se filtró, pide uno nuevo: el anterior deja de funcionar.</p>
 </section>
 </div>
+{% if simulable %}
+<section class="tarjeta" aria-labelledby="titulo-caida">
+<h2 id="titulo-caida">Simular una caída de la IA (demo)</h2>
+<p>Estado en tu copia de la demo: <b>{% if ia_caida %}la IA está caída (simulado){% else %}la IA funciona{% endif %}</b>.</p>
+<p class="suave">Con la IA caída, envía un reporte por el canal: no se pierde. Llega a la bandeja «Sin lectura de la IA», los plazos corren igual y nada se marca como «no corresponde». Solo afecta a tu copia de la demo.</p>
+<form method="post" action="{{ BASE }}/demo/ia">
+<input type="hidden" name="csrf" value="{{ ctx.csrf }}">
+<input type="hidden" name="caida" value="{{ '0' if ia_caida else '1' }}">
+<button type="submit" class="{{ 'primario' if ia_caida else 'peligro' }}">{% if ia_caida %}Restablecer la IA{% else %}Simular caída de la IA{% endif %}</button>
+</form>
+</section>
+{% endif %}
 {% endblock %}

@@ -354,6 +354,14 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
         request.session.clear()
         return RedirectResponse(f"{BASE}/" if config.demo else f"{BASE}/entrar?salio=1", 303)
 
+    async def simular_caida_ia(request: Request) -> Response:
+        ctx = contexto(request)
+        if not ctx.demo or config.salas is None or ctx.sala is None:
+            raise HTTPException(404)
+        datos = await formulario_seguro(request)
+        config.salas.fijar_ia_caida(ctx.sala, _uno(datos, "caida") == "1")
+        return RedirectResponse(f"{BASE}/canal", 303)
+
     async def cambiar_organizacion(request: Request) -> Response:
         if not config.demo:
             raise HTTPException(404)
@@ -920,6 +928,8 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
             seccion="canal",
             enlace=enlace + sufijo,
             qr=enlace[len(raiz) :] + "/qr.svg" + sufijo,
+            ia_caida=bool(config.salas and ctx.sala and config.salas.ia_caida(ctx.sala)),
+            simulable=bool(ctx.demo and config.salas and ctx.sala),
         )
 
     async def evidencia(request: Request) -> Response:
@@ -983,6 +993,7 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
         Route("/entrar", entrar, methods=["POST"]),
         Route("/salir", salir, methods=["POST"]),
         Route("/demo/organizacion", cambiar_organizacion, methods=["POST"]),
+        Route("/demo/ia", simular_caida_ia, methods=["POST"]),
         Route("/caso/{id}", caso, methods=["GET"]),
         Route("/caso/{id}/corregir", corregir, methods=["POST"]),
         Route("/caso/{id}/resolver", resolver, methods=["POST"]),

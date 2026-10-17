@@ -34,6 +34,14 @@ from ..canal.repositorio import NOMBRE_ARCHIVO, RepositorioCasos
 from ..canal.servicio import CanalReporte
 
 _ID_SALA = re.compile(r"^[A-Za-z0-9_-]{22}$")
+MARCA_IA_CAIDA = "ia-caida"
+
+
+class ClienteCaido:
+    """Imita una caída de la API de IA: toda llamada falla, como sin conexión."""
+
+    def llamar(self, **_: object) -> object:
+        raise ConnectionError("caída de la IA simulada en la demo")
 
 
 def id_sala_valido(id_sala: str | None) -> bool:
@@ -96,7 +104,22 @@ class SalasDemo:
             else:
                 self._abiertas.move_to_end(id_sala)
             self._tocar(id_sala)
-            return canal
+        if self.ia_caida(id_sala):
+            return canal.con_cliente(ClienteCaido())
+        return canal
+
+    def ia_caida(self, id_sala: str | None) -> bool:
+        return self.existe(id_sala) and (self._ruta(id_sala) / MARCA_IA_CAIDA).is_file()  # type: ignore[arg-type]
+
+    def fijar_ia_caida(self, id_sala: str, caida: bool) -> None:
+        """Simula (o termina) una caída de la IA solo en esta sala."""
+        if not self.existe(id_sala):
+            return
+        marca = self._ruta(id_sala) / MARCA_IA_CAIDA
+        if caida:
+            marca.touch()
+        else:
+            marca.unlink(missing_ok=True)
 
     def cerrar(self) -> None:
         """Cierra las bases abiertas (al detener el servidor o al terminar una prueba)."""
