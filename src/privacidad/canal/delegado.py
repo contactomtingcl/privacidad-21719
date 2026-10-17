@@ -1,5 +1,5 @@
-"""Acciones del delegado sobre un caso: corregir hechos, resolver dudas, validar y abrir una
-identidad reservada.
+"""Acciones del delegado sobre un caso: corregir hechos, resolver dudas, validar, dejar constancia
+de lo que envió y abrir una identidad reservada.
 
 Las reglas que sostienen el principio "la IA interpreta, el motor decide, la persona valida":
 
@@ -8,6 +8,9 @@ Las reglas que sostienen el principio "la IA interpreta, el motor decide, la per
 - Lo que el motor deja en "revisar" lo resuelve el delegado con un sí o un no y un motivo.
 - No se puede validar mientras quede algo por resolver; si después se corrige algo, la
   validación anterior se anula y queda anotado.
+- Validar no es enviar: el sistema no envía nada a las autoridades ni a las personas. Por cada
+  cosa que corresponde, el delegado marca «Ya lo envié» (canal y hora). El caso sigue abierto
+  hasta que todo lo que corresponde quede enviado.
 - Cada acción deja un evento en la evidencia con el identificador del usuario y un motivo de una
   lista cerrada. Las notas libres quedan solo en el caso, nunca en la cadena.
 - Un delegado solo alcanza los casos de su organización. Un caso ajeno responde igual que uno
@@ -18,7 +21,7 @@ from __future__ import annotations
 
 import hmac
 from collections.abc import Callable, Mapping
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any
 
 from cryptography.fernet import MultiFernet
@@ -28,9 +31,11 @@ from ..motor import Deber, HechosIncidente, decidir_incidente
 from .enrutamiento import ReglasEnrutamiento
 from .evidencia import Anotacion, Verificacion
 from .modelos import (
+    CanalEnvio,
     Caso,
     Correccion,
     DecisionDelegado,
+    Envio,
     MotivoCorreccion,
     MotivoDecision,
     MotivoIdentidad,
@@ -59,6 +64,32 @@ def deberes_del_caso(caso: Caso) -> list[Deber]:
         r = caso.resultado_solicitud
         return [d for d in (r.respuesta, r.bloqueo, r.comunicar_terceros) if d is not None]
     return []
+
+
+def entregas_del_caso(caso: Caso) -> list[Deber]:
+    """Lo que el delegado tiene que enviar (o hacer) porque corresponde, en orden de plazo.
+
+    En la ANCI cuenta cada paso por separado (alerta temprana, actualización e informe final),
+    porque cada uno tiene su plazo. Un deber en duda no entra hasta que el delegado lo decida.
+    """
+    if caso.resultado_incidente is not None:
+        r = caso.resultado_incidente
+        salida = [
+            d for d in (r.aviso_agencia, r.aviso_titulares) if decision_final(caso, d) == "si"
+        ]
+        if decision_final(caso, r.reporte_anci) == "si":
+            salida += r.plazos_anci or [r.reporte_anci]
+        return salida
+    return [d for d in deberes_del_caso(caso) if decision_final(caso, d) == "si"]
+
+
+def pendientes_de_envio(caso: Caso) -> list[Deber]:
+    return [d for d in entregas_del_caso(caso) if d.id not in caso.envios]
+
+
+def caso_abierto(caso: Caso) -> bool:
+    """Un caso sigue en la bandeja hasta validarlo y enviar todo lo que corresponde."""
+    return caso.validacion is None or bool(pendientes_de_envio(caso))
 
 
 def por_resolver(caso: Caso) -> list[Deber]:
@@ -135,6 +166,10 @@ class AccionesDelegado:
         if nota and len(nota) > LARGO_MAXIMO_NOTA:
             raise AccionInvalida(f"La nota admite hasta {LARGO_MAXIMO_NOTA} caracteres.")
         guardia.exigir_sintetico({"nota": nota} if nota else {})
+        if caso.hechos_vigentes is None:
+            motivo = "ia_no_leyo"  # no hay lectura que corregir: el motivo es ese y no otro
+        elif motivo == "ia_no_leyo":
+            raise AccionInvalida("La IA sí leyó este reporte: elige otro motivo.")
         cambios = _cambios(caso.hechos_vigentes, hechos)
         if not cambios:
             raise AccionInvalida("No cambiaste ningún hecho.")
@@ -194,6 +229,50 @@ class AccionesDelegado:
             "deber_resuelto", ahora, deber=deber, decision=decision, motivo=motivo, por=por
         )
         self._anular_validacion(caso, ahora, por, "deber_resuelto")
+        self._repo.guardar(caso)
+        return caso
+
+    def registrar_envio(
+        self,
+        id_organizacion: str,
+        id_caso: str,
+        id_deber: str,
+        *,
+        canal: CanalEnvio,
+        por: str,
+        momento: datetime | None = None,
+    ) -> Caso:
+        """Deja constancia de que el delegado envió (o hizo) algo que corresponde. La hora la
+        indica él (pudo enviarlo antes de anotarlo), pero no puede ser antes del ingreso del caso
+        ni en el futuro."""
+        caso = self.caso_de_organizacion(id_organizacion, id_caso)
+        ahora = self._reloj()
+        momento = momento or ahora
+        if id_deber in caso.envios:
+            raise AccionInvalida("Esto ya quedó registrado como enviado.")
+        if id_deber not in {d.id for d in entregas_del_caso(caso)}:
+            raise AccionInvalida(
+                "Esto no corresponde enviarlo con lo que se sabe hoy. Si el motor dejó una duda, "
+                "decide primero si corresponde."
+            )
+        if momento.tzinfo is None:
+            raise AccionInvalida("Indica la hora con su zona horaria.")
+        if momento > ahora + timedelta(minutes=1):
+            raise AccionInvalida("La hora del envío no puede ser en el futuro.")
+        if momento < caso.ingreso - timedelta(minutes=1):
+            raise AccionInvalida("La hora del envío no puede ser anterior al ingreso del caso.")
+        caso.envios[id_deber] = Envio(
+            deber=id_deber, canal=canal, momento=momento, por=por, registrado=ahora
+        )
+        caso.registrar(
+            "envio_registrado",
+            ahora,
+            por=por,
+            deber=id_deber,
+            canal=canal,
+            enviado=momento.isoformat(),
+        )
+        self._enrutar(caso, ahora)  # la urgencia ya no cuenta lo que se envió
         self._repo.guardar(caso)
         return caso
 

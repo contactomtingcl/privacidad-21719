@@ -187,6 +187,18 @@ class TestAcciones(unittest.TestCase):
             {"csrf": self.csrf, "vulneracion": "inventada", "ciberincidente": "no", "motivo": "x"},
         )
         self.assertEqual(r.status, 400)
+        self.assertIn("Completa todos los campos", r.html)
+        completo = {
+            "csrf": self.csrf,
+            "vulneracion": "inventada",
+            "ciberincidente": "no",
+            "datos_personales": "si",
+            "riesgo_mitigado": "no",
+            "interrupcion_servicio": "no",
+            "motivo": "error_ia",
+        }
+        r = self.nav.pedir("POST", f"/panel/caso/{self.caso.id}/corregir", completo)
+        self.assertEqual(r.status, 400)
         self.assertIn("Revisa los datos", r.html)
 
     def test_validar(self):

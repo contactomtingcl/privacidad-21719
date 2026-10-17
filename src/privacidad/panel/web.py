@@ -47,9 +47,9 @@ from starlette.staticfiles import StaticFiles
 
 from ..canal.confirmacion import ETIQUETAS_DERECHO
 from ..canal.correcciones import medir_correcciones
-from ..canal.delegado import AccionInvalida, CasoAjeno
+from ..canal.delegado import AccionInvalida, CasoAjeno, caso_abierto
 from ..canal.evidencia import Anotacion, Verificacion
-from ..canal.modelos import Organizacion
+from ..canal.modelos import ZONA_CHILE, Organizacion
 from ..canal.repositorio import NOMBRE_ARCHIVO, RepositorioCasos
 from ..canal.reservado import IdentidadReservadaError
 from ..canal.servicio import CanalReporte
@@ -163,6 +163,8 @@ def _entorno() -> Environment:
         MOTIVOS_CORRECCION=vista.MOTIVOS_CORRECCION,
         MOTIVOS_DECISION=vista.MOTIVOS_DECISION,
         MOTIVOS_IDENTIDAD=vista.MOTIVOS_IDENTIDAD,
+        CANALES_ENVIO=vista.CANALES_ENVIO,
+        MOTIVO_SIN_LECTURA=vista.MOTIVO_SIN_LECTURA,
         VULNERACIONES=vista.VULNERACIONES,
         CATEGORIAS=vista.CATEGORIAS,
         CIBER=vista.CIBER,
@@ -197,7 +199,18 @@ def _simular_alteracion(canal: CanalReporte, id_org: str) -> tuple[Verificacion,
     return verificacion, anotaciones, objetivo
 
 
+CAMPOS_OBLIGATORIOS = (
+    "vulneracion",
+    "ciberincidente",
+    "datos_personales",
+    "riesgo_mitigado",
+    "interrupcion_servicio",
+)
+
+
 def _hechos_del_formulario(datos: dict[str, list[str]]) -> HechosIncidente:
+    if any(not _uno(datos, campo) for campo in CAMPOS_OBLIGATORIOS):
+        raise AccionInvalida("Completa todos los campos: elige una opción en cada uno.")
     titulares = _uno(datos, "titulares_aprox").strip()
     return HechosIncidente(
         datos_personales=_uno(datos, "datos_personales") == "si",
@@ -367,7 +380,7 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
     def datos_bandeja(ctx: Contexto, filtro: str, desde: datetime | None) -> dict[str, Any]:
         ahora = reloj()
         casos = vista.ordenar(ctx.canal.casos_de_organizacion(ctx.org.id))
-        abiertos = [c for c in casos if c.validacion is None]
+        abiertos = [c for c in casos if caso_abierto(c)]
         if filtro == "validados":
             elegidos = [c for c in casos if c.validacion is not None]
         elif filtro in ("inmediata", "alta", "normal"):
@@ -454,12 +467,14 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
             error=error,
             cambio=cambio,
             identidad=identidad,
+            ahora_local=reloj().astimezone(ZONA_CHILE).strftime("%Y-%m-%dT%H:%M"),
+            minimo_local=caso.ingreso.astimezone(ZONA_CHILE).strftime("%Y-%m-%dT%H:%M"),
         )
 
     async def caso(request: Request) -> Response:
         ctx = contexto(request)
         cambio = request.query_params.get("cambio")
-        if cambio not in ("corregido", "resuelto", "validado", "revisado"):
+        if cambio not in ("corregido", "resuelto", "validado", "revisado", "enviado"):
             cambio = None
         return ver_ficha(ctx, request.path_params["id"], cambio=cambio)
 
@@ -517,6 +532,31 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
             ctx.canal.validar(ctx.org.id, id_caso, por=ctx.usuario)
 
         return await accion(request, hacer, "validado")
+
+    async def registrar_envio(request: Request) -> Response:
+        def hacer(ctx: Contexto, datos: dict, id_caso: str) -> None:
+            texto = _uno(datos, "momento").strip()
+            momento = None
+            if texto:
+                try:
+                    momento = datetime.fromisoformat(texto)
+                except ValueError as e:
+                    raise AccionInvalida("Revisa la fecha y hora del envío.") from e
+                if momento.tzinfo is None:
+                    momento = momento.replace(tzinfo=ZONA_CHILE)
+            canal_envio = _uno(datos, "canal")
+            if canal_envio not in vista.CANALES_ENVIO:
+                raise AccionInvalida("Elige por dónde lo enviaste.")
+            ctx.canal.registrar_envio(
+                ctx.org.id,
+                id_caso,
+                _uno(datos, "deber"),
+                canal=canal_envio,  # type: ignore[arg-type]  # validado arriba
+                por=ctx.usuario,
+                momento=momento,
+            )
+
+        return await accion(request, hacer, "enviado")
 
     async def abrir_identidad(request: Request) -> Response:
         ctx = contexto(request)
@@ -705,6 +745,7 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
         Route("/caso/{id}/corregir", corregir, methods=["POST"]),
         Route("/caso/{id}/resolver", resolver, methods=["POST"]),
         Route("/caso/{id}/validar", validar, methods=["POST"]),
+        Route("/caso/{id}/enviado", registrar_envio, methods=["POST"]),
         Route("/caso/{id}/identidad", abrir_identidad, methods=["POST"]),
         Route("/caso/{id}/borrador/{destino}", ver_borrador, methods=["GET"]),
         Route("/caso/{id}/borrador/{destino}/descargar", descargar_borrador, methods=["GET"]),

@@ -10,9 +10,18 @@ from dataclasses import dataclass, field
 from datetime import date, datetime, time, timedelta
 from typing import Any
 
-from ..canal.delegado import deberes_del_caso, decision_final, por_resolver
+from babel.dates import format_date
+
+from ..canal.delegado import (
+    caso_abierto,
+    deberes_del_caso,
+    decision_final,
+    entregas_del_caso,
+    pendientes_de_envio,
+    por_resolver,
+)
 from ..canal.evidencia import Anotacion
-from ..canal.modelos import ZONA_CHILE, Caso
+from ..canal.modelos import ZONA_CHILE, Caso, Envio
 from ..deteccion import Enmascarador
 from ..interpretacion.incidentes import afirmados_incidente
 from ..interpretacion.respaldo import Respaldo
@@ -60,12 +69,21 @@ CATEGORIAS = {
     "financieros": "Financieros o comerciales",
 }
 CIBER = {"si": "Sí", "no": "No", "dudoso": "No se sabe"}
+CANALES_ENVIO = {
+    "correo": "Correo electrónico",
+    "portal_oficial": "Portal o formulario oficial",
+    "carta": "Carta",
+    "en_persona": "En persona",
+    "sistemas_internos": "En nuestros sistemas",
+    "otro": "Otro",
+}
 MOTIVOS_CORRECCION = {
     "error_ia": "La IA leyó mal el mensaje",
     "informacion_nueva": "Llegó información nueva",
     "confirmado_por_area": "El área responsable lo confirmó",
     "otro": "Otro motivo",
 }
+MOTIVO_SIN_LECTURA = "La IA no pudo leerlo"
 MOTIVOS_DECISION = {
     "datos_revisados": "Revisé qué datos había",
     "consulta_area": "Lo consulté con el área",
@@ -99,6 +117,7 @@ EVENTOS = {
     "identidad_abierta": "{por} abrió la identidad reservada",
     "editado_a_mano": "Editado a mano (alteración de la demo)",
     "borrador_revisado": "{por} revisó un borrador de reporte",
+    "envio_registrado": "{por} registró un envío",
 }
 
 
@@ -149,6 +168,8 @@ def resumen_de(caso: Caso) -> str:
 
 def estado_de(caso: Caso) -> tuple[str, str]:
     if caso.validacion is not None:
+        if pendientes_de_envio(caso):
+            return "Falta enviar", "enviar"
         return "Validado", "validado"
     if caso.tipo != "solicitud" and caso.hechos_vigentes is None:
         return SIN_LECTURA, "revision"
@@ -208,6 +229,7 @@ class Resumen:
     revision: int  # la IA no pudo leerlos: el delegado los lee y valida igual
     validados: int
     validados_hoy: int
+    por_enviar: int = 0  # validados con algo que corresponde y aún no se envía
 
     @property
     def para_validar(self) -> int:
@@ -216,7 +238,8 @@ class Resumen:
 
 
 def resumen_bandeja(casos: list[Caso], ahora: datetime) -> Resumen:
-    abiertos = [c for c in casos if c.validacion is None]
+    abiertos = [c for c in casos if caso_abierto(c)]
+    sin_validar = [c for c in casos if c.validacion is None]
     con_plazo = [c for c in abiertos if c.asignacion and c.asignacion.vence]
     vencidos = [c for c in con_plazo if c.asignacion.vence <= ahora]
     hoy = ahora.astimezone(ZONA_CHILE).date()
@@ -228,12 +251,13 @@ def resumen_bandeja(casos: list[Caso], ahora: datetime) -> Resumen:
         plazos_cercanos=sum(
             1 for c in con_plazo if timedelta(0) < c.asignacion.vence - ahora <= timedelta(hours=3)
         ),
-        por_validar=sum(1 for c in abiertos if estado_de(c)[1] == "validar"),
-        revision=sum(1 for c in abiertos if estado_de(c)[1] == "revision"),
+        por_validar=sum(1 for c in sin_validar if estado_de(c)[1] == "validar"),
+        revision=sum(1 for c in sin_validar if estado_de(c)[1] == "revision"),
         validados=len(validados),
         validados_hoy=sum(
             1 for c in validados if c.validacion.momento.astimezone(ZONA_CHILE).date() == hoy
         ),
+        por_enviar=sum(1 for c in validados if pendientes_de_envio(c)),
     )
 
 
@@ -300,6 +324,7 @@ def aclarar_habiles(texto: str | None) -> str | None:
 
 
 TITULO_RELOJ_ANCI = "Primer aviso a la ANCI"
+DESPUES_ALERTA = "Después: actualización a las 72 horas e informe final a los 15 días."
 
 
 @dataclass
@@ -308,27 +333,55 @@ class Reloj:
     detalle: str
     vence: datetime | None
     total_s: int  # duración total del plazo, para el anillo
-    tono: str  # "rojo" | "ambar" | "neutro"
+    tono: str  # "rojo" | "ambar" | "neutro" | "hecho"
+    deber: str | None = None
+
+
+def fecha_hora(valor: datetime) -> str:
+    local = valor.astimezone(ZONA_CHILE)
+    return f"el {format_date(local, format='long', locale='es_CL')} a las {hora(local)}"
+
+
+def texto_envio(envio: Envio) -> str:
+    return f"Enviado {fecha_hora(envio.momento)} · {CANALES_ENVIO[envio.canal].lower()}"
+
+
+def _reloj_enviado(titulo: str, envio: Envio) -> Reloj:
+    return Reloj(titulo, texto_envio(envio) + ".", None, 0, "hecho", envio.deber)
 
 
 def relojes(caso: Caso, ahora: datetime) -> list[Reloj]:
+    """Los plazos del caso. Lo ya enviado queda al final, con la hora en que se envió."""
     salida: list[Reloj] = []
     r = caso.resultado_incidente
     if r is not None:
         anci = [p for p in r.plazos_anci if r.reporte_anci.decision in ("si", "revisar")]
         if anci and decision_final(caso, r.reporte_anci) != "no":
-            primero = anci[0]
-            vence = momento(primero.vence)
-            salida.append(
-                Reloj(
-                    titulo=TITULO_RELOJ_ANCI,
-                    detalle="Después: actualización a las 72 horas e informe final a los 15 días.",
-                    vence=vence,
-                    total_s=int((vence - caso.ingreso).total_seconds()) if vence else 0,
-                    tono="rojo",
+            pendientes = [p for p in anci if p.id not in caso.envios]
+            if pendientes:
+                siguiente = pendientes[0]
+                vence = momento(siguiente.vence)
+                es_primero = siguiente.id == "anci_alerta_temprana"
+                salida.append(
+                    Reloj(
+                        titulo=TITULO_RELOJ_ANCI
+                        if es_primero
+                        else TITULOS_DEBER.get(siguiente.id, siguiente.id),
+                        detalle=DESPUES_ALERTA
+                        if es_primero
+                        else f"Van {len(anci) - len(pendientes)} de {len(anci)} pasos enviados.",
+                        vence=vence,
+                        total_s=int((vence - caso.ingreso).total_seconds()) if vence else 0,
+                        tono="rojo",
+                        deber=siguiente.id,
+                    )
                 )
-            )
-        if decision_final(caso, r.aviso_agencia) != "no":
+            else:
+                ultimo = caso.envios[anci[-1].id]
+                salida.append(_reloj_enviado("Los tres reportes a la ANCI", ultimo))
+        if "aviso_agencia" in caso.envios:
+            salida.append(_reloj_enviado("Aviso a la Agencia", caso.envios["aviso_agencia"]))
+        elif decision_final(caso, r.aviso_agencia) != "no":
             minutos = max(0, int((ahora - caso.ingreso).total_seconds() // 60))
             salida.append(
                 Reloj(
@@ -338,6 +391,7 @@ def relojes(caso: Caso, ahora: datetime) -> list[Reloj]:
                     vence=None,
                     total_s=0,
                     tono="ambar",
+                    deber="aviso_agencia",
                 )
             )
     elif caso.relojes_anci_posibles:
@@ -354,7 +408,9 @@ def relojes(caso: Caso, ahora: datetime) -> list[Reloj]:
         )
     elif caso.resultado_solicitud is not None:
         for d in (caso.resultado_solicitud.bloqueo, caso.resultado_solicitud.respuesta):
-            if d is not None and d.vence is not None and d.decision != "no":
+            if d is not None and d.id in caso.envios:
+                salida.append(_reloj_enviado(TITULOS_DEBER.get(d.id, d.id), caso.envios[d.id]))
+            elif d is not None and d.vence is not None and d.decision != "no":
                 vence = momento(d.vence)
                 salida.append(
                     Reloj(
@@ -363,9 +419,10 @@ def relojes(caso: Caso, ahora: datetime) -> list[Reloj]:
                         vence=vence,
                         total_s=int((vence - caso.ingreso).total_seconds()),
                         tono="rojo" if d.id == "bloqueo_temporal" else "ambar",
+                        deber=d.id,
                     )
                 )
-    return salida
+    return sorted(salida, key=lambda r: r.tono == "hecho")
 
 
 @dataclass
@@ -378,10 +435,10 @@ class SiguientePaso:
 
 def siguiente_paso(f: Ficha, destinos_con_borrador: list[str]) -> SiguientePaso:
     reloj = f.relojes[0]
-    if reloj.titulo == TITULO_RELOJ_ANCI:
+    if reloj.deber and reloj.deber.startswith("anci_"):
         texto = (
-            "Venció el plazo del primer aviso a la ANCI, pero el deber sigue: envíalo cuanto "
-            "antes por el canal oficial."
+            f"Venció el plazo de «{reloj.titulo.lower()}», pero el deber sigue: envíalo cuanto "
+            "antes por el canal oficial y marca «Ya lo envié»."
         )
     elif f.caso.tipo == "solicitud":
         texto = (
@@ -484,10 +541,16 @@ def por_que_no_validar(caso: Caso) -> str | None:
 def que_te_toca(caso: Caso) -> str:
     """Una línea arriba de la ficha: qué tiene que hacer el delegado en este caso."""
     if caso.validacion is not None:
-        return (
-            "Validaste la decisión. El sistema no envía nada: envía tú lo que corresponde "
-            "antes de su plazo."
-        )
+        pendientes = pendientes_de_envio(caso)
+        if pendientes:
+            nombres = ", ".join(NOMBRES_ENVIO.get(d.id, d.id).lower() for d in pendientes)
+            return (
+                f"Validaste la decisión. Falta enviar: {nombres}. El sistema no envía nada: "
+                "envíalo tú y marca «Ya lo envié»."
+            )
+        if entregas_del_caso(caso):
+            return "Validaste y quedó registrado el envío de todo lo que corresponde."
+        return "Validaste la decisión. Con estos hechos no corresponde enviar nada."
     falta = por_que_no_validar(caso)
     if falta == "Primero completa los hechos":
         return "La IA no pudo leer este reporte: completa los hechos y el motor decidirá."
@@ -496,6 +559,106 @@ def que_te_toca(caso: Caso) -> str:
     if falta:
         return "La persona todavía no confirma lo que pide: el plazo corre igual."
     return "Revisa lo que decidió el motor y valídalo."
+
+
+NOMBRES_ENVIO = {
+    "aviso_agencia": "Aviso a la Agencia",
+    "aviso_titulares": "Aviso a cada persona afectada",
+    "reporte_anci": "Primer aviso a la ANCI",
+    "anci_alerta_temprana": "Primer aviso a la ANCI (alerta temprana)",
+    "anci_actualizacion": "Actualización a la ANCI",
+    "anci_informe_final": "Informe final a la ANCI",
+    "respuesta_solicitud": "Respuesta a la persona",
+    "bloqueo_temporal": "Bloqueo de sus datos",
+    "comunicar_a_terceros": "Aviso a quienes recibieron sus datos",
+}
+BORRADOR_DE = {
+    "aviso_agencia": "agencia",
+    "reporte_anci": "anci",
+    "anci_alerta_temprana": "anci",
+    "anci_actualizacion": "anci",
+    "anci_informe_final": "anci",
+}
+GUIAS_ENVIO = {
+    "aviso_agencia": "Usa el borrador y envíalo por el canal oficial de la Agencia.",
+    "aviso_titulares": (
+        "Avisa a cada persona afectada en lenguaje claro: qué datos, qué consecuencias y qué "
+        "medidas (a los menores, por medio de sus padres o representantes)."
+    ),
+    "reporte_anci": "Usa el borrador y envíalo por el canal oficial de la ANCI.",
+    "anci_alerta_temprana": "Usa el borrador y envíalo por el canal oficial de la ANCI.",
+    "anci_actualizacion": "Actualiza a la ANCI con lo que se sabe ahora (usa el mismo borrador).",
+    "anci_informe_final": "Envía a la ANCI el informe final del incidente.",
+    "bloqueo_temporal": (
+        "Deja de usar sus datos para lo que pidió suspender, hasta responderle. Esto no se "
+        "envía: lo haces en tus sistemas."
+    ),
+    "comunicar_a_terceros": (
+        "Avisa del cambio a quienes recibieron sus datos (proveedores u otros). El inventario "
+        "muestra a quién se entregaron."
+    ),
+}
+
+
+@dataclass
+class VistaEnvio:
+    id: str
+    titulo: str
+    guia: str
+    vence: datetime | None
+    envio: Envio | None
+    boton: str  # «Ya lo envié» o «Ya lo hice»
+    borrador: str | None  # destino del borrador que sirve para enviarlo
+    vigente: bool = True  # False: se envió, pero con los hechos de hoy ya no corresponde
+
+    @property
+    def texto_envio(self) -> str:
+        return texto_envio(self.envio) if self.envio else ""
+
+
+def _guia(caso: Caso, d: Deber) -> str:
+    if d.id != "respuesta_solicitud":
+        return GUIAS_ENVIO.get(d.id, "")
+    contacto = (caso.identidad or {}).get("contacto")
+    vence = momento(d.vence)
+    plazo = f" antes del {format_date(vence, format='long', locale='es_CL')}" if vence else ""
+    destino = f" a {contacto}" if contacto else ""
+    return (
+        f"Respóndele tú por escrito{destino}{plazo}: qué pidió, qué hiciste y, si no "
+        "corresponde, por qué. El sistema no envía la respuesta."
+    )
+
+
+def vista_envios(caso: Caso) -> list[VistaEnvio]:
+    entregas = entregas_del_caso(caso)
+    ids = {d.id for d in entregas}
+    salida = [
+        VistaEnvio(
+            id=d.id,
+            titulo=NOMBRES_ENVIO.get(d.id, TITULOS_DEBER.get(d.id, d.id)),
+            guia=_guia(caso, d),
+            vence=momento(d.vence),
+            envio=caso.envios.get(d.id),
+            boton="Ya lo hice" if d.id == "bloqueo_temporal" else "Ya lo envié",
+            borrador=BORRADOR_DE.get(d.id),
+        )
+        for d in entregas
+    ]
+    for id_deber, envio in caso.envios.items():
+        if id_deber not in ids:
+            salida.append(
+                VistaEnvio(
+                    id=id_deber,
+                    titulo=NOMBRES_ENVIO.get(id_deber, id_deber),
+                    guia="",
+                    vence=None,
+                    envio=envio,
+                    boton="",
+                    borrador=None,
+                    vigente=False,
+                )
+            )
+    return salida
 
 
 @dataclass
@@ -509,6 +672,18 @@ def pasos(caso: Caso) -> list[Paso]:
     tipos = {e.tipo: e for e in reversed(caso.eventos)}
     ia = tipos.get("interpretado")
     sin_hechos = caso.tipo != "solicitud" and caso.hechos_vigentes is None
+    entregas = entregas_del_caso(caso)
+    enviados = sum(1 for d in entregas if d.id in caso.envios)
+    if sin_hechos:
+        envio = Paso("Tú envías", "Espera los hechos", False)
+    elif not entregas:
+        envio = Paso("Tú envías", "Nada que enviar", caso.validacion is not None)
+    else:
+        envio = Paso(
+            "Tú envías",
+            f"{enviados} de {len(entregas)} enviado{'s' if len(entregas) != 1 else ''}",
+            enviados == len(entregas),
+        )
     return [
         Paso("Llegó por el canal", f"{hora(caso.ingreso)} · enlace o código QR", True),
         Paso(
@@ -526,6 +701,7 @@ def pasos(caso: Caso) -> list[Paso]:
             f"Validado a las {hora(caso.validacion.momento)}" if caso.validacion else "Pendiente",
             caso.validacion is not None,
         ),
+        envio,
     ]
 
 
@@ -565,6 +741,7 @@ class Ficha:
     puede_corregir: bool
     falta_para_validar: str | None
     que_te_toca: str
+    envios: list[VistaEnvio] = field(default_factory=list)
     valores: dict[str, Any] = field(default_factory=dict)  # para el formulario de corrección
 
 
@@ -573,13 +750,13 @@ def ficha(caso: Caso, anotaciones: list[Anotacion], ahora: datetime) -> Ficha:
     valores = (
         vigentes.model_dump(mode="json")
         if vigentes
-        else {
-            "datos_personales": True,
-            "vulneracion": "filtracion",
+        else {  # la IA no leyó: el formulario parte vacío para no parecer una lectura
+            "datos_personales": None,
+            "vulneracion": None,
             "categorias_especiales": [],
-            "riesgo_mitigado": False,
-            "ciberincidente": "dudoso",
-            "interrupcion_servicio": False,
+            "riesgo_mitigado": None,
+            "ciberincidente": None,
+            "interrupcion_servicio": None,
             "titulares_aprox": None,
         }
     )
@@ -596,6 +773,7 @@ def ficha(caso: Caso, anotaciones: list[Anotacion], ahora: datetime) -> Ficha:
         puede_corregir=caso.tipo != "solicitud",
         falta_para_validar=por_que_no_validar(caso),
         que_te_toca=que_te_toca(caso),
+        envios=vista_envios(caso),
         valores=valores,
     )
 

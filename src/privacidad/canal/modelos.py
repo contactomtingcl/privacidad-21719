@@ -38,9 +38,14 @@ EstadoCaso = Literal[
 ]
 Urgencia = Literal["inmediata", "alta", "normal"]
 # Motivos fijos: van a la evidencia, así que no pueden traer texto libre con datos personales.
-MotivoCorreccion = Literal["error_ia", "informacion_nueva", "confirmado_por_area", "otro"]
+# «ia_no_leyo» lo pone el sistema (no se elige) cuando el delegado completa un reporte sin lectura.
+MotivoCorreccion = Literal[
+    "error_ia", "informacion_nueva", "confirmado_por_area", "otro", "ia_no_leyo"
+]
 MotivoDecision = Literal["datos_revisados", "consulta_area", "criterio_delegado", "otro"]
 MotivoIdentidad = Literal["contactar_a_quien_reporto", "requerimiento_de_autoridad", "otro"]
+# Por dónde se envió (o se hizo) algo que corresponde. Lista cerrada: va a la evidencia.
+CanalEnvio = Literal["correo", "portal_oficial", "carta", "en_persona", "sistemas_internos", "otro"]
 EstadoConfirmacion = Literal["no_requerida", "pendiente", "confirmada", "corregida", "por_defecto"]
 
 
@@ -136,6 +141,17 @@ class Validacion(BaseModel):
     momento: datetime
 
 
+class Envio(BaseModel):
+    """El delegado dejó constancia de que envió (o hizo) algo que corresponde. El sistema no
+    envía nada: solo registra lo que la persona dice que hizo, con la hora que indica."""
+
+    deber: str
+    canal: CanalEnvio
+    momento: datetime  # cuándo se envió, según el delegado
+    por: str
+    registrado: datetime  # cuándo lo anotó en el sistema
+
+
 class Caso(BaseModel):
     id: str  # también es el código de seguimiento que recibe la persona
     id_organizacion: str
@@ -166,6 +182,7 @@ class Caso(BaseModel):
     correcciones: list[Correccion] = Field(default_factory=list)
     decisiones: dict[str, DecisionDelegado] = Field(default_factory=dict)
     validacion: Validacion | None = None
+    envios: dict[str, Envio] = Field(default_factory=dict)  # deber (o paso de la ANCI) → envío
     eventos: list[Evento] = Field(default_factory=list)
 
     def registrar(self, tipo: str, momento: datetime, /, **detalle: Any) -> None:

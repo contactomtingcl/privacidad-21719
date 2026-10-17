@@ -159,6 +159,7 @@ a.fila:hover{background:var(--sel)}
 .recorrido li:nth-child(2),.recorrido li:nth-child(2) .barra i{animation-delay:.22s}
 .recorrido li:nth-child(3),.recorrido li:nth-child(3) .barra i{animation-delay:.44s}
 .recorrido li:nth-child(4),.recorrido li:nth-child(4) .barra i{animation-delay:.66s}
+.recorrido li:nth-child(5),.recorrido li:nth-child(5) .barra i{animation-delay:.88s}
 .columnas{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
 .principal{flex:3 1 520px;min-width:0;display:flex;flex-direction:column;gap:20px}
 .lateral{flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:20px}
@@ -340,3 +341,13 @@ button:disabled,button:disabled:hover{opacity:.5;cursor:not-allowed;border-color
 .d-pendiente{background:transparent;color:var(--tx3);border:1px dashed var(--line2)}
 .tecnico ul{margin:6px 0 0;padding-left:18px;font-size:12px;line-height:1.7}
 .deber form label{font-size:13px;color:var(--tx2)}
+/* «Ya lo envié» (G1) */
+.e-enviar{color:var(--amb-tx);font-weight:500}
+.reloj.hecho{background:var(--ok-bg);border:1px solid var(--acc)}
+.reloj.hecho .texto small,.reloj.hecho .texto p{color:var(--tx2)}
+.envio .cuerpo p{margin:4px 0}
+.envio-form .rejilla{margin-top:8px}
+.envio-form input[type=datetime-local]{min-height:44px;border-radius:12px;border:1px solid var(--line2);background:var(--panel);color:var(--tx);padding:0 12px}
+/* Formulario sin lectura de la IA (G2) */
+.etiqueta-campo{font-size:13px;color:var(--tx2)}
+.motivo-fijo{margin:6px 0 0;min-height:44px;display:flex;align-items:center;padding:0 12px;border:1px dashed var(--line2);border-radius:12px;color:var(--tx2)}

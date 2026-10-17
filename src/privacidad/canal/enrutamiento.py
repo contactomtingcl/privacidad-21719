@@ -134,7 +134,12 @@ def _como_momento(vence: datetime | date) -> datetime:
 def _urgencia(
     caso: Caso, ahora: datetime, reglas: ReglasUrgencia
 ) -> tuple[Urgencia, str, str | None, datetime | None]:
-    vigentes = [d for d in _deberes(caso) if d.decision in ("si", "revisar")]
+    enviados = set(caso.envios)
+    if "anci_alerta_temprana" in enviados:
+        enviados.add("reporte_anci")  # su plazo es el de la alerta temprana
+    vigentes = [
+        d for d in _deberes(caso) if d.decision in ("si", "revisar") and d.id not in enviados
+    ]
     con_fecha = [(d, _como_momento(d.vence)) for d in vigentes if d.vence is not None]
     proximo, vence = min(con_fecha, key=lambda par: par[1]) if con_fecha else (None, None)
     nombre = NOMBRES_DEBER.get(proximo.id, proximo.id) if proximo else None

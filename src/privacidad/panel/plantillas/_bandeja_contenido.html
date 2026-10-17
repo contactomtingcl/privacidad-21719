@@ -26,7 +26,7 @@
 <div class="tarjeta cifra {{ '' if en_vivo else 'sube' }}">
 <span class="etiqueta">{{ icono("circle-check", 16) }}Validados</span>
 <span class="numero">{{ resumen.validados }}</span>
-<span class="pie">{% if resumen.validados_hoy %}{{ resumen.validados_hoy }} hoy{% else %}Ninguno hoy{% endif %}</span>
+<span class="pie {% if resumen.por_enviar %}ambar{% endif %}">{% if resumen.por_enviar %}{{ resumen.por_enviar }} con algo por enviar: siguen en la bandeja{% elif resumen.validados_hoy %}{{ resumen.validados_hoy }} hoy{% else %}Ninguno hoy{% endif %}</span>
 </div>
 </section>
 
@@ -44,7 +44,7 @@
 </div>
 <div class="botones">
 {% if siguiente %}{% for destino, texto in siguiente.borradores %}<a class="boton primario" href="{{ BASE }}/caso/{{ u.id }}/borrador/{{ destino }}">{{ texto }}</a>{% endfor %}{% endif %}
-<a class="boton {% if not (siguiente and siguiente.borradores) %}primario{% endif %}" href="{{ BASE }}/caso/{{ u.id }}">Abrir y validar</a>
+<a class="boton {% if not (siguiente and siguiente.borradores) %}primario{% endif %}" href="{{ BASE }}/caso/{{ u.id }}">{% if urgente.caso.validacion %}Abrir y enviar{% else %}Abrir y validar{% endif %}</a>
 </div>
 </section>
 {% endif %}

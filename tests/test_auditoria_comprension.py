@@ -8,6 +8,7 @@ import re
 import unittest
 
 from privacidad.canal.delegado import AccionInvalida
+from privacidad.motor import HechosIncidente
 from privacidad.panel import vista
 
 from .canal_apoyo import HECHOS_INCIDENTE, SOLICITUD_AMBIGUA, ClienteFalso, crear_canal
@@ -161,3 +162,46 @@ class TestRegistro(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestFormularioSinLectura(Ficha):
+    """G2: si la IA no leyó, el formulario parte vacío y el motivo lo pone el sistema."""
+
+    def test_parte_vacio_con_motivo_fijo(self):
+        html = self.abrir(None)
+        formulario = html[html.index("/corregir") :]
+        formulario = formulario[: formulario.index("</form>")]
+        self.assertEqual(formulario.count('<option value="" disabled selected>Elige…</option>'), 5)
+        self.assertNotIn("selected>Se filtraron datos", formulario)
+        self.assertIn("La IA no pudo leerlo", formulario)
+        self.assertIn('name="motivo" value="ia_no_leyo"', formulario)
+        self.assertNotIn("La IA leyó mal el mensaje", formulario)
+        self.assertIn("Completa lo que sepas", formulario)
+        self.assertIn("Guardar los hechos", formulario)
+
+    def test_el_motivo_queda_como_sin_lectura_aunque_manden_otro(self):
+        self.abrir(None)
+        hechos = HechosIncidente(
+            datos_personales=True,
+            vulneracion="filtracion",
+            riesgo_mitigado=False,
+            ciberincidente="no",
+        )
+        caso = self.canal.corregir_hechos(
+            MUNI, self.caso.id, hechos, motivo="error_ia", por="delegado-muni"
+        )
+        self.assertEqual(caso.correcciones[-1].motivo, "ia_no_leyo")
+        with self.assertRaises(AccionInvalida):
+            self.canal.corregir_hechos(
+                MUNI,
+                self.caso.id,
+                hechos.model_copy(update={"vulneracion": "perdida"}),
+                motivo="ia_no_leyo",
+                por="delegado-muni",
+            )
+
+    def test_con_lectura_de_la_ia_el_motivo_se_elige(self):
+        html = self.abrir(ClienteFalso(registrar_hechos=HECHOS_INCIDENTE))
+        formulario = html[html.index("/corregir") :]
+        self.assertIn('<select id="motivo-correccion" name="motivo" required>', formulario)
+        self.assertIn("Aplicar corrección", formulario)
