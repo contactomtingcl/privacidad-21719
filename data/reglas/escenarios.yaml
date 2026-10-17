@@ -1,0 +1,49 @@
+# Escenarios del simulador. Lo que corresponde hacer ante un incidente no cambia entre
+# escenarios (lo decide el motor con las reglas de reglas.yaml); cambia desde cuándo es exigible
+# y qué sanción arriesga quien no lo hace. Ningún escenario reemplaza la regla vigente.
+version: "2026-10-17"
+
+escenarios:
+  vigente:
+    nombre: Ley vigente
+    estado: Ley publicada (Ley N° 21.719).
+    vigencia_ley_21719: 2026-12-01
+    amonestacion_a_todos: false
+    fuente: {norma: ley-21719, articulo: transitorio primero, fragmento: "entrarán en vigencia el día primero del mes vigésimo cuarto posterior a la publicación de esta ley en el Diario Oficial"}
+
+  postergacion:
+    nombre: Si se aprueba la postergación
+    estado: "Proyecto en trámite (Boletín N° 18.623-07): ingresó al Senado el 1 de septiembre de 2026. No es ley."
+    vigencia_ley_21719: 2027-12-01
+    amonestacion_a_todos: true
+    documento: proyectos/boletin-18623-07.txt
+    fragmento: "1 de diciembre de 2027"
+    url: https://tramitacion.senado.cl/appsenado/index.php?mo=tramitacion&ac=getDocto&iddocto=19307&tipodoc=mensaje_mocion
+
+# Consecuencias de no cumplir, con su fuente verificada contra el corpus.
+sanciones:
+  omitir_comunicacion:
+    texto: Omitir la comunicación de una vulneración es infracción grave; omitirla deliberadamente, gravísima.
+    fuentes:
+      - {norma: ley-19628, articulo: 34 ter, fragmento: "Omitir las comunicaciones o los registros en los casos de vulneración de las medidas de seguridad"}
+      - {norma: ley-19628, articulo: 34 quater, fragmento: "Omitir en forma deliberada la comunicación de las vulneraciones a las medidas de seguridad"}
+  multa_privados:
+    texto: "Multa de hasta 10.000 UTM si es grave y de hasta 20.000 UTM si es gravísima."
+    fuentes:
+      - {norma: ley-19628, articulo: "35", fragmento: "Las infracciones graves serán sancionadas con multa de hasta 10.000 unidades tributarias mensuales"}
+      - {norma: ley-19628, articulo: "35", fragmento: "Las infracciones gravísimas serán sancionadas con multa de hasta 20.000 unidades tributarias mensuales"}
+  multa_organos_publicos:
+    texto: "Multa al jefe superior del servicio de 20% a 50% de su remuneración mensual; con datos sensibles, 50% y suspensión de hasta 30 días."
+    fuentes:
+      - {norma: ley-19628, articulo: "44", fragmento: "multa de veinte por ciento a cincuenta por ciento de la remuneración mensual del jefe superior del órgano público infractor"}
+      - {norma: ley-19628, articulo: "44", fragmento: "la multa será del cincuenta por ciento de la remuneración mensual del jefe superior del órgano público y procederá la suspensión en el cargo de hasta treinta días"}
+  amonestacion_primer_anio:
+    texto: Durante los primeros doce meses de vigencia, la Agencia puede aplicar una amonestación por escrito en vez de multa.
+    fuentes:
+      - {norma: ley-21719, articulo: transitorio sexto, fragmento: "Durante los primeros doce meses luego de la entrada en vigencia de esta ley"}
+      - {norma: ley-21719, articulo: transitorio sexto, fragmento: "la Agencia podrá aplicar como sanción una amonestación por escrito"}
+  omitir_reporte_anci:
+    texto: "No reportar a la ANCI es infracción grave: multa de hasta 10.000 UTM, o hasta 20.000 UTM si es operador de importancia vital."
+    fuentes:
+      - {norma: ley-21663, articulo: "38", fragmento: "Incumplir la obligación de reportar establecida en el artículo 9"}
+      - {norma: ley-21663, articulo: "40", fragmento: "Las infracciones graves serán sancionadas con multa de hasta 10.000 unidades tributarias mensuales, o hasta 20.000 unidades tributarias mensuales si se trata de un operador de importancia vital"}

@@ -739,6 +739,79 @@ def vista_destinos(caso: Caso, organizacion: str, url_panel: str | None) -> list
     return salida
 
 
+# --- simulador de escenarios ---------------------------------------------------------
+
+EJEMPLOS_SIMULADOR = {
+    "paseo": (
+        "Planilla del paseo enviada por error a un proveedor (84 niños y niñas, con alergias)",
+        {
+            "datos_personales": True,
+            "vulneracion": "comunicacion_no_autorizada",
+            "categorias_especiales": ["menores_14", "sensibles"],
+            "riesgo_mitigado": False,
+            "ciberincidente": "no",
+            "interrupcion_servicio": False,
+            "titulares_aprox": 84,
+        },
+    ),
+    "clientes": (
+        "Ciberataque con acceso a la base de clientes (datos financieros)",
+        {
+            "datos_personales": True,
+            "vulneracion": "acceso_no_autorizado",
+            "categorias_especiales": ["financieros"],
+            "riesgo_mitigado": False,
+            "ciberincidente": "si",
+            "interrupcion_servicio": False,
+            "titulares_aprox": 1200,
+        },
+    ),
+    "caida": (
+        "Ransomware que detiene la atención y cifra fichas con datos de salud",
+        {
+            "datos_personales": True,
+            "vulneracion": "alteracion",
+            "categorias_especiales": ["sensibles"],
+            "riesgo_mitigado": False,
+            "ciberincidente": "si",
+            "interrupcion_servicio": True,
+            "titulares_aprox": 5000,
+        },
+    ),
+}
+NOMBRES_SIMULADOR = {
+    "aviso_agencia": "Avisar a la Agencia de Protección de Datos",
+    "aviso_titulares": "Avisar a cada persona afectada",
+    "reporte_anci": "Reportar a la ANCI (Ley 21.663)",
+}
+
+
+@dataclass
+class FilaComparada:
+    deber: str
+    titulo: str
+    decision: str
+    columnas: list[Any]  # una FilaSimulada por escenario
+    cambia: bool
+
+
+def comparar_filas(simulaciones: list) -> list[FilaComparada]:
+    salida = []
+    for i, fila in enumerate(simulaciones[0].filas):
+        columnas = [s.filas[i] for s in simulaciones]
+        firma = {(c.exigible, c.nota, tuple(x.texto for x in c.consecuencias)) for c in columnas}
+        salida.append(
+            FilaComparada(
+                deber=fila.deber,
+                titulo=NOMBRES_SIMULADOR.get(fila.deber, fila.deber),
+                decision=DECISION[fila.decision],
+                columnas=columnas,
+                cambia=len(firma) > 1,
+            )
+        )
+    return salida
+
+
 @dataclass
 class Paso:
     titulo: str

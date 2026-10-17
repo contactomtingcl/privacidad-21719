@@ -142,7 +142,7 @@ Validado por {{ c.validacion.por }} a las {{ c.validacion.momento | hora }}</spa
 </section>
 
 <section class="tarjeta" aria-label="Lo que decide el motor de reglas">
-<h2>Lo que decide el motor de reglas</h2>
+<div class="cabecera"><h2>Lo que decide el motor de reglas</h2>{% if c.tipo != "solicitud" and c.hechos_vigentes %}<a href="{{ BASE }}/simulador?caso={{ c.id }}">Simular este caso con la postergación</a>{% endif %}</div>
 {% if not f.deberes %}<p class="suave">Todavía no hay deberes calculados.</p>{% endif %}
 {% for d in f.deberes %}
 <div class="deber {% if cambio in ('corregido', 'resuelto') %}cambio{% endif %}">

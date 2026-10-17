@@ -26,7 +26,7 @@ import tempfile
 import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -56,8 +56,9 @@ from ..canal.servicio import CanalReporte
 from ..canal.web import _leer_formulario, _uno
 from ..guardia import DatosNoSinteticosError
 from ..iconos import icono
-from ..motor import HechosIncidente
+from ..motor import HechosIncidente, escenarios
 from ..reportes import DESTINOS, NOMBRE_DESTINO, Borrador, ultima_revision
+from ..reportes.borradores import PERFILES
 from . import vista
 from .salas import SalasDemo
 from .usuarios import LimiteIntentos, RegistroUsuarios
@@ -565,6 +566,57 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
 
         return await accion(request, hacer, "enviado")
 
+    async def simulador(request: Request) -> Response:
+        """Mismo incidente, ley vigente y postergación lado a lado. No guarda nada."""
+        ctx = contexto(request)
+        q = request.query_params
+        id_caso = q.get("caso", "")
+        caso_base = None
+        if id_caso:
+            try:
+                caso_base = ctx.canal.caso_de_organizacion(ctx.org.id, id_caso)
+            except CasoAjeno as e:
+                raise HTTPException(404) from e
+        ejemplo = q.get("ejemplo", "paseo")
+        if ejemplo not in vista.EJEMPLOS_SIMULADOR:
+            ejemplo = "paseo"
+        if caso_base is not None and caso_base.hechos_vigentes is not None:
+            hechos = caso_base.hechos_vigentes
+        else:
+            caso_base = None
+            hechos = HechosIncidente(**vista.EJEMPLOS_SIMULADOR[ejemplo][1])
+        perfil = q.get("perfil", ctx.org.perfil)
+        if perfil not in PERFILES:
+            perfil = ctx.org.perfil
+        try:
+            fecha = date.fromisoformat(q.get("fecha", "2027-03-01"))
+        except ValueError:
+            fecha = date(2027, 3, 1)
+        enviado = "fecha" in q
+        oiv = q.get("oiv") == "1" if enviado else ctx.org.operador_importancia_vital
+        menor = q.get("menor") == "1"
+        simulaciones = escenarios.comparar(hechos, perfil, fecha, oiv=oiv, menor_tamano=menor)  # type: ignore[arg-type]
+        return responder(
+            "simulador.html",
+            ctx=ctx,
+            organizaciones=organizaciones,
+            seccion="simulador",
+            simulaciones=simulaciones,
+            filas=vista.comparar_filas(simulaciones),
+            ejemplos=vista.EJEMPLOS_SIMULADOR,
+            ejemplo=ejemplo,
+            caso_base=caso_base,
+            perfiles=PERFILES,
+            perfil=perfil,
+            fecha=fecha,
+            oiv=oiv,
+            menor=menor,
+            extracto=next(
+                (escenarios.extracto(s.escenario) for s in simulaciones if s.escenario.documento),
+                None,
+            ),
+        )
+
     async def derivar(request: Request) -> Response:
         def hacer(ctx: Contexto, datos: dict, id_caso: str) -> None:
             motivo = _uno(datos, "motivo")
@@ -774,6 +826,7 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
         Route("/caso/{id}/borrador/{destino}/descargar", descargar_borrador, methods=["GET"]),
         Route("/caso/{id}/borrador/{destino}/revisado", marcar_revisado, methods=["POST"]),
         Route("/canal", ver_canal, methods=["GET"]),
+        Route("/simulador", simulador, methods=["GET"]),
         Route("/evidencia", evidencia, methods=["GET"]),
         Route("/evidencia/revisar", evidencia_revisar, methods=["POST"]),
         Route("/evidencia/simular", evidencia_simular, methods=["POST"]),

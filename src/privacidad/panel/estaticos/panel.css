@@ -356,3 +356,16 @@ button:disabled,button:disabled:hover{opacity:.5;cursor:not-allowed;border-color
 .estado-aviso.fallido{color:var(--red-tx)}
 .aviso-asunto{margin:6px 0 4px;font-size:12px;color:var(--tx2)}
 .aviso-cuerpo{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.6 "IBM Plex Mono",monospace;color:var(--tx2);background:var(--bg);border-radius:8px;padding:10px}
+/* Simulador de escenarios */
+.simulador-form .rejilla{margin-bottom:8px}
+.simulador-form input[type=date]{min-height:44px;border-radius:12px;border:1px solid var(--line2);background:var(--panel);color:var(--tx);padding:0 12px}
+.tabla-simulador{display:flex;flex-direction:column}
+.fila-sim{display:grid;grid-template-columns:minmax(160px,1fr) 2fr 2fr;gap:16px;padding:14px 0;border-top:1px solid var(--line)}
+.fila-sim.titulos{border-top:0;font-size:13px}
+.fila-sim span{display:flex;flex-direction:column;gap:6px;min-width:0}
+.fila-sim small{color:var(--tx3);font-size:12px;line-height:1.5}
+.fila-sim p{margin:0;font-size:14px;line-height:1.5}
+.fila-sim.cambia{background:linear-gradient(90deg,var(--amb-bg),transparent)}
+.fila-sim .pildora{align-self:flex-start}
+.consecuencias{margin:0;padding-left:18px;font-size:13px;line-height:1.5;color:var(--tx2)}
+@media (max-width:760px){.fila-sim{grid-template-columns:1fr}.fila-sim.titulos{display:none}}

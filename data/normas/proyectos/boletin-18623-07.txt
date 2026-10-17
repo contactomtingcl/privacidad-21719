@@ -1,0 +1,13 @@
+# documento: Boletín N° 18.623-07, proyecto de ley (mensaje presidencial del 31 de agosto de 2026)
+# estado: en trámite. No es ley: el simulador lo muestra como escenario, nunca como regla vigente.
+# fuente: https://tramitacion.senado.cl/appsenado/index.php?mo=tramitacion&ac=getDocto&iddocto=19307&tipodoc=mensaje_mocion
+# revisado: 17 de octubre de 2026. Ingresó al Senado el 1 de septiembre de 2026 (primer trámite).
+#
+# Extracto de lo que usa el simulador. No es el texto completo del proyecto: lo que va entre
+# comillas es literal; el resto es un resumen.
+
+Numeral 2 (artículo primero transitorio de la Ley N° 21.719): reemplaza la frase "día primero del mes vigésimo cuarto posterior a la publicación de esta ley en el Diario Oficial" por "1 de diciembre de 2027".
+
+Numeral 4 (artículo sexto transitorio de la Ley N° 21.719), resumen: suprime la limitación a las empresas de menor tamaño, de modo que durante los primeros doce meses de vigencia la Agencia pueda aplicar una amonestación por escrito en vez de multa a cualquier responsable de datos.
+
+Otros cambios del proyecto que el simulador no usa, resumen: el Consejo Directivo de la Agencia pasa de tres a cinco consejeros y cambia el plazo para designarlo.

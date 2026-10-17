@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block titulo %}Simulador de escenarios{% endblock %}
+{% block cuerpo %}
+<header class="cabecera">
+<div>
+<h1>Simulador de escenarios</h1>
+<p class="quien-decide">{{ icono("info", 16) }}<span>Lo que corresponde hacer no cambia entre escenarios: lo decide el motor con las reglas vigentes. Cambia desde cuándo es exigible y qué sanción se arriesga. Aquí no se guarda nada.</span></p>
+</div>
+</header>
+
+<form class="tarjeta simulador-form" method="get" action="{{ BASE }}/simulador">
+{% if caso_base %}<input type="hidden" name="caso" value="{{ caso_base.id }}">{% endif %}
+<div class="rejilla">
+<div class="campo"><label for="ejemplo">Incidente</label>
+{% if caso_base %}<p class="motivo-fijo">Los hechos del caso <span class="mono">{{ caso_base.id }}</span></p>
+{% else %}<select id="ejemplo" name="ejemplo">{% for id, (nombre, _) in ejemplos.items() %}<option value="{{ id }}" {% if id == ejemplo %}selected{% endif %}>{{ nombre }}</option>{% endfor %}</select>{% endif %}</div>
+<div class="campo"><label for="fecha">Fecha en que se supo</label>
+<input id="fecha" name="fecha" type="date" value="{{ fecha.isoformat() }}" required></div>
+<div class="campo"><label for="perfil">Tipo de organización</label>
+<select id="perfil" name="perfil">{% for k, v in perfiles.items() %}<option value="{{ k }}" {% if k == perfil %}selected{% endif %}>{{ v }}</option>{% endfor %}</select></div>
+</div>
+<label class="opcion"><input type="checkbox" name="oiv" value="1" {% if oiv %}checked{% endif %}> Calificada como operador de importancia vital (Ley 21.663)</label>
+<label class="opcion"><input type="checkbox" name="menor" value="1" {% if menor %}checked{% endif %}> Empresa de menor tamaño (Ley 20.416)</label>
+<div class="acciones"><button class="primario" type="submit">Simular</button></div>
+</form>
+
+<section class="tarjeta" aria-labelledby="titulo-comparacion">
+<h2 id="titulo-comparacion">Si se supo el {{ fecha | fecha }}</h2>
+<div class="tabla-simulador" role="table" aria-label="Comparación de escenarios">
+<div class="fila-sim titulos" role="row">
+<span role="columnheader">Deber</span>
+{% for s in simulaciones %}<span role="columnheader"><b>{{ s.escenario.nombre }}</b><small>{{ s.escenario.estado }} Ley 21.719 desde el {{ s.escenario.vigencia_ley_21719 | fecha }}.</small></span>{% endfor %}
+</div>
+{% for f in filas %}
+<div class="fila-sim {% if f.cambia %}cambia{% endif %}" role="row">
+<span role="rowheader"><b>{{ f.titulo }}</b><small>Motor: {{ f.decision }}</small>{% if f.cambia %}<span class="pildora marca-d d-si">Cambia</span>{% endif %}</span>
+{% for c in f.columnas %}
+<span role="cell">
+{% if c.decision == "no" %}<span class="pildora marca-d d-no">No corresponde</span>
+{% elif c.exigible %}<span class="pildora marca-d d-si">Exigible</span>
+{% else %}<span class="pildora marca-d d-pendiente">Aún no exigible</span>{% endif %}
+<p>{{ c.nota }}</p>
+{% if c.consecuencias %}<ul class="consecuencias">{% for s in c.consecuencias %}<li>{{ s.texto }}<details class="fuente"><summary>Ver fuente legal</summary>{% for cita in s.fuentes %}<blockquote>{{ cita.norma | norma }}, art. {{ cita.articulo }}: «{{ cita.fragmento }}»</blockquote>{% endfor %}</details></li>{% endfor %}</ul>{% endif %}
+</span>
+{% endfor %}
+</div>
+{% endfor %}
+</div>
+</section>
+
+{% if extracto %}
+<details class="tarjeta fuente">
+<summary>Qué propone el proyecto de postergación (extracto guardado en el repositorio)</summary>
+<pre class="aviso-cuerpo">{{ extracto }}</pre>
+{% for s in simulaciones %}{% if s.escenario.url %}<p><a href="{{ s.escenario.url }}" rel="noopener" target="_blank">Ver el proyecto en el sitio del Senado</a></p>{% endif %}{% endfor %}
+</details>
+{% endif %}
+{% endblock %}
