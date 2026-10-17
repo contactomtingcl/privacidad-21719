@@ -123,7 +123,17 @@ IA, confirmaciones de titulares). Pantalla Evidencia y comando `correcciones`. A
 medida: sale de las pruebas con usuarios. Ojo: la demo pública es compartida; las correcciones
 de un participante las ve el siguiente (falta reiniciar casos entre pruebas).
 
-Pendiente técnico, en orden: reinicio de la demo para pruebas con usuarios, avisos por correo/Telegram a los destinos, completar el motor
+Auditoría de comprensión del delegado (17 oct, artifact "Auditoría de comprensión del delegado
+— Privacidad 21.719"): 6 graves (G1-G6), 13 de lenguaje (I1-I13), 5 menores. Decisiones de
+Matías: entran «Ya lo envié» por deber (validar no es enviar; el caso sigue en la bandeja hasta
+enviar lo que corresponde) y «Derivar a…» un área (mismo correo que los avisos; reservados sin
+identidad). Criterio: un texto o botón de una función planificada para la versión final se
+conserva («Se envió a» se queda porque vienen los avisos); se cambia solo si no llegará.
+
+Pendiente técnico, en orden: (sáb 17) registro de evidencia por organización + copia limpia de
+la demo por participante + textos y diseño de la auditoría; (dom 18) «Ya lo envié», formulario
+vacío si la IA no leyó, cómo responder a la persona; (19-20) avisos por correo/Telegram a los
+destinos + «Derivar a…»; completar el motor
 (perfiles, operadores de importancia vital, simulador). Si se cumple la puerta de calidad del 23 de octubre:
 red de cascada y sello de tiempo. Rediseño contrafactual e impacto de proyectos de ley entran
 seguro.
