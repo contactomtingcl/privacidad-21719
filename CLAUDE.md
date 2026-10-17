@@ -57,7 +57,7 @@ sintéticos, detección y enmascarado, inventario con IA (11 campos del DS 662),
 reglas (Agencia, titulares, ANCI, plazos de solicitudes), interpretación con IA de
 solicitudes e incidentes, set de 150 casos y evaluación en tres niveles (iteración 2:
 IA + motor 76/77 deberes detectados; iteración 3 del 12 oct con frase de respaldo: 76/77, solicitudes
-98%). 507 pruebas (5 omitidas sin segno) en verde.
+98%). 532 pruebas (5 omitidas sin segno) en verde.
 
 Canal de reporte (primera versión, 10 oct): enlace firmado y QR (segno), confirmación al
 titular con menú fijo y, sin respuesta a los 5 días, lectura reversible: oposición + bloqueo
@@ -170,9 +170,24 @@ Sábado 17 (tarde), adelantado:
   versión mínima con el motor; sugerencia «¿Es esta planilla?» en la ficha del caso. La demo
   precarga nómina, clientes y proveedores; el paseo se sube en vivo.
 
-Pendiente técnico: matriz de riesgos leve/grave/gravísima por actividad (P1), avisos por
-Telegram (P1), impacto de proyectos de ley sobre el inventario (más allá del simulador). Si se
-cumple la puerta de calidad del 23 de octubre: red de cascada y sello de tiempo.
+Sábado 17 (tarde, segunda parte):
+- Riesgo de infracción por planilla (`inventario/riesgos.py`, `data/reglas/riesgos.yaml`): 34 ter
+  a, b, c, g y 34 quáter e; sanción art. 35 o art. 44 si es organismo público; se recalcula en
+  la versión mínima. Se muestra como riesgo si no se corrige, no como infracción.
+- Red de cascada (`canal/cascada.py`, `data/canal/proveedores.yaml`, `/proveedor/{id}/{firma}`,
+  `/panel/proveedores`): proveedor ficticio Remuneraciones del Sur SpA; formulario cerrado sin
+  IA; un caso por cliente con sus datos y su motor (`Caso.cascada`, evento `cascada`); firma con
+  sal propia. Tercera organización ficticia: `clinica-del-valle` (perfil salud).
+- Avisos por Telegram (`avisos.Telegram`, urllib) con `PRIVACIDAD_TELEGRAM_TOKEN` y `telegram`
+  por destino en enrutamiento.yaml; `salio_de_verdad` decide «enviado» o «simulado».
+- Demo: «Simular caída de la IA» por sala (`salas.ClienteCaido`, marca `ia-caida`,
+  `CanalReporte.con_cliente`), en Canal y código QR.
+- Auditoría menor: M1 menú compacto en celular (js-listo + botón Menú), M3, M4 (código de
+  seguimiento seleccionable, sin JS), M5 (borrador ANCI). Ficha: con lectura, primero decisión y
+  envíos (`_caso_decision.html`, `_caso_llego.html`).
+
+Pendiente técnico: sello de tiempo (necesita una autoridad de sellado con red y una librería
+RFC 3161; decidirlo), impacto de proyectos de ley sobre el inventario (más allá del simulador).
 
 Hallazgo del 11 oct, sin resolver: si el titular no responde, la lectura por defecto agrega
 un bloqueo temporal cuyo plazo (2 días hábiles desde el ingreso) normalmente ya venció. El

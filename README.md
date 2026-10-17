@@ -33,6 +33,8 @@ Funciona sin conexión y sin llave de IA: la demo usa respuestas de la IA grabad
 3. **Canal y código QR** → abre el canal (o escanea el QR con el teléfono) y envía un reporte: aparece solo en la bandeja.
 4. **Registro de lo actuado** → «Simular una alteración»: la cadena SHA-256 detecta el cambio.
 5. **Simulador de escenarios** → el mismo incidente con la ley vigente y con la postergación en trámite (Boletín 18.623-07), lado a lado.
+6. **Proveedores (red)** → «Abrir el canal del proveedor» y reporta un incidente: llega un caso a cada organización cliente (cambia de organización arriba), cada una con sus plazos.
+7. **Canal y código QR** → «Simular caída de la IA» y envía un reporte: no se pierde, queda «Sin lectura de la IA» con los plazos corriendo.
 
 ## Estado
 
@@ -59,6 +61,9 @@ En construcción (entrega: 28 de octubre de 2026). Avance actual:
 | Operadores de importancia vital (Ley 21.663): 24 h y plan de acción en 7 días | Primera versión |
 | Simulador de escenarios: ley vigente frente a la postergación (Boletín 18.623-07) | Primera versión |
 | Inventario en el panel: subir planilla, registro del DS 662 y versión mínima con el motor | Primera versión |
+| Riesgo de infracción por planilla (leve, grave o gravísima) con su artículo | Primera versión |
+| Red de cascada: un proveedor reporta una vez y cada cliente recibe su caso | Primera versión ([cómo funciona](#red-de-cascada)) |
+| Avisos por Telegram (opcional) y simulación de caída de la IA en la demo | Primera versión |
 
 ## Cómo ejecutar
 
@@ -218,6 +223,14 @@ En `/panel/inventario` se sube una planilla (.xlsx o .csv, hasta 2 MB) o se anal
 - La IA ve los encabezados y la forma de los valores, nunca los valores. Las planillas de ejemplo usan la respuesta de la IA grabada en `resultados/inventario_demo.json` (se reconocen por su huella SHA-256); las alertas se calculan siempre con código.
 - **Versión mínima:** quita las columnas que el registro marca como innecesarias y el motor vuelve a decidir qué habría que hacer si la planilla se filtrara. En la base de clientes de ejemplo, sin las columnas de compras deja de corresponder avisar a cada persona; en la del paseo se quita el RUT de los niños, pero los deberes siguen (hay datos de salud y de menores).
 - El delegado valida el registro. La ficha de un caso sugiere la planilla que el mensaje parece nombrar, sin cambiar ningún hecho ni deber.
+
+## Red de cascada
+
+Un proveedor que trata datos de varias organizaciones (en la demo, «Remuneraciones del Sur SpA», ficticio) reporta un incidente **una sola vez** desde su enlace firmado, con un formulario cerrado y sin IA: servicios afectados, qué ocurrió, si afectó sistemas y si se interrumpió el servicio.
+
+- Cada organización cliente que usa un servicio afectado recibe **su propio caso**, con los datos que ella le entrega al proveedor (`data/canal/proveedores.yaml`), y su motor decide con su perfil: la empresa privada no tiene reloj de la ANCI; el municipio y la clínica sí.
+- El plazo de cada cliente corre desde que le llega el reporte. Ningún cliente ve el caso de otro; el proveedor ve a quién llegó, no sus decisiones.
+- En el producto, la relación proveedor-cliente sale del inventario de cada organización y del contrato de encargo; en la demo está escrita a mano.
 
 ## Simulador de escenarios
 
