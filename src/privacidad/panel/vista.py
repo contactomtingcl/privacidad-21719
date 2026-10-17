@@ -202,25 +202,39 @@ def ordenar(casos: list[Caso]) -> list[Caso]:
 @dataclass
 class Resumen:
     abiertos: int
-    plazos: int
-    plazos_cercanos: int
-    por_validar: int
-    revision: int
+    plazos: int  # casos abiertos con una fecha límite legal (corriendo o ya vencida)
+    plazos_vencidos: int
+    plazos_cercanos: int  # vencen dentro de 3 horas; no incluye los ya vencidos
+    por_validar: int  # la IA propuso y el delegado aún no valida
+    revision: int  # la IA no pudo leerlos: el delegado los lee y valida igual
     validados: int
+    validados_hoy: int
+
+    @property
+    def para_validar(self) -> int:
+        """Todo lo que espera la validación del delegado, haya o no lectura de la IA."""
+        return self.por_validar + self.revision
 
 
 def resumen_bandeja(casos: list[Caso], ahora: datetime) -> Resumen:
     abiertos = [c for c in casos if c.validacion is None]
     con_plazo = [c for c in abiertos if c.asignacion and c.asignacion.vence]
+    vencidos = [c for c in con_plazo if c.asignacion.vence <= ahora]
+    hoy = ahora.astimezone(ZONA_CHILE).date()
+    validados = [c for c in casos if c.validacion is not None]
     return Resumen(
         abiertos=len(abiertos),
         plazos=len(con_plazo),
+        plazos_vencidos=len(vencidos),
         plazos_cercanos=sum(
-            1 for c in con_plazo if c.asignacion.vence - ahora <= timedelta(hours=3)
+            1 for c in con_plazo if timedelta(0) < c.asignacion.vence - ahora <= timedelta(hours=3)
         ),
         por_validar=sum(1 for c in abiertos if estado_de(c)[1] == "validar"),
         revision=sum(1 for c in abiertos if estado_de(c)[1] == "revision"),
-        validados=len(casos) - len(abiertos),
+        validados=len(validados),
+        validados_hoy=sum(
+            1 for c in validados if c.validacion.momento.astimezone(ZONA_CHILE).date() == hoy
+        ),
     )
 
 
@@ -270,6 +284,9 @@ def vista_deberes(caso: Caso) -> list[VistaDeber]:
     return salida
 
 
+TITULO_RELOJ_ANCI = "Primer aviso a la ANCI"
+
+
 @dataclass
 class Reloj:
     titulo: str
@@ -289,7 +306,7 @@ def relojes(caso: Caso, ahora: datetime) -> list[Reloj]:
             vence = momento(primero.vence)
             salida.append(
                 Reloj(
-                    titulo="Primer aviso a la ANCI",
+                    titulo=TITULO_RELOJ_ANCI,
                     detalle="Después: actualización a las 72 horas e informe final a los 15 días.",
                     vence=vence,
                     total_s=int((vence - caso.ingreso).total_seconds()) if vence else 0,
@@ -334,6 +351,36 @@ def relojes(caso: Caso, ahora: datetime) -> list[Reloj]:
                     )
                 )
     return salida
+
+
+@dataclass
+class SiguientePaso:
+    """Qué hacer cuando el plazo más cercano ya venció. No decide nada: el deber no cambia."""
+
+    texto: str
+    borradores: list[tuple[str, str]]  # (destino, texto del botón)
+
+
+def siguiente_paso(f: Ficha, destinos_con_borrador: list[str]) -> SiguientePaso:
+    reloj = f.relojes[0]
+    if reloj.titulo == TITULO_RELOJ_ANCI:
+        texto = (
+            "Venció el plazo del primer aviso a la ANCI, pero el deber sigue: envíalo cuanto "
+            "antes por el canal oficial."
+        )
+    elif f.caso.tipo == "solicitud":
+        texto = (
+            f"Venció el plazo para «{reloj.titulo.lower()}», pero el deber sigue: "
+            "respóndele a la persona cuanto antes."
+        )
+    else:
+        texto = (
+            "Venció el plazo que correría si fuera un ciberincidente: lee el reporte y "
+            "completa los hechos cuanto antes."
+        )
+    corto = {"anci": "la ANCI", "agencia": "la Agencia"}
+    botones = [(d, f"Abrir borrador para {corto[d]}") for d in destinos_con_borrador]
+    return SiguientePaso(texto, botones)
 
 
 @dataclass

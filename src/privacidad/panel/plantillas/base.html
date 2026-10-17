@@ -35,6 +35,7 @@
 <span class="avatar" aria-hidden="true">DP</span>
 <span>{{ ctx.usuario }}<small>{{ ctx.org.nombre }}</small></span>
 </div>
+<button type="button" class="discreto tema" data-cambiar-tema>{{ icono("sun-moon", 18) }}<span data-tema-texto>Usar tema claro</span></button>
 <form method="post" action="{{ BASE }}/salir">
 <input type="hidden" name="csrf" value="{{ ctx.csrf }}">
 <button type="submit" class="discreto">{% if ctx.demo %}Reiniciar la sesión de demo{% else %}Salir{% endif %}</button>

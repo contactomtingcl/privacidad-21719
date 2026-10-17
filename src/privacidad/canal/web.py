@@ -34,6 +34,8 @@ from starlette.responses import HTMLResponse, RedirectResponse, Response
 from starlette.routing import Mount, Route
 
 from ..guardia import DatosNoSinteticosError
+from ..iconos import icono
+from ..motor import cargar_reglas
 from . import qr
 from .confirmacion import ETIQUETAS_DERECHO, RespuestaInvalida, dias_de_espera
 from .modelos import Caso, Organizacion
@@ -49,6 +51,32 @@ TIPOS = {
     "incidente": "Quiero avisar de un incidente de seguridad",
     "aviso_proveedor": "Soy proveedor y quiero avisar de un incidente",
 }
+# Una línea por opción: quién la usa y un ejemplo, para elegir sin leer instrucciones.
+AYUDA_TIPOS = {
+    "solicitud": (
+        "user-round",
+        "Para clientes, trabajadores, vecinos o cualquier persona cuyos datos tenga la "
+        "organización.",
+        "«Quiero saber qué datos tienen de mí» o «No me envíen más publicidad».",
+    ),
+    "incidente": (
+        "triangle-alert",
+        "Si supo que algo pasó con datos de personas.",
+        "«Mandaron una planilla con datos de personas al correo equivocado».",
+    ),
+    "aviso_proveedor": (
+        "building",
+        "Para empresas que manejan datos por encargo de la organización.",
+        "«Nuestro sistema, donde están sus datos, tuvo un acceso indebido».",
+    ),
+}
+
+
+def plazo_respuesta() -> dict[str, int]:
+    """Días que da la ley para responder a quien ejerce un derecho, leídos de las reglas."""
+    p = cargar_reglas()["reglas"]["respuesta_solicitud"]["plazo"]
+    return {"dias": int(p["valor"]), "prorroga": int(p["prorroga_dias_corridos"])}
+
 
 MENSAJE_NO_SINTETICO = (
     "Detectamos datos que parecen reales (RUT, correo o teléfono). Este prototipo solo admite "
@@ -89,6 +117,9 @@ def crear_entorno() -> Environment:
     entorno.filters["fecha"] = fecha_larga
     entorno.globals["ETIQUETAS_DERECHO"] = ETIQUETAS_DERECHO
     entorno.globals["TIPOS"] = TIPOS
+    entorno.globals["AYUDA_TIPOS"] = AYUDA_TIPOS
+    entorno.globals["PLAZO_RESPUESTA"] = plazo_respuesta()
+    entorno.globals["icono"] = icono
     return entorno
 
 

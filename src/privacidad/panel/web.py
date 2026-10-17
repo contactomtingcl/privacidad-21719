@@ -54,6 +54,7 @@ from ..canal.reservado import IdentidadReservadaError
 from ..canal.servicio import CanalReporte
 from ..canal.web import _leer_formulario, _uno
 from ..guardia import DatosNoSinteticosError
+from ..iconos import icono
 from ..motor import HechosIncidente
 from ..reportes import DESTINOS, NOMBRE_DESTINO, Borrador, ultima_revision
 from . import vista
@@ -62,13 +63,15 @@ from .usuarios import LimiteIntentos, RegistroUsuarios
 BASE = "/panel"
 CARPETA = Path(__file__).parent
 USUARIO_DEMO = "delegado-demo"
-FILTROS = {
-    "abiertos": "Abiertos",
+# Filtros de la bandeja. «Validados» tiene su propia entrada en el menú lateral; en la bandeja
+# solo se filtra por urgencia, que es una sola dimensión y se entiende de un vistazo.
+FILTROS_URGENCIA = {
+    "abiertos": "Todas",
     "inmediata": "Inmediata",
     "alta": "Alta",
     "normal": "Normal",
-    "validados": "Validados",
 }
+FILTROS = {**FILTROS_URGENCIA, "validados": "Validados"}
 CSP_PANEL = (
     "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; "
     "font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'none'; "
@@ -148,6 +151,8 @@ def _entorno() -> Environment:
     entorno.globals.update(
         BASE=BASE,
         FILTROS=FILTROS,
+        FILTROS_URGENCIA=FILTROS_URGENCIA,
+        icono=icono,
         MOTIVOS_CORRECCION=vista.MOTIVOS_CORRECCION,
         MOTIVOS_DECISION=vista.MOTIVOS_DECISION,
         MOTIVOS_IDENTIDAD=vista.MOTIVOS_IDENTIDAD,
@@ -321,6 +326,25 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
 
     # --- bandeja ---------------------------------------------------------------------
 
+    def siguiente_paso(
+        ctx: Contexto, f: vista.Ficha | None, ahora: datetime
+    ) -> vista.SiguientePaso | None:
+        """Si el plazo más cercano del caso urgente ya venció, qué puede hacer el delegado ahora.
+
+        No cambia ninguna decisión: el deber sigue igual aunque el plazo haya vencido. Solo ofrece
+        el paso que ya existe (por ejemplo, el borrador para la ANCI) en vez de un contador.
+        """
+        if f is None or not f.relojes or f.relojes[0].vence is None:
+            return None
+        if f.relojes[0].vence > ahora:
+            return None
+        destinos = []
+        if f.relojes[0].titulo == vista.TITULO_RELOJ_ANCI:
+            _, borradores = canal.borradores(ctx.org.id, f.caso.id)
+            if isinstance(borradores.get("anci"), Borrador):
+                destinos.append("anci")
+        return vista.siguiente_paso(f, destinos)
+
     def datos_bandeja(ctx: Contexto, filtro: str, desde: datetime | None) -> dict[str, Any]:
         ahora = reloj()
         casos = vista.ordenar(canal.casos_de_organizacion(ctx.org.id))
@@ -336,11 +360,13 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
             (c for c in abiertos if c.asignacion and c.asignacion.urgencia != "normal"), None
         )
         verificacion, _ = canal.evidencia_de_organizacion(ctx.org.id)
+        ficha_urgente = vista.ficha(urgente, [], ahora) if urgente else None
         return {
             "filas": filas,
             "filtro": filtro,
             "resumen": vista.resumen_bandeja(casos, ahora),
-            "urgente": vista.ficha(urgente, [], ahora) if urgente else None,
+            "urgente": ficha_urgente,
+            "siguiente": siguiente_paso(ctx, ficha_urgente, ahora),
             "integra": verificacion.integra,
             "nuevas": sum(1 for f in filas if f.nueva),
             "en_vivo": desde is not None,  # en la revisión periódica no se repiten las entradas

@@ -304,3 +304,22 @@ mark.completar{background:var(--mark);color:var(--tx);border-radius:4px;padding:
   .tarjeta,.reloj,.estado-cadena{border:1px solid #999!important;background:#fff!important;color:#000!important}
   *{animation:none!important}
 }
+
+/* --- claridad (17 oct): íconos, quién decide, evidencia como botón, paso siguiente ------- */
+.icono-svg{flex:none;vertical-align:middle}
+.cifra .etiqueta{display:flex;align-items:center;gap:6px}
+.quien-decide{display:flex;align-items:flex-start;gap:8px;margin:8px 0 0;font-size:14px;color:var(--tx2);max-width:62ch}
+.quien-decide .icono-svg{margin-top:2px;color:var(--acc-tx)}
+.estado-evidencia small{font-size:12px;font-weight:600;border-radius:999px;padding:2px 9px}
+.estado-evidencia.integra .icono-svg,.estado-evidencia.integra small{color:var(--acc-tx)}
+.estado-evidencia.integra small{background:var(--ok-bg);border:1px solid var(--ok-line)}
+.estado-evidencia.alterada{border-color:var(--red-line)}
+.estado-evidencia.alterada .icono-svg,.estado-evidencia.alterada small{color:var(--red-tx)}
+.estado-evidencia.alterada small{background:var(--red-bg);border:1px solid var(--red-line)}
+.alarma-evidencia{display:flex;align-items:flex-start;gap:10px}
+.urgente p.siguiente{display:flex;align-items:flex-start;gap:8px;color:var(--red-tx);font-weight:500}
+.urgente.alta p.siguiente{color:var(--amb-tx)}
+.urgente p.siguiente .icono-svg{margin-top:2px}
+.filtros{align-items:center}
+.titulo-filtro{font-size:12px;color:var(--tx3);margin-right:4px}
+.tema{justify-content:flex-start}

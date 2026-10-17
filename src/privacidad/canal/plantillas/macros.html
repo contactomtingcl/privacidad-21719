@@ -27,7 +27,7 @@
 {% macro plazos(caso) %}
 {% set r = caso.resultado_solicitud %}
 {% if r and r.respuesta and r.respuesta.vence %}
-<p>Le responderemos a más tardar el <strong>{{ r.respuesta.vence | fecha }}</strong>. Este plazo corre desde hoy, aunque estemos confirmando con usted.</p>
+<p>Le responderemos a más tardar el <strong>{{ r.respuesta.vence | fecha }}</strong>. Este plazo corre desde que llegó su mensaje, aunque estemos confirmando con usted. La ley permite extenderlo una sola vez, hasta por {{ PLAZO_RESPUESTA.prorroga }} días más.</p>
 {% if r.bloqueo and r.bloqueo.vence %}
 <p>Sobre dejar de usar sus datos mientras se resuelve, le responderemos a más tardar el <strong>{{ r.bloqueo.vence | fecha }}</strong>{% if r.bloqueo.a_confirmar %} (fecha estimada){% endif %}.</p>
 {% endif %}

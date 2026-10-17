@@ -16,7 +16,7 @@
 {%- endmacro %}
 
 {% macro pildora(urgencia, etiqueta) -%}
-<span class="pildora u-{{ urgencia }}">{{ etiqueta }}</span>
+<span class="pildora u-{{ urgencia }}"><span class="oculto">Urgencia según plazo: </span>{{ etiqueta }}</span>
 {%- endmacro %}
 
 {% macro respaldo(r) -%}

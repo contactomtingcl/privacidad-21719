@@ -11,7 +11,10 @@
 <form method="post" action="">
 <fieldset><legend>¿Qué necesita?</legend>
 {% for clave, etiqueta in TIPOS.items() %}
-{{ opcion("tipo", clave, etiqueta, valores.get("tipo", "solicitud") == clave, tipo="radio") }}
+{% set ayuda = AYUDA_TIPOS[clave] %}
+<label class="opcion tipo"><input type="radio" name="tipo" value="{{ clave }}"{% if valores.get("tipo", "solicitud") == clave %} checked{% endif %}>
+<span class="dibujo">{{ icono(ayuda[0], 26) }}</span>
+<span><span class="titulo-opcion">{{ etiqueta }}</span><span class="detalle-opcion">{{ ayuda[1] }} Ejemplo: {{ ayuda[2] }}</span></span></label>
 {% endfor %}
 </fieldset>
 <label for="texto">Cuéntenos qué pasó o qué necesita</label>
@@ -24,6 +27,14 @@
 <p class="ayuda" id="ayuda-identidad">Si pide ejercer un derecho, nombre y correo son obligatorios: necesitamos saber quién es y dónde responderle. En un aviso de incidente son opcionales.</p>
 {{ opcion("reservado", "1", "Modo reservado", valores.get("reservado") == "1", not reservado_disponible) }}
 <p class="ayuda">{% if reservado_disponible %}Solo para avisos de incidente. Guardamos su nombre y contacto cifrados; solo se abren con una llave de acceso restringido.{% else %}No está disponible en este canal.{% endif %}</p>
+<section class="despues" aria-labelledby="titulo-despues">
+<h2 id="titulo-despues">Qué pasa después de enviar</h2>
+<ul>
+<li>Recibe un código de seguimiento para volver a consultar su mensaje.</li>
+<li>Su mensaje llega de inmediato a la persona encargada de protección de datos de la organización.</li>
+<li>Si ejerce un derecho, la ley obliga a responderle dentro de {{ PLAZO_RESPUESTA.dias }} días corridos desde que llega su mensaje. Ese plazo se puede extender una sola vez, hasta por {{ PLAZO_RESPUESTA.prorroga }} días más.</li>
+</ul>
+</section>
 <button type="submit">Enviar</button>
 </form>
 {% endblock %}

@@ -6,27 +6,28 @@
 <span>{% if nuevas == 1 %}Llegó un reporte nuevo{% else %}Llegaron {{ nuevas }} reportes nuevos{% endif %}: el motor calculó sus plazos y quedó en la evidencia.{% if nuevas_revision %} La IA no {% if nuevas_revision == 1 %}pudo leer uno{% else %}pudo leer {{ nuevas_revision }}{% endif %}: queda en revisión y el plazo corre igual.{% else %} La IA ya propuso su lectura.{% endif %}</span>
 </div>
 {% endif %}
+{% if not integra %}
+<div class="error alarma-evidencia" role="alert">{{ icono("shield-alert", 20) }}<span><strong>La cadena de evidencia no calza.</strong> Alguien cambió o borró anotaciones. <a href="{{ BASE }}/evidencia">Revísala ahora</a>.</span></div>
+{% endif %}
 <section class="resumen" aria-label="Resumen">
 <div class="tarjeta cifra {{ '' if en_vivo else 'sube' }}">
-<span class="etiqueta">Plazos legales corriendo</span>
+<span class="etiqueta">{{ icono("clock", 16) }}Casos con fecha límite legal</span>
 <span class="numero"><span class="{% if nuevas %}salta{% endif %}">{{ resumen.plazos }}</span></span>
-<span class="pie {% if resumen.plazos_cercanos %}rojo{% endif %}">{% if resumen.plazos_cercanos %}{{ resumen.plazos_cercanos }} vence{% if resumen.plazos_cercanos > 1 %}n{% endif %} en menos de 3 horas{% else %}Ninguno vence en las próximas 3 horas{% endif %}</span>
+<span class="pie {% if resumen.plazos_vencidos or resumen.plazos_cercanos %}rojo{% endif %}">
+{%- if resumen.plazos_vencidos %}{{ resumen.plazos_vencidos }} vencido{% if resumen.plazos_vencidos > 1 %}s{% endif %}{% if resumen.plazos_cercanos %} · {% endif %}{% endif %}
+{%- if resumen.plazos_cercanos %}{{ resumen.plazos_cercanos }} vence{% if resumen.plazos_cercanos > 1 %}n{% endif %} en menos de 3 horas{% endif %}
+{%- if not resumen.plazos_vencidos and not resumen.plazos_cercanos %}Ninguno vence en las próximas 3 horas{% endif %}</span>
 </div>
 <div class="tarjeta cifra {{ '' if en_vivo else 'sube' }}">
-<span class="etiqueta">Esperan tu validación</span>
-<span class="numero"><span class="{% if nuevas %}salta{% endif %}">{{ resumen.por_validar }}</span></span>
-<span class="pie">La IA propone, tú decides</span>
+<span class="etiqueta">{{ icono("file-text", 16) }}Por validar</span>
+<span class="numero"><span class="{% if nuevas %}salta{% endif %}">{{ resumen.para_validar }}</span></span>
+<span class="pie {% if resumen.revision %}ambar{% endif %}">{% if resumen.revision %}{{ resumen.revision }} sin lectura de la IA: {% if resumen.revision == 1 %}léelo{% else %}léelos{% endif %} tú{% else %}La IA propone, tú decides{% endif %}</span>
 </div>
 <div class="tarjeta cifra {{ '' if en_vivo else 'sube' }}">
-<span class="etiqueta">Requieren revisión</span>
-<span class="numero">{{ resumen.revision }}</span>
-<span class="pie {% if resumen.revision %}ambar{% endif %}">{% if resumen.revision %}La IA no respondió; el plazo corre igual{% else %}Ninguno sin lectura{% endif %}</span>
+<span class="etiqueta">{{ icono("circle-check", 16) }}Validados</span>
+<span class="numero">{{ resumen.validados }}</span>
+<span class="pie">{% if resumen.validados_hoy %}{{ resumen.validados_hoy }} hoy{% else %}Ninguno hoy{% endif %}</span>
 </div>
-<a class="tarjeta cifra {{ '' if en_vivo else 'sube' }} {% if integra %}integra{% else %}alterada{% endif %}" href="{{ BASE }}/evidencia">
-<span class="etiqueta">Cadena de evidencia</span>
-<span class="numero">{% if integra %}Íntegra{% else %}Alterada{% endif %}</span>
-<span class="pie">Revisada recién · ver detalle</span>
-</a>
 </section>
 
 {% if urgente and filtro != "validados" %}
@@ -39,9 +40,11 @@
 <div class="acciones">{{ pildora(u.urgencia, u.etiqueta_urgencia) }}<span class="suave">{{ u.tipo }} · ingresó a las {{ urgente.caso.ingreso | hora }}</span></div>
 <h2>{{ u.resumen }}</h2>
 <p>{{ urgente.caso.asignacion.porque_urgencia }} Se envió a: {{ u.destinos }}.</p>
+{% if siguiente %}<p class="siguiente">{{ icono("triangle-alert", 18) }}<span>{{ siguiente.texto }}</span></p>{% endif %}
 </div>
 <div class="botones">
-<a class="boton primario" href="{{ BASE }}/caso/{{ u.id }}">Abrir y validar</a>
+{% if siguiente %}{% for destino, texto in siguiente.borradores %}<a class="boton primario" href="{{ BASE }}/caso/{{ u.id }}/borrador/{{ destino }}">{{ texto }}</a>{% endfor %}{% endif %}
+<a class="boton {% if not (siguiente and siguiente.borradores) %}primario{% endif %}" href="{{ BASE }}/caso/{{ u.id }}">Abrir y validar</a>
 </div>
 </section>
 {% endif %}
@@ -49,13 +52,16 @@
 <section aria-label="Casos" class="vivo">
 <div class="cabecera">
 <h2>{% if filtro == "validados" %}Validados{% else %}Casos abiertos{% endif %}</h2>
-<nav class="filtros" aria-label="Filtrar">
-{% for id, nombre in FILTROS.items() %}<a href="{{ BASE }}/?filtro={{ id }}" {% if id == filtro %}aria-current="true"{% endif %}>{{ nombre }}</a>{% endfor %}
+{% if filtro != "validados" %}
+<nav class="filtros" aria-labelledby="titulo-filtro">
+<span class="titulo-filtro" id="titulo-filtro">Urgencia según plazo</span>
+{% for id, nombre in FILTROS_URGENCIA.items() %}<a href="{{ BASE }}/?filtro={{ id }}" {% if id == filtro %}aria-current="true"{% endif %}>{{ nombre }}</a>{% endfor %}
 </nav>
+{% endif %}
 </div>
 <div class="tabla">
 <div class="ancho">
-<div class="fila titulos" aria-hidden="true"><span>Urgencia</span><span>Caso</span><span>Se envió a</span><span>Próximo plazo</span><span>Estado</span></div>
+<div class="fila titulos" aria-hidden="true"><span>Urgencia según plazo</span><span>Caso</span><span>Se envió a</span><span>Próximo plazo</span><span>Estado</span></div>
 {% for f in filas %}
 <a class="fila {% if f.nueva %}nueva{% endif %}" href="{{ BASE }}/caso/{{ f.id }}">
 {{ pildora(f.urgencia, f.etiqueta_urgencia) }}

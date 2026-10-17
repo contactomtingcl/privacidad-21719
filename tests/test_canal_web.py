@@ -263,7 +263,8 @@ class TestConfirmacionPorLaWeb(Base):
         self.assertIn("publicidad", html)
         self.assertIn(f"Si no responde en {dias_de_espera()} días", html)
         self.assertIn("Que borren mis datos", html)
-        self.assertIn("Este plazo corre desde hoy", html)
+        self.assertIn("Este plazo corre desde que llegó su mensaje", html)
+        self.assertIn("extenderlo una sola vez, hasta por 30 días más", html)
 
     def test_el_titular_corrige_y_ve_lo_que_se_tramita(self):
         destino, id_caso = self.abrir()

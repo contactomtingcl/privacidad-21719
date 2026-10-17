@@ -27,6 +27,9 @@ class TestFuentes(unittest.TestCase):
         corpus = corpus_por_defecto()
         reglas = cargar_reglas()
         fuentes = [r["fuente"] for r in reglas["reglas"].values()]
+        fuentes += [
+            r["fuente_prorroga"] for r in reglas["reglas"].values() if "fuente_prorroga" in r
+        ]
         fuentes.append(reglas["servicios_esenciales"]["fuente"])
         fuentes.append(reglas["vigencias"]["ley-21719"]["fuente"])
         for f in fuentes:

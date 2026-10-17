@@ -1,7 +1,7 @@
 # Reglas legales del motor. Cada regla guarda su fuente (artículo y fragmento literal,
 # verificados contra el corpus por las pruebas), su versión y su vigencia.
 # Ningún plazo está escrito a mano en el código: se leen de aquí.
-version: "2026-10-11"
+version: "2026-10-17"
 
 vigencias:
   ley-21719:
@@ -101,6 +101,7 @@ reglas:
     ley: ley-21719
     plazo: {tipo: dias_corridos, valor: 30, desde: ingreso, prorroga_dias_corridos: 30}
     fuente: {norma: ley-19628, articulo: "11", fragmento: "pronunciarse a más tardar dentro de los treinta días corridos siguientes a la fecha de ingreso de la solicitud"}
+    fuente_prorroga: {norma: ley-19628, articulo: "11", fragmento: "Este plazo podrá ser prorrogado, por una sola vez, hasta por treinta días corridos"}
 
   bloqueo_temporal:
     descripcion: Responder la solicitud de bloqueo temporal; mientras no se resuelva, no se pueden tratar esos datos.

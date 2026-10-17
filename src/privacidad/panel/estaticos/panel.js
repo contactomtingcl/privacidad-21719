@@ -33,10 +33,16 @@
     var nuevo = actual === "claro" ? "oscuro" : "claro";
     document.documentElement.setAttribute("data-tema", nuevo);
     try { window.localStorage.setItem("panel-tema", nuevo); } catch (e) { /* sin almacenamiento */ }
+    rotularTema();
+  }
+
+  // El botón de tema (en el menú lateral) dice lo que hará según el tema actual.
+  function rotularTema() {
     var boton = document.querySelector("[data-cambiar-tema]");
-    if (boton) {
-      boton.setAttribute("aria-label", nuevo === "claro" ? "Cambiar a tema oscuro" : "Cambiar a tema claro");
-    }
+    if (!boton) { return; }
+    var claro = document.documentElement.getAttribute("data-tema") === "claro";
+    var texto = boton.querySelector("[data-tema-texto]");
+    if (texto) { texto.textContent = claro ? "Usar tema oscuro" : "Usar tema claro"; }
   }
 
   document.addEventListener("click", function (evento) {
@@ -52,11 +58,7 @@
     }
   });
 
-  // El botón de tema dice lo que hará según el tema actual.
-  var boton = document.querySelector("[data-cambiar-tema]");
-  if (boton && document.documentElement.getAttribute("data-tema") === "claro") {
-    boton.setAttribute("aria-label", "Cambiar a tema oscuro");
-  }
+  rotularTema();
 
   actualizarRelojes();
   window.setInterval(actualizarRelojes, 1000);
