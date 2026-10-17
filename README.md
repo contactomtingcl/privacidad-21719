@@ -28,6 +28,11 @@ En construcción (entrega: 28 de octubre de 2026). Avance actual:
 | Panel del delegado: bandeja en vivo, ficha del caso, correcciones, validación y evidencia | Primera versión ([cómo usarlo](#panel-del-delegado)) |
 | Borradores de reporte a la Agencia y a la ANCI, armados desde el caso sin IA | Primera versión ([cómo funcionan](#borradores-de-reporte)) |
 | Cifra de correcciones del delegado, contada desde la evidencia | Primera versión ([cómo se cuenta](#cuánto-corrige-la-persona-a-la-ia)) |
+| «Ya lo envié»: el caso sigue abierto hasta enviar todo lo que corresponde | Primera versión |
+| Avisos a cada destino (correo con smtplib o bandeja simulada) y «Derivar a…» | Primera versión |
+| Operadores de importancia vital (Ley 21.663): 24 h y plan de acción en 7 días | Primera versión |
+| Simulador de escenarios: ley vigente frente a la postergación (Boletín 18.623-07) | Primera versión |
+| Inventario en el panel: subir planilla, registro del DS 662 y versión mínima con el motor | Primera versión |
 
 ## Cómo ejecutar
 

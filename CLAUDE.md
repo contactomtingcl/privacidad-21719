@@ -57,7 +57,7 @@ sintéticos, detección y enmascarado, inventario con IA (11 campos del DS 662),
 reglas (Agencia, titulares, ANCI, plazos de solicitudes), interpretación con IA de
 solicitudes e incidentes, set de 150 casos y evaluación en tres niveles (iteración 2:
 IA + motor 76/77 deberes detectados; iteración 3 del 12 oct con frase de respaldo: 76/77, solicitudes
-98%). 449 pruebas (5 omitidas sin segno) en verde.
+98%). 507 pruebas (5 omitidas sin segno) en verde.
 
 Canal de reporte (primera versión, 10 oct): enlace firmado y QR (segno), confirmación al
 titular con menú fijo y, sin respuesta a los 5 días, lectura reversible: oposición + bloqueo
@@ -149,12 +149,30 @@ I9 (huellas en «Ver detalle técnico»), I10, I11 («Registro de lo actuado», 
 sigue siendo /panel/evidencia), I12 (una línea + «Cómo se lee»; «qué te toca» arriba de la ficha),
 I13. Pruebas en `tests/test_auditoria_comprension.py`.
 
-Pendiente técnico, en orden: (dom 18) «Ya lo envié», formulario
-vacío si la IA no leyó, cómo responder a la persona; (19-20) avisos por correo/Telegram a los
-destinos + «Derivar a…»; completar el motor
-(perfiles, operadores de importancia vital, simulador). Si se cumple la puerta de calidad del 23 de octubre:
-red de cascada y sello de tiempo. Rediseño contrafactual e impacto de proyectos de ley entran
-seguro.
+Sábado 17 (tarde), adelantado:
+- G1 «Ya lo envié» (`delegado.registrar_envio`, `entregas_del_caso`, `caso_abierto`): cada deber y
+  cada paso de la ANCI con canal y hora; evento `envio_registrado`; la urgencia ya no lo cuenta;
+  el caso sigue en la bandeja («Falta enviar») hasta enviar todo. G2: formulario vacío y motivo
+  fijo `ia_no_leyo`. I8: guía de respuesta con contacto y fecha.
+- G5/G6 (`canal/avisos.py`): aviso a cada destino una vez, sin mensaje ni datos personales
+  (revisado con el detector); smtplib si hay `PRIVACIDAD_SMTP_HOST`, si no bandeja simulada;
+  fallos «fallido» sin detener el caso. «Derivar a…» (`delegado.derivar`, `Caso.derivaciones`,
+  sobrevive al reenrutar). Telegram no se hizo.
+- Motor: operadores de importancia vital (`Organizacion.operador_importancia_vital`,
+  `decidir_incidente(..., oiv)`): actualización 24 h si se interrumpe el servicio y plan de
+  acción 7 días. Simulador (`motor/escenarios.py`, `data/reglas/escenarios.yaml`,
+  `/panel/simulador`): vigente vs Boletín 18.623-07 (1-12-2027; amonestación para todos);
+  sanciones citadas (34 ter k, 34 quáter f, 35, 44, transitorio sexto; 21.663 arts. 38 y 40).
+  El proyecto se cita desde `data/normas/proyectos/boletin-18623-07.txt` (extracto, «no es ley»).
+- Inventario en el panel (`inventario/servicio.py`, `/panel/inventario`): subir o analizar
+  ejemplo; la planilla no se guarda (solo registro + resumen sin valores, tabla `actividades`);
+  ejemplos con respuesta grabada por huella SHA-256; alertas recalculadas; validación humana;
+  versión mínima con el motor; sugerencia «¿Es esta planilla?» en la ficha del caso. La demo
+  precarga nómina, clientes y proveedores; el paseo se sube en vivo.
+
+Pendiente técnico: matriz de riesgos leve/grave/gravísima por actividad (P1), avisos por
+Telegram (P1), impacto de proyectos de ley sobre el inventario (más allá del simulador). Si se
+cumple la puerta de calidad del 23 de octubre: red de cascada y sello de tiempo.
 
 Hallazgo del 11 oct, sin resolver: si el titular no responde, la lectura por defecto agrega
 un bloqueo temporal cuyo plazo (2 días hábiles desde el ingreso) normalmente ya venció. El
