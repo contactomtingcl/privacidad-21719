@@ -137,7 +137,6 @@ a.fila:hover{background:var(--sel)}
 .tarjeta h3{margin:20px 0 10px}
 .tarjeta .mensaje{margin-top:12px}
 .lateral .tarjeta{display:flex;flex-direction:column;gap:14px}
-.salto{align-self:center;font:12px "IBM Plex Mono",monospace;color:var(--tx3);border:1px dashed var(--line2);border-radius:999px;padding:2px 8px;margin:0 2px}
 @media (max-width:720px){
   .menu{flex-direction:row;flex-wrap:wrap;align-items:center;padding:12px 16px;gap:8px 16px}
   .nav{flex-direction:row;flex-wrap:wrap}
@@ -238,7 +237,9 @@ legend{font-size:13px;color:var(--tx2);padding:0 4px}
 .escaneo .bloque.mala{animation:temblor .5s ease-in-out .4s both}
 .bloque .arriba{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .bloque small{font-size:12px;color:var(--tx3)}
-.bloque .huellas{display:flex;flex-direction:column;gap:2px;border-top:1px solid var(--line);padding-top:8px;font:12px "IBM Plex Mono",monospace;color:var(--tx3)}
+.bloque .huellas{border-top:1px solid var(--line);padding-top:8px;font:12px "IBM Plex Mono",monospace;color:var(--tx3)}
+.bloque .huellas summary{cursor:pointer;font-family:inherit;color:var(--acc-tx)}
+.bloque .huellas span{display:block;margin-top:2px}
 .bloque .huellas .propia{color:var(--tx2)}
 .bloque.mala .huellas .propia{color:var(--red-tx);text-decoration:line-through}
 .sello{font-size:11px;font-weight:600;border-radius:5px;padding:2px 7px;background:var(--ok-bg);color:var(--acc-tx)}
@@ -328,3 +329,14 @@ mark.completar{background:var(--mark);color:var(--tx);border-radius:4px;padding:
 .correcciones p{margin:0}
 .correcciones .numero small{font-size:15px;color:var(--tx3)}
 .correcciones .cifra{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+
+/* Auditoría de comprensión (17 oct) */
+.codigo-caso{font-size:12px}
+.que-te-toca{display:flex;align-items:flex-start;gap:8px;margin:8px 0 0;font-size:15px;color:var(--tx);max-width:62ch}
+.que-te-toca .icono-svg{margin-top:3px;color:var(--acc-tx)}
+.validar-bloqueado{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.validar-bloqueado small{font-size:12px;color:var(--amb-tx)}
+button:disabled,button:disabled:hover{opacity:.5;cursor:not-allowed;border-color:var(--line2);transform:none}
+.d-pendiente{background:transparent;color:var(--tx3);border:1px dashed var(--line2)}
+.tecnico ul{margin:6px 0 0;padding-left:18px;font-size:12px;line-height:1.7}
+.deber form label{font-size:13px;color:var(--tx2)}

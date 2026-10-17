@@ -299,7 +299,7 @@ def decidir_solicitud(hechos: HechosSolicitud, ingreso: date) -> ResultadoSolici
     respuesta = Deber(
         id="respuesta_solicitud",
         decision="si",
-        porque="Toda solicitud del titular debe tener acuse de recibo y respuesta por escrito. "
+        porque="Toda solicitud de la persona debe tener acuse de recibo y respuesta por escrito. "
         "El plazo corre desde el ingreso, aunque se esté confirmando con la persona qué pidió.",
         plazo=f"{p['valor']} días corridos (prorrogable una vez por {p['prorroga_dias_corridos']})",
         vence=ingreso + timedelta(days=p["valor"]),

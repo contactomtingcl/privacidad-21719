@@ -44,7 +44,7 @@ TITULOS_DEBER = {
     "bloqueo_temporal": "Bloquear sus datos mientras se resuelve",
     "comunicar_a_terceros": "Avisar a quienes recibieron sus datos",
 }
-DECISION = {"si": "Sí", "no": "No", "revisar": "Revisar"}
+DECISION = {"si": "Corresponde", "no": "No corresponde", "revisar": "Decide tú"}
 VULNERACIONES = {
     "filtracion": "Se filtraron datos",
     "perdida": "Se perdieron datos",
@@ -77,18 +77,19 @@ MOTIVOS_IDENTIDAD = {
     "requerimiento_de_autoridad": "Lo pide una autoridad",
     "otro": "Otro motivo",
 }
+SIN_LECTURA = "Sin lectura de la IA"
 ESTADOS = {
     "interpretado": "Por validar",
-    "requiere_revision": "Requiere revisión",
-    "pendiente_confirmacion": "Espera al titular",
-    "sin_solicitud": "Por revisar",
+    "requiere_revision": SIN_LECTURA,
+    "pendiente_confirmacion": "Espera a la persona",
+    "sin_solicitud": "Por leer",
 }
 EVENTOS = {
     "recibido": "Reporte recibido por el canal",
     "interpretado": "La IA propuso su lectura",
-    "ia_sin_respuesta": "La IA no respondió: pasó a revisión",
-    "confirmacion_solicitada": "Se pidió confirmación al titular",
-    "confirmacion_respondida": "El titular respondió",
+    "ia_sin_respuesta": "La IA no respondió: quedó sin lectura",
+    "confirmacion_solicitada": "Se pidió confirmación a la persona",
+    "confirmacion_respondida": "La persona respondió",
     "confirmacion_por_defecto": "Sin respuesta: se aplicó la lectura reversible",
     "enrutado": "Se decidió a quién enviarlo",
     "hechos_corregidos": "{por} corrigió hechos",
@@ -150,11 +151,9 @@ def estado_de(caso: Caso) -> tuple[str, str]:
     if caso.validacion is not None:
         return "Validado", "validado"
     if caso.tipo != "solicitud" and caso.hechos_vigentes is None:
-        return "Requiere revisión", "revision"
-    etiqueta = ESTADOS.get(caso.estado, "Por revisar")
-    return etiqueta, {"Por validar": "validar", "Requiere revisión": "revision"}.get(
-        etiqueta, "espera"
-    )
+        return SIN_LECTURA, "revision"
+    etiqueta = ESTADOS.get(caso.estado, "Por leer")
+    return etiqueta, {"Por validar": "validar", SIN_LECTURA: "revision"}.get(etiqueta, "espera")
 
 
 def fila(caso: Caso, ahora: datetime, desde: datetime | None = None) -> Fila:
@@ -264,24 +263,40 @@ def vista_deberes(caso: Caso) -> list[VistaDeber]:
         porque = d.porque
         if humano:
             porque = (
-                f"El motor dejó la duda y decidiste «{DECISION[final]}» "
+                f"El motor no pudo decidirlo y decidiste «{DECISION[final]}» "
                 f"({MOTIVOS_DECISION[caso.decisiones[d.id].motivo].lower()})."
             )
+        pendiente = d.id in pendientes
+        if pendiente:
+            de_quien = "El motor no puede decidirlo con estos hechos: decide tú."
+        else:
+            de_quien = "decidido por ti" if humano else "decidido por el motor"
         salida.append(
             VistaDeber(
                 id=d.id,
                 titulo=TITULOS_DEBER.get(d.id, d.id),
                 decision=final,
                 etiqueta=DECISION[final],
-                de_quien="decidido por ti" if humano else "decidido por el motor",
+                de_quien=de_quien,
                 porque=porque,
-                plazo=d.plazo,
+                plazo=aclarar_habiles(d.plazo),
                 vence=momento(d.vence),
                 citas=[c.model_dump() for c in d.citas],
-                pendiente=d.id in pendientes,
+                pendiente=pendiente,
             )
         )
     return salida
+
+
+HABILES = "días hábiles"
+ACLARACION_HABILES = "días hábiles (no cuentan fines de semana ni feriados)"
+
+
+def aclarar_habiles(texto: str | None) -> str | None:
+    """Que «2 días hábiles» no parezca contradecir un anillo que cuenta días de calendario."""
+    if not texto or ACLARACION_HABILES in texto:
+        return texto
+    return texto.replace(HABILES, ACLARACION_HABILES, 1)
 
 
 TITULO_RELOJ_ANCI = "Primer aviso a la ANCI"
@@ -344,7 +359,7 @@ def relojes(caso: Caso, ahora: datetime) -> list[Reloj]:
                 salida.append(
                     Reloj(
                         titulo=TITULOS_DEBER.get(d.id, d.id),
-                        detalle=d.plazo or "",
+                        detalle=aclarar_habiles(d.plazo) or "",
                         vence=vence,
                         total_s=int((vence - caso.ingreso).total_seconds()),
                         tono="rojo" if d.id == "bloqueo_temporal" else "ambar",
@@ -410,7 +425,7 @@ ETIQUETAS_HECHO = {
     "datos_personales": "¿Hay datos de personas?",
     "categorias_especiales": "Datos especialmente protegidos",
     "ciberincidente": "¿Afectó sistemas informáticos?",
-    "riesgo_mitigado": "¿Hay razón para pensar que nadie los vio?",
+    "riesgo_mitigado": "¿Se puede descartar que alguien viera los datos?",
     "interrupcion_servicio": "¿Se interrumpió un servicio?",
     "titulares_aprox": "Personas afectadas (aprox.)",
 }
@@ -442,6 +457,47 @@ def vista_hechos(caso: Caso) -> list[VistaHecho]:
     return salida
 
 
+def conteo_deberes(caso: Caso) -> str:
+    """«1 corresponde, 1 por decidir»: cuenta lo que vale ahora, sea del motor o tuyo."""
+    finales = [decision_final(caso, d) for d in deberes_del_caso(caso)]
+    n_si, n_duda = finales.count("si"), finales.count("revisar")
+    partes = [f"{n_si} corresponde{'n' if n_si != 1 else ''}"] if n_si else []
+    if n_duda:
+        partes.append(f"{n_duda} por decidir")
+    return ", ".join(partes) or "Ninguno corresponde"
+
+
+def por_que_no_validar(caso: Caso) -> str | None:
+    """Lo que falta para poder validar (las mismas condiciones que exige `validar`)."""
+    if caso.validacion is not None:
+        return None
+    if caso.tipo != "solicitud" and caso.hechos_vigentes is None:
+        return "Primero completa los hechos"
+    if caso.tipo == "solicitud" and caso.estado != "interpretado":
+        return "Primero espera la respuesta de la persona"
+    n = len(por_resolver(caso))
+    if n:
+        return f"Primero decide {n} deber{'es' if n != 1 else ''}"
+    return None
+
+
+def que_te_toca(caso: Caso) -> str:
+    """Una línea arriba de la ficha: qué tiene que hacer el delegado en este caso."""
+    if caso.validacion is not None:
+        return (
+            "Validaste la decisión. El sistema no envía nada: envía tú lo que corresponde "
+            "antes de su plazo."
+        )
+    falta = por_que_no_validar(caso)
+    if falta == "Primero completa los hechos":
+        return "La IA no pudo leer este reporte: completa los hechos y el motor decidirá."
+    if falta and falta.startswith("Primero decide"):
+        return f"{falta[len('Primero ') :].capitalize()} que el motor no pudo resolver y valida."
+    if falta:
+        return "La persona todavía no confirma lo que pide: el plazo corre igual."
+    return "Revisa lo que decidió el motor y valídalo."
+
+
 @dataclass
 class Paso:
     titulo: str
@@ -452,7 +508,7 @@ class Paso:
 def pasos(caso: Caso) -> list[Paso]:
     tipos = {e.tipo: e for e in reversed(caso.eventos)}
     ia = tipos.get("interpretado")
-    n_si = sum(1 for d in deberes_del_caso(caso) if decision_final(caso, d) == "si")
+    sin_hechos = caso.tipo != "solicitud" and caso.hechos_vigentes is None
     return [
         Paso("Llegó por el canal", f"{hora(caso.ingreso)} · enlace o código QR", True),
         Paso(
@@ -460,7 +516,11 @@ def pasos(caso: Caso) -> list[Paso]:
             f"Leyó el texto con los datos tapados ({hora(ia.momento)})" if ia else "No respondió",
             ia is not None or caso.hechos_delegado is not None,
         ),
-        Paso("El motor decide", f"{n_si} deber{'es' if n_si != 1 else ''} con su artículo", True),
+        Paso(
+            "El motor decide",
+            "Espera los hechos" if sin_hechos else conteo_deberes(caso),
+            not sin_hechos,
+        ),
         Paso(
             "Tú validas",
             f"Validado a las {hora(caso.validacion.momento)}" if caso.validacion else "Pendiente",
@@ -503,6 +563,8 @@ class Ficha:
     linea: list[Hito]
     pendientes: int
     puede_corregir: bool
+    falta_para_validar: str | None
+    que_te_toca: str
     valores: dict[str, Any] = field(default_factory=dict)  # para el formulario de corrección
 
 
@@ -532,6 +594,8 @@ def ficha(caso: Caso, anotaciones: list[Anotacion], ahora: datetime) -> Ficha:
         linea=linea_de_tiempo(caso, anotaciones),
         pendientes=len(por_resolver(caso)),
         puede_corregir=caso.tipo != "solicitud",
+        falta_para_validar=por_que_no_validar(caso),
+        que_te_toca=que_te_toca(caso),
         valores=valores,
     )
 
@@ -550,9 +614,12 @@ class VistaBorrador:
     borrador: Borrador | None
     motivo: str | None  # por qué no hay borrador
     revision: Revision | None
+    pendiente: bool = False  # todavía no se sabe: faltan los hechos (no es «no corresponde»)
 
     @property
     def estado(self) -> str:
+        if self.pendiente:
+            return "Pendiente"
         if self.borrador is None:
             return "No corresponde"
         if self.revision and self.revision.vigente:
@@ -564,6 +631,7 @@ class VistaBorrador:
 
 
 def vista_borradores(caso: Caso, borradores: dict) -> list[VistaBorrador]:
+    sin_hechos = caso.tipo != "solicitud" and caso.hechos_vigentes is None
     salida = []
     for destino in DESTINOS:
         b = borradores.get(destino)
@@ -573,5 +641,9 @@ def vista_borradores(caso: Caso, borradores: dict) -> list[VistaBorrador]:
             )
         else:
             motivo = b.motivo if isinstance(b, SinBorrador) else "No hay borrador."
-            salida.append(VistaBorrador(destino, NOMBRE_DESTINO[destino], None, motivo, None))
+            if sin_hechos:
+                motivo = "Completa los hechos y se arma."
+            salida.append(
+                VistaBorrador(destino, NOMBRE_DESTINO[destino], None, motivo, None, sin_hechos)
+            )
     return salida

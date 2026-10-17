@@ -57,7 +57,7 @@ sintéticos, detección y enmascarado, inventario con IA (11 campos del DS 662),
 reglas (Agencia, titulares, ANCI, plazos de solicitudes), interpretación con IA de
 solicitudes e incidentes, set de 150 casos y evaluación en tres niveles (iteración 2:
 IA + motor 76/77 deberes detectados; iteración 3 del 12 oct con frase de respaldo: 76/77, solicitudes
-98%). 435 pruebas (5 omitidas sin segno) en verde.
+98%). 449 pruebas (5 omitidas sin segno) en verde.
 
 Canal de reporte (primera versión, 10 oct): enlace firmado y QR (segno), confirmación al
 titular con menú fijo y, sin respuesta a los 5 días, lectura reversible: oposición + bloqueo
@@ -141,7 +141,15 @@ organización (columna `fila` global solo para el orden; `UNIQUE(id_organizacion
 solo si se revisó una. Una base v1 no se abre (ErrorEvidencia); la demo cambia de carpeta porque
 `version_demo` incluye la versión del esquema. CLI: `evidencia --org`, y `--cabeza` exige `--org`.
 
-Pendiente técnico, en orden: (sáb 17) textos y diseño de la auditoría; (dom 18) «Ya lo envié», formulario
+Auditoría aplicada (17 oct): G3 (borrador «Pendiente» sin hechos), G4 (botón Validar desactivado
+con la razón: `vista.por_que_no_validar`, mismas condiciones que `validar`), I1 («Sin lectura de
+la IA», «Decide tú», «Ver registro»), I2 («¿Por qué?» sin opción elegida), I3 («Corresponde»/«No
+corresponde»), I4 («la persona» fuera de citas), I5, I6 (`conteo_deberes`), I7 (`aclarar_habiles`),
+I9 (huellas en «Ver detalle técnico»), I10, I11 («Registro de lo actuado», «Anotación N»; la URL
+sigue siendo /panel/evidencia), I12 (una línea + «Cómo se lee»; «qué te toca» arriba de la ficha),
+I13. Pruebas en `tests/test_auditoria_comprension.py`.
+
+Pendiente técnico, en orden: (dom 18) «Ya lo envié», formulario
 vacío si la IA no leyó, cómo responder a la persona; (19-20) avisos por correo/Telegram a los
 destinos + «Derivar a…»; completar el motor
 (perfiles, operadores de importancia vital, simulador). Si se cumple la puerta de calidad del 23 de octubre:

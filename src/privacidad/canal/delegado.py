@@ -128,7 +128,9 @@ class AccionesDelegado:
     ) -> Caso:
         caso = self.caso_de_organizacion(id_organizacion, id_caso)
         if caso.tipo == "solicitud":
-            raise AccionInvalida("Lo que pidió un titular se confirma con él, no se corrige aquí.")
+            raise AccionInvalida(
+                "Lo que pidió una persona se confirma con ella, no se corrige aquí."
+            )
         nota = (nota or "").strip() or None
         if nota and len(nota) > LARGO_MAXIMO_NOTA:
             raise AccionInvalida(f"La nota admite hasta {LARGO_MAXIMO_NOTA} caracteres.")
@@ -202,19 +204,19 @@ class AccionesDelegado:
         if caso.tipo != "solicitud" and caso.hechos_vigentes is None:
             raise AccionInvalida(
                 "La IA no pudo leer este reporte. "
-                "Primero completa los hechos con «Corregir hechos»."
+                "Primero completa los hechos con «Completar hechos»."
             )
         if caso.tipo == "solicitud" and caso.estado != "interpretado":
             raise AccionInvalida(
-                "Esta solicitud todavía no tiene una lectura vigente: espera la respuesta del "
-                "titular o revísala con él."
+                "Esta solicitud todavía no tiene una lectura vigente: espera la respuesta de la "
+                "persona o confírmala con ella."
             )
         pendientes = por_resolver(caso)
         if pendientes:
             n = len(pendientes)
             raise AccionInvalida(
-                f"Antes de validar, resuelve {n} deber{'es' if n > 1 else ''} marcado"
-                f"{'s' if n > 1 else ''} «Revisar»."
+                f"Antes de validar, decide {n} deber{'es' if n > 1 else ''} marcado"
+                f"{'s' if n > 1 else ''} «Decide tú»."
             )
         ahora = self._reloj()
         caso.validacion = Validacion(por=por, momento=ahora)

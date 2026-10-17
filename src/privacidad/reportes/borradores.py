@@ -229,8 +229,8 @@ def _avisos_comunes(decision: str, deber: Deber) -> list[str]:
     ]
     if decision == "revisar":
         avisos.append(
-            "El motor dejó este deber en «Revisar»: decide en la ficha si corresponde antes de "
-            "enviarlo."
+            "El motor no pudo decidir este deber («Decide tú»): decide en la ficha si "
+            "corresponde antes de enviarlo."
         )
     if deber.nota_vigencia:
         avisos.append(_fechas_en_palabras(deber.nota_vigencia))
@@ -272,7 +272,11 @@ def borrador_agencia(caso: Caso, org: Organizacion, reglas: ReglasOrganizacion) 
         aviso_personas = [
             "Corresponde avisar a cada persona afectada (a los menores, por medio de sus padres "
             "o representantes), en lenguaje claro: qué datos, qué consecuencias y qué medidas."
-            + (" El motor lo dejó en «Revisar»." if decision_titulares == "revisar" else ""),
+            + (
+                " El motor no pudo decidirlo: lo decide el delegado."
+                if decision_titulares == "revisar"
+                else ""
+            ),
             completar("cómo y cuándo se avisará a las personas"),
         ]
 
@@ -423,7 +427,7 @@ def borradores_del_caso(
     """Un borrador por destino, o el motivo por el que no lo hay."""
     if caso.tipo == "solicitud":
         return {
-            d: SinBorrador(destino=d, motivo="Las solicitudes de titulares no se reportan.")
+            d: SinBorrador(destino=d, motivo="Las solicitudes de las personas no se reportan.")
             for d in DESTINOS
         }
     if caso.hechos_vigentes is None or caso.resultado_incidente is None:

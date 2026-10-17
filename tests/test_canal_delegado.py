@@ -141,7 +141,7 @@ class TestDudasYValidacion(unittest.TestCase):
         self.assertIn("reporte_anci", self.dudas)
         with self.assertRaises(AccionInvalida) as error:
             self.canal.validar(MUNI, self.caso.id, por=POR)
-        self.assertIn("Revisar", str(error.exception))
+        self.assertIn("Decide tú", str(error.exception))
 
     def test_resolver_y_validar(self):
         for deber in self.dudas:

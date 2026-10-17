@@ -3,11 +3,11 @@
 {% if nuevas %}
 <div class="aviso llegada" role="status">
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3DD6C3" stroke-width="2" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/></svg>
-<span>{% if nuevas == 1 %}Llegó un reporte nuevo{% else %}Llegaron {{ nuevas }} reportes nuevos{% endif %}: el motor calculó sus plazos y quedó en la evidencia.{% if nuevas_revision %} La IA no {% if nuevas_revision == 1 %}pudo leer uno{% else %}pudo leer {{ nuevas_revision }}{% endif %}: queda en revisión y el plazo corre igual.{% else %} La IA ya propuso su lectura.{% endif %}</span>
+<span>{% if nuevas == 1 %}Llegó un reporte nuevo{% else %}Llegaron {{ nuevas }} reportes nuevos{% endif %}: el motor calculó sus plazos y quedó en el registro.{% if nuevas_revision %} La IA no {% if nuevas_revision == 1 %}pudo leer uno{% else %}pudo leer {{ nuevas_revision }}{% endif %}: queda sin lectura y el plazo corre igual.{% else %} La IA ya propuso su lectura.{% endif %}</span>
 </div>
 {% endif %}
 {% if not integra %}
-<div class="error alarma-evidencia" role="alert">{{ icono("shield-alert", 20) }}<span><strong>La cadena de evidencia no calza.</strong> Alguien cambió o borró anotaciones. <a href="{{ BASE }}/evidencia">Revísala ahora</a>.</span></div>
+<div class="error alarma-evidencia" role="alert">{{ icono("shield-alert", 20) }}<span><strong>El registro de lo actuado no calza.</strong> Alguien cambió o borró anotaciones. <a href="{{ BASE }}/evidencia">Revísalo ahora</a>.</span></div>
 {% endif %}
 <section class="resumen" aria-label="Resumen">
 <div class="tarjeta cifra {{ '' if en_vivo else 'sube' }}">

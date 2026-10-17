@@ -63,7 +63,8 @@ class TestBorradoresEnElPanel(unittest.TestCase):
         self.assertEqual(ultima.detalle["huella"], huella_sin_digitos(b["anci"].huella))
         self.assertEqual(ultima.detalle["por"], "delegado-muni")
         ficha = self.nav.pedir("GET", f"/panel/caso/{self.caso.id}?cambio=revisado")
-        self.assertIn("Marcaste el borrador como revisado", ficha.html)
+        self.assertIn("Marcaste que revisaste el borrador", ficha.html)
+        self.assertIn("todavía no lo envías", ficha.html)
         self.assertIn("revisó un borrador de reporte", ficha.html)
 
     def test_huella_antigua_muestra_el_error_sin_anotar(self):

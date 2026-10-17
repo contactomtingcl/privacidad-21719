@@ -180,7 +180,7 @@ class TestCuandoNoHayBorrador(unittest.TestCase):
         caso = canal.recibir_incidente(MUNI, "Se perdió un pendrive cifrado con la planilla.")
         _, b = canal.borradores(MUNI, caso.id)
         self.assertEqual(b["agencia"].decision, "revisar")
-        self.assertTrue(any("«Revisar»" in a for a in b["agencia"].avisos))
+        self.assertTrue(any("«Decide tú»" in a for a in b["agencia"].avisos))
         canal.resolver_deber(
             MUNI, caso.id, "aviso_agencia", "no", motivo="datos_revisados", por="delegado-muni"
         )

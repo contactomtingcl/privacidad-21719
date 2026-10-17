@@ -205,7 +205,7 @@ class TestDudasPorLaWeb(unittest.TestCase):
         csrf = nav.pedir("GET", f"/panel/caso/{caso.id}").csrf()
         r = nav.pedir("POST", f"/panel/caso/{caso.id}/validar", {"csrf": csrf})
         self.assertEqual(r.status, 400)
-        self.assertIn("Revisar", r.html)
+        self.assertIn("Decide tú", r.html)
         r = nav.pedir(
             "POST",
             f"/panel/caso/{caso.id}/resolver",
@@ -298,7 +298,7 @@ class TestDemo(unittest.TestCase):
         self.assertIn("fue modificada", r.html)
         self.assertTrue(self.repo.verificar_evidencia().integra)
         r = self.nav.pedir("POST", "/panel/evidencia/revisar", {"csrf": csrf})
-        self.assertIn("Cadena íntegra", r.html)
+        self.assertIn("Registro íntegro", r.html)
 
     def test_la_bandeja_marca_lo_que_llego_despues(self):
         csrf = self.nav.pedir("GET", "/panel/").csrf()

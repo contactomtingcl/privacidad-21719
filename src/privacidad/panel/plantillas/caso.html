@@ -9,15 +9,21 @@
 <div class="acciones">
 <span class="{% if cambio == 'corregido' %}cambio{% endif %}">{{ pildora(f.fila.urgencia, f.fila.etiqueta_urgencia) }}</span>
 <span class="suave">{{ f.fila.tipo }} · ingresó el {{ c.ingreso | fecha }} a las {{ c.ingreso | hora }}</span>
-<span class="mono suave">{{ c.id }}</span>
+<span class="suave codigo-caso">Código del caso: <span class="mono">{{ c.id }}</span></span>
 </div>
 <h1>{{ f.fila.resumen }}</h1>
+<p class="que-te-toca">{{ icono("info", 16) }}<span>{{ f.que_te_toca }}</span></p>
 </div>
 <div class="acciones">
 {% if c.validacion %}
 <span class="boton visto" role="status">
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5 L10 17 L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
 Validado por {{ c.validacion.por }} a las {{ c.validacion.momento | hora }}</span>
+{% elif f.falta_para_validar %}
+<div class="validar-bloqueado">
+<button class="primario" type="button" disabled aria-describedby="falta-validar">Validar decisión</button>
+<small id="falta-validar">{{ f.falta_para_validar }}</small>
+</div>
 {% else %}
 <form method="post" action="{{ BASE }}/caso/{{ c.id }}/validar">
 <input type="hidden" name="csrf" value="{{ ctx.csrf }}">
@@ -29,14 +35,14 @@ Validado por {{ c.validacion.por }} a las {{ c.validacion.momento | hora }}</spa
 </header>
 
 {% if error %}<div class="error" role="alert">{{ error }}</div>{% endif %}
-{% if cambio == "corregido" %}<div class="aviso" role="status">Corregiste los hechos. El motor volvió a decidir con ellos y quedó anotado en la evidencia.</div>{% endif %}
+{% if cambio == "corregido" %}<div class="aviso" role="status">Corregiste los hechos. El motor volvió a decidir con ellos y quedó anotado en el registro.</div>{% endif %}
 {% if cambio == "resuelto" %}<div class="aviso" role="status">Resolviste la duda. Quedó anotado con su motivo.</div>{% endif %}
-{% if cambio == "revisado" %}<div class="aviso" role="status">Marcaste el borrador como revisado. Quedó anotado en la evidencia con la huella del texto.</div>{% endif %}
-{% if cambio == "validado" %}<div class="aviso" role="status">Validaste la decisión. Quedó anotada en la evidencia con tu usuario y la hora.</div>{% endif %}
+{% if cambio == "revisado" %}<div class="aviso" role="status">Marcaste que revisaste el borrador. Quedó anotado en el registro (todavía no lo envías).</div>{% endif %}
+{% if cambio == "validado" %}<div class="aviso" role="status">Validaste la decisión. Quedó anotada en el registro con tu usuario y la hora. El sistema no envía nada: envía tú lo que corresponde.</div>{% endif %}
 {% if identidad %}
 <section class="identidad" aria-label="Identidad reservada">
 <h2>Identidad reservada</h2>
-<p class="suave">La apertura quedó anotada en la evidencia. No se guarda en esta página: si recargas, desaparece.</p>
+<p class="suave">La apertura quedó anotada en el registro. No se guarda en esta página: si recargas, desaparece.</p>
 <dl>{% for k, v in identidad.items() %}<dt>{{ "Nombre" if k == "nombre" else "Contacto" }}</dt><dd>{{ v }}</dd>{% endfor %}</dl>
 </section>
 {% endif %}
@@ -70,7 +76,8 @@ Validado por {{ c.validacion.por }} a las {{ c.validacion.momento | hora }}</spa
 
 <section class="tarjeta" aria-label="Lo que llegó">
 <h2>Lo que llegó</h2>
-<p class="suave">Así lo leyó la IA: los RUT, correos, teléfonos y fechas van tapados. Cada hecho propuesto por la IA muestra la frase en que se basó; el sistema comprueba que esa frase esté en el mensaje.</p>
+<p class="suave">Así lo leyó la IA, con los datos personales tapados.</p>
+<details class="fuente"><summary>Cómo se lee</summary><p class="suave">Los RUT, correos, teléfonos y fechas van tapados antes de llegar a la IA. Cada hecho propuesto por la IA muestra la frase del mensaje en que se basó, y el sistema comprueba que esa frase esté en el mensaje.</p></details>
 <p class="mensaje">{{ f.texto_enmascarado | marcadores }}</p>
 
 {% if c.tipo == "solicitud" %}
@@ -79,7 +86,7 @@ Validado por {{ c.validacion.por }} a las {{ c.validacion.momento | hora }}</spa
 <ul class="derechos">{% for d in c.confirmacion.vigente %}<li>{{ ETIQUETAS_DERECHO[d] }}{% if d in c.confirmacion.propuesta %} {{ respaldo(c.respaldos_ia.get(d)) }}{% endif %}</li>{% endfor %}</ul>
 <p class="suave">Estado de la confirmación con la persona: {{ {"no_requerida": "no hizo falta", "pendiente": "esperando su respuesta", "confirmada": "confirmó", "corregida": "corrigió la lectura", "por_defecto": "no respondió; se aplicó la lectura reversible"}[c.confirmacion.estado] }}.</p>
 {% else %}
-<p class="suave">Todavía no hay una lectura de lo que pide. Revísala con la persona.</p>
+<p class="suave">Todavía no hay una lectura de lo que pide: confírmala con la persona.</p>
 {% endif %}
 {% if c.identidad %}<p>Escribió: {{ c.identidad.get("nombre", "") }} · {{ c.identidad.get("contacto", "") }}</p>{% endif %}
 {% else %}
@@ -119,7 +126,7 @@ Validado por {{ c.validacion.por }} a las {{ c.validacion.momento | hora }}</spa
 {% for k, v in CATEGORIAS.items() %}<label class="opcion"><input type="checkbox" name="categorias_especiales" value="{{ k }}" {% if k in f.valores.categorias_especiales %}checked{% endif %}> {{ v }}</label>{% endfor %}
 </fieldset>
 <div class="rejilla">
-<div class="campo"><label for="motivo-correccion">Motivo (queda en la evidencia)</label>
+<div class="campo"><label for="motivo-correccion">Motivo (queda en el registro)</label>
 <select id="motivo-correccion" name="motivo" required>{% for k, v in MOTIVOS_CORRECCION.items() %}<option value="{{ k }}">{{ v }}</option>{% endfor %}</select></div>
 <div class="campo"><label for="nota">Nota opcional (queda solo en el caso)</label>
 <textarea id="nota" name="nota" maxlength="300"></textarea></div>
@@ -145,9 +152,9 @@ Validado por {{ c.validacion.por }} a las {{ c.validacion.momento | hora }}</spa
 <form method="post" action="{{ BASE }}/caso/{{ c.id }}/resolver">
 <input type="hidden" name="csrf" value="{{ ctx.csrf }}">
 <input type="hidden" name="deber" value="{{ d.id }}">
-<label class="oculto" for="motivo-{{ d.id }}">Motivo</label>
-<select id="motivo-{{ d.id }}" name="motivo">{% for k, v in MOTIVOS_DECISION.items() %}<option value="{{ k }}">{{ v }}</option>{% endfor %}</select>
-<button type="submit" name="decision" value="si">Sí corresponde</button>
+<label for="motivo-{{ d.id }}">¿Por qué?</label>
+<select id="motivo-{{ d.id }}" name="motivo" required><option value="" disabled selected>Elige…</option>{% for k, v in MOTIVOS_DECISION.items() %}<option value="{{ k }}">{{ v }}</option>{% endfor %}</select>
+<button type="submit" name="decision" value="si">Corresponde</button>
 <button type="submit" name="decision" value="no">No corresponde</button>
 </form>
 {% endif %}
@@ -165,10 +172,10 @@ Validado por {{ c.validacion.por }} a las {{ c.validacion.momento | hora }}</spa
 <p class="suave">Armados por el sistema desde los hechos y los plazos, sin IA. Tú los revisas y los envías.</p>
 {% for v in borradores %}
 <div class="deber borrador-fila">
-<span class="pildora marca-d {% if not v.borrador %}d-no{% elif v.revision and v.revision.vigente %}d-hecho{% else %}d-{{ v.borrador.decision }}{% endif %}">{% if not v.borrador %}No{% elif v.revision and v.revision.vigente %}Revisado{% elif v.borrador.decision == "si" %}Sí{% else %}Revisar{% endif %}</span>
+<span class="pildora marca-d {% if v.pendiente %}d-pendiente{% elif not v.borrador %}d-no{% elif v.revision and v.revision.vigente %}d-hecho{% else %}d-{{ v.borrador.decision }}{% endif %}">{% if v.pendiente %}Pendiente{% elif not v.borrador %}No corresponde{% elif v.revision and v.revision.vigente %}Revisado{% elif v.borrador.decision == "si" %}Corresponde{% else %}Decide tú{% endif %}</span>
 <div class="cuerpo">
 <b>{{ v.nombre }}</b>
-<p>{% if v.borrador %}{{ v.estado }}.{% else %}{{ v.motivo }}{% endif %}</p>
+<p>{% if v.borrador %}{{ v.estado }}.{% elif v.pendiente %}{{ v.motivo }}{% else %}{{ v.motivo | replace("No corresponde: ", "") }}{% endif %}</p>
 </div>
 {% if v.borrador %}<a class="boton" href="{{ BASE }}/caso/{{ c.id }}/borrador/{{ v.destino }}">Ver borrador</a>{% endif %}
 </div>
@@ -195,7 +202,7 @@ Validado por {{ c.validacion.por }} a las {{ c.validacion.momento | hora }}</spa
 {% if c.identidad_cifrada %}
 <section class="tarjeta" aria-label="Identidad reservada">
 <h2>Identidad reservada</h2>
-<p class="suave">Quien reportó pidió reserva. Abrirla pide tu contraseña y un motivo, y queda en la evidencia.</p>
+<p class="suave">Quien reportó pidió reserva. Abrirla pide tu contraseña y un motivo, y queda en el registro.</p>
 {% if ctx.demo %}
 <p class="suave">En la demo no se abren identidades reservadas.</p>
 {% else %}
@@ -214,14 +221,18 @@ Validado por {{ c.validacion.por }} a las {{ c.validacion.momento | hora }}</spa
 </section>
 {% endif %}
 
-<section class="tarjeta" aria-label="Evidencia del caso">
-<div class="cabecera"><h2>Evidencia</h2><a href="{{ BASE }}/evidencia">Ver la cadena</a></div>
+<section class="tarjeta" aria-label="Registro de lo actuado en este caso">
+<div class="cabecera"><h2>Registro de lo actuado</h2><a href="{{ BASE }}/evidencia">Ver registro completo</a></div>
 {% for h in f.linea %}
 <div class="hito {% if h.tipo in ('hechos_corregidos', 'deber_resuelto', 'identidad_abierta', 'validacion_anulada', 'borrador_revisado') %}delegado{% elif h.tipo == 'validado' %}validado{% endif %} {% if cambio and loop.last %}nuevo{% endif %}">
 <span class="punto" aria-hidden="true"></span>
-<span>{{ h.texto }}<small class="mono">{{ h.hora }} · {{ h.huella | corto }}</small></span>
+<span>{{ h.texto }}<small class="mono">{{ h.hora }}</small></span>
 </div>
 {% endfor %}
+<details class="fuente tecnico"><summary>Ver detalle técnico</summary>
+<p class="suave">Cada anotación guarda la huella (SHA-256) de la anterior: si alguien la cambia, deja de calzar.</p>
+<ul class="mono">{% for h in f.linea %}<li>{{ h.hora }} · {{ h.huella | corto }}</li>{% endfor %}</ul>
+</details>
 {% if c.costo_usd %}<p class="suave">Costo de IA de este caso: US${{ "%.4f" | format(c.costo_usd) | replace(".", ",") }}</p>{% endif %}
 </section>
 </aside>

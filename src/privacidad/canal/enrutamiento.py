@@ -36,7 +36,7 @@ NOMBRES_DEBER = {
     "anci_alerta_temprana": "primer aviso a la ANCI",
     "anci_actualizacion": "actualización a la ANCI",
     "anci_informe_final": "informe final a la ANCI",
-    "respuesta_solicitud": "respuesta al titular",
+    "respuesta_solicitud": "respuesta a la persona",
     "bloqueo_temporal": "respuesta al bloqueo temporal",
     "comunicar_a_terceros": "aviso a quienes recibieron los datos",
 }

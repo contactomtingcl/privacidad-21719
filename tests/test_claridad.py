@@ -85,7 +85,7 @@ class TestBandeja(unittest.TestCase):
     def test_un_solo_acceso_a_la_evidencia_con_su_estado(self):
         html = self.nav.pedir("GET", "/panel/").html
         self.assertEqual(html.count('href="/panel/evidencia"'), 2)  # menú lateral y botón
-        self.assertRegex(html, r"Revisar evidencia</span><small>Íntegra</small>")
+        self.assertRegex(html, r"Ver registro</span><small>Íntegra</small>")
 
     def test_el_tema_vive_en_el_menu_y_no_junto_a_botones_importantes(self):
         for ruta in ("/panel/", f"/panel/caso/{self.caso.id}", "/panel/evidencia"):
