@@ -3,7 +3,7 @@
 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{% if v.integra %}#3DD6C3{% else %}#FF6B5B{% endif %}" stroke-width="2" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9.5C7.5 20 4 17 4 12V6z"/>{% if v.integra %}<path d="M8.5 12 L11 14.5 L15.5 9.5" stroke-linecap="round" stroke-linejoin="round"/>{% else %}<path d="M12 8 V13 M12 16 V16.5" stroke-linecap="round"/>{% endif %}</svg>
 <div>
 <span class="titular">{% if v.integra %}Cadena íntegra{% elif alterada %}La copia de la demo fue alterada{% else %}La evidencia fue alterada{% endif %}</span>
-<p>{{ v.anotaciones }} anotaciones revisadas en total, {{ total_propias }} de {{ ctx.org.nombre }}.{% if v.integra %} Todas calzan con la anterior y con la historia guardada en cada caso.{% endif %}</p>
+<p>{{ v.anotaciones }} anotaciones de {{ ctx.org.nombre }} revisadas.{% if v.integra %} Todas calzan con la anterior y con la historia guardada en cada caso.{% endif %} Esta cadena es solo de tu organización: otras organizaciones tienen la suya.</p>
 {% if v.problemas %}<ul>{% for p in v.problemas %}<li>{{ p }}</li>{% endfor %}</ul>{% endif %}
 </div>
 </section>
@@ -16,7 +16,6 @@
 <small>Caso <span class="mono">{{ a.id_caso[:4] }}…</span> · {{ a.momento | hora_iso }}</small>
 <div class="huellas"><span>anterior {{ a.anterior | corto }}</span><span class="propia">huella {{ a.huella | corto }}</span></div>
 </div>
-{% if not loop.last and loop.nextitem.n != a.n + 1 %}<span class="salto" title="Anotaciones de otras organizaciones">+{{ loop.nextitem.n - a.n - 1 }}</span>{% endif %}
 {% if not loop.last %}<svg class="flecha" width="34" height="20" viewBox="0 0 34 20" aria-hidden="true"><path class="flujo" d="M2 10 H28" stroke-width="2"/><path d="M24 5 L30 10 L24 15" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>{% endif %}
 </div>
 {% else %}
@@ -24,9 +23,9 @@
 {% endfor %}
 </section>
 <section class="tarjeta" aria-label="Huella final">
-<p class="suave">Huella final de la cadena completa</p>
+<p class="suave">Huella final de la cadena de {{ ctx.org.nombre }}</p>
 <p class="huella-final">{{ v.cabeza }}</p>
-<p class="suave">Guárdala fuera del servidor (por correo o impresa). Si alguien borra las últimas anotaciones, solo se detecta comparando con esta huella: <span class="mono">python -m privacidad.canal evidencia --cabeza HUELLA</span>.</p>
+<p class="suave">Guárdala fuera del servidor (por correo o impresa). Solo cambia cuando tu organización registra algo. Si alguien borra las últimas anotaciones, solo se detecta comparando con esta huella: <span class="mono">python -m privacidad.canal evidencia --org {{ ctx.org.id }} --cabeza HUELLA</span>.</p>
 <button type="button" data-copiar="{{ v.cabeza }}">Copiar huella</button>
 </section>
 </div>

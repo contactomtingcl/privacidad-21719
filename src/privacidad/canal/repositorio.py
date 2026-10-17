@@ -71,16 +71,29 @@ class RepositorioCasos:
             filas = self._con.execute("SELECT datos FROM casos ORDER BY ingreso_utc, id").fetchall()
         return [Caso.model_validate_json(f[0]) for f in filas]
 
-    def evidencia(self, id_caso: str | None = None) -> list[evidencia.Anotacion]:
-        """Anotaciones de la cadena, de un caso o de todos."""
+    def evidencia(
+        self, id_caso: str | None = None, id_organizacion: str | None = None
+    ) -> list[evidencia.Anotacion]:
+        """Anotaciones de un caso, de una organización o de todas."""
         with self._cerrojo:
-            return evidencia.leer(self._con, id_caso)
+            return evidencia.leer(self._con, id_caso, id_organizacion)
 
-    def verificar_evidencia(self, cabeza_esperada: str | None = None) -> evidencia.Verificacion:
-        """Revisa la cadena completa y la compara con la historia guardada en cada caso."""
+    def verificar_evidencia(
+        self, cabeza_esperada: str | None = None, id_organizacion: str | None = None
+    ) -> evidencia.Verificacion:
+        """Revisa la cadena de una organización (o la de todas) y la compara con la historia
+        guardada en cada uno de sus casos."""
         with self._cerrojo:
-            anotaciones = evidencia.leer(self._con)
-        return evidencia.verificar_cadena(anotaciones, self.listar(), cabeza_esperada)
+            anotaciones = evidencia.leer(self._con, id_organizacion=id_organizacion)
+        casos = self.listar()
+        if id_organizacion is not None:
+            casos = [c for c in casos if c.id_organizacion == id_organizacion]
+        return evidencia.verificar_cadena(
+            anotaciones,
+            casos,
+            cabeza_esperada,
+            organizaciones=[id_organizacion] if id_organizacion else None,
+        )
 
     def copiar_a(self, destino: Path) -> None:
         """Copia completa y consistente de la base (API de respaldo de SQLite). La usa la demo

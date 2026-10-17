@@ -3,6 +3,10 @@ sin que se note.
 
 Cómo funciona:
 
+- **Una cadena por organización.** Cada organización tiene su propia numeración (1, 2, 3…) y
+  cada anotación apunta a la anterior de la misma organización. Así un delegado verifica su
+  cadena sin ver ni depender de la de otras: no sabe cuánta actividad tienen, y su huella final
+  solo cambia cuando su organización registra algo (se puede guardar y comparar después).
 - Cada anotación guarda su número, el caso, el tipo de evento, el momento y el detalle, más la
   huella (SHA-256, de `hashlib`, biblioteca estándar) de la anotación anterior. Su propia huella
   se calcula sobre todo eso. Si alguien cambia o borra una anotación del medio, las huellas
@@ -15,9 +19,10 @@ Cómo funciona:
 - Los eventos no llevan datos personales: antes de anotar, se revisa que el detalle no tenga
   RUT, correos ni teléfonos. Si los tiene, no se guarda nada.
 
-Límite declarado: si alguien borra las últimas anotaciones, la cadena que queda sigue siendo
-coherente. Para detectarlo hay que comparar con la huella final guardada en otra parte (el
-comando `evidencia` la muestra). El sello de tiempo, previsto en el roadmap, cumple ese papel.
+Límite declarado: si alguien borra las últimas anotaciones de una organización, la cadena que
+queda sigue siendo coherente. Para detectarlo hay que comparar con la huella final de esa
+organización guardada en otra parte (el panel y el comando `evidencia` la muestran). El sello
+de tiempo, previsto en el roadmap, cumple ese papel.
 
 El contenido que se firma es JSON con llaves ordenadas, sin espacios y en UTF-8, para que la
 misma anotación produzca siempre la misma huella.
@@ -35,19 +40,22 @@ from pydantic import BaseModel, Field
 from ..deteccion import detectar
 from .modelos import Caso
 
-GENESIS = "0" * 64  # "anterior" de la primera anotación
+GENESIS = "0" * 64  # "anterior" de la primera anotación de cada organización
+VERSION_ESQUEMA = 2  # 2: una cadena por organización (antes, una sola para todas)
 TIPOS_PROHIBIDOS = ("rut", "correo", "telefono")  # las fechas son metadatos del caso
 
 _ESQUEMA = """
 CREATE TABLE IF NOT EXISTS evidencia (
-    n INTEGER PRIMARY KEY,
-    id_caso TEXT NOT NULL,
+    fila INTEGER PRIMARY KEY,
     id_organizacion TEXT NOT NULL,
+    n INTEGER NOT NULL,
+    id_caso TEXT NOT NULL,
     tipo TEXT NOT NULL,
     momento TEXT NOT NULL,
     detalle TEXT NOT NULL,
     anterior TEXT NOT NULL,
-    huella TEXT NOT NULL UNIQUE
+    huella TEXT NOT NULL UNIQUE,
+    UNIQUE (id_organizacion, n)
 );
 CREATE INDEX IF NOT EXISTS evidencia_por_caso ON evidencia (id_caso, n);
 CREATE TRIGGER IF NOT EXISTS evidencia_sin_cambios BEFORE UPDATE ON evidencia
@@ -62,7 +70,7 @@ class ErrorEvidencia(Exception):
 
 
 class Anotacion(BaseModel):
-    n: int
+    n: int  # número dentro de la cadena de su organización
     id_caso: str
     id_organizacion: str
     tipo: str
@@ -75,8 +83,16 @@ class Anotacion(BaseModel):
 class Verificacion(BaseModel):
     integra: bool
     anotaciones: int
-    cabeza: str  # huella de la última anotación (GENESIS si no hay ninguna)
+    # Huella de la última anotación de cada organización revisada (GENESIS si no tiene ninguna).
+    cabezas: dict[str, str] = Field(default_factory=dict)
     problemas: list[str] = Field(default_factory=list)
+
+    @property
+    def cabeza(self) -> str:
+        """La huella final cuando se revisó una sola organización (lo normal en el panel)."""
+        if len(self.cabezas) > 1:
+            raise ValueError("Se revisaron varias organizaciones: usa `cabezas`")
+        return next(iter(self.cabezas.values()), GENESIS)
 
 
 def _canonico(valor: Any) -> str:
@@ -119,6 +135,14 @@ def _sin_datos_personales(detalle: dict[str, Any]) -> None:
 
 
 def crear_tablas(con: sqlite3.Connection) -> None:
+    columnas = {f[1] for f in con.execute("PRAGMA table_info(evidencia)")}
+    if columnas and "fila" not in columnas:
+        # Base de la versión 1 (una sola cadena). No se convierte: reescribir la evidencia es
+        # justo lo que no debe pasar. Solo hubo bases con datos ficticios.
+        raise ErrorEvidencia(
+            "Esta base usa el formato anterior de evidencia (una sola cadena). "
+            "Usa una carpeta de datos nueva."
+        )
     con.executescript(_ESQUEMA)
 
 
@@ -138,14 +162,20 @@ def _fila(f: tuple) -> Anotacion:
 _COLUMNAS = "n, id_caso, id_organizacion, tipo, momento, detalle, anterior, huella"
 
 
-def leer(con: sqlite3.Connection, id_caso: str | None = None) -> list[Anotacion]:
-    if id_caso is None:
-        filas = con.execute(f"SELECT {_COLUMNAS} FROM evidencia ORDER BY n").fetchall()
-    else:
-        filas = con.execute(
-            f"SELECT {_COLUMNAS} FROM evidencia WHERE id_caso = ? ORDER BY n", (id_caso,)
-        ).fetchall()
-    return [_fila(f) for f in filas]
+def leer(
+    con: sqlite3.Connection, id_caso: str | None = None, id_organizacion: str | None = None
+) -> list[Anotacion]:
+    """Anotaciones de un caso, de una organización o de todas, en el orden en que se anotaron."""
+    condiciones, valores = [], []
+    if id_caso is not None:
+        condiciones.append("id_caso = ?")
+        valores.append(id_caso)
+    if id_organizacion is not None:
+        condiciones.append("id_organizacion = ?")
+        valores.append(id_organizacion)
+    donde = f" WHERE {' AND '.join(condiciones)}" if condiciones else ""
+    filas = con.execute(f"SELECT {_COLUMNAS} FROM evidencia{donde} ORDER BY fila", valores)
+    return [_fila(f) for f in filas.fetchall()]
 
 
 def _eventos(caso: Caso) -> list[tuple[str, str, dict[str, Any]]]:
@@ -172,7 +202,10 @@ def anotar_eventos(con: sqlite3.Connection, caso: Caso) -> list[Anotacion]:
     for _, _, detalle in nuevos:
         _sin_datos_personales(detalle)
 
-    ultima = con.execute("SELECT n, huella FROM evidencia ORDER BY n DESC LIMIT 1").fetchone()
+    ultima = con.execute(
+        "SELECT n, huella FROM evidencia WHERE id_organizacion = ? ORDER BY n DESC LIMIT 1",
+        (caso.id_organizacion,),
+    ).fetchone()
     n, anterior = ultima if ultima else (0, GENESIS)
     anotadas = []
     for tipo, momento, detalle in nuevos:
@@ -206,16 +239,11 @@ def anotar_eventos(con: sqlite3.Connection, caso: Caso) -> list[Anotacion]:
     return anotadas
 
 
-def verificar_cadena(
-    anotaciones: list[Anotacion],
-    casos: list[Caso] | None = None,
-    cabeza_esperada: str | None = None,
-) -> Verificacion:
-    """Revisa la cadena completa y, si se entregan, la compara con los casos y con una huella
-    final guardada antes en otra parte."""
+def _revisar_eslabones(anotaciones: list[Anotacion]) -> list[str]:
+    """Revisa una cadena (la de una organización): numeración seguida, enlaces y huellas."""
     problemas: list[str] = []
     anterior = GENESIS
-    for esperado, a in enumerate(anotaciones, start=1):
+    for esperado, a in enumerate(sorted(anotaciones, key=lambda a: a.n), start=1):
         if a.n != esperado:
             problemas.append(f"Falta la anotación {esperado} (sigue la {a.n}): hubo un borrado")
         if a.anterior != anterior:
@@ -223,9 +251,34 @@ def verificar_cadena(
         if _huella_de(a) != a.huella:
             problemas.append(f"La anotación {a.n} fue modificada: su huella no calza")
         anterior = a.huella
-        if len(problemas) >= 20:
-            problemas.append("Hay más problemas; se muestran los primeros.")
-            break
+    return problemas
+
+
+def verificar_cadena(
+    anotaciones: list[Anotacion],
+    casos: list[Caso] | None = None,
+    cabeza_esperada: str | None = None,
+    organizaciones: list[str] | None = None,
+) -> Verificacion:
+    """Revisa la cadena de cada organización presente (o de las indicadas en `organizaciones`,
+    que puede incluir una sin anotaciones) y, si se entregan, la compara con los casos y con una
+    huella final guardada antes en otra parte."""
+    por_org: dict[str, list[Anotacion]] = {o: [] for o in organizaciones or []}
+    for a in anotaciones:
+        por_org.setdefault(a.id_organizacion, []).append(a)
+    varias = len(por_org) > 1
+
+    def prefijo(org: str) -> str:
+        return f"{org}: " if varias else ""
+
+    problemas: list[str] = []
+    cabezas: dict[str, str] = {}
+    for org, propias in por_org.items():
+        for p in _revisar_eslabones(propias):
+            problemas.append(prefijo(org) + p)
+        cabezas[org] = max(propias, key=lambda a: a.n).huella if propias else GENESIS
+    if len(problemas) > 20:
+        problemas = problemas[:20] + ["Hay más problemas; se muestran los primeros."]
 
     if casos is not None:
         por_caso: dict[str, list[Anotacion]] = {}
@@ -236,9 +289,15 @@ def verificar_cadena(
             ids.add(caso.id)
             registrados = [_de_anotacion(a) for a in por_caso.get(caso.id, [])]
             if registrados != _eventos(caso):
-                problemas.append(f"La historia del caso {caso.id} no coincide con la evidencia")
+                problemas.append(
+                    prefijo(caso.id_organizacion)
+                    + f"La historia del caso {caso.id} no coincide con la evidencia"
+                )
         for id_caso in sorted(set(por_caso) - ids):
-            problemas.append(f"Hay evidencia del caso {id_caso}, pero el caso ya no existe")
+            problemas.append(
+                prefijo(por_caso[id_caso][0].id_organizacion)
+                + f"Hay evidencia del caso {id_caso}, pero el caso ya no existe"
+            )
 
     if cabeza_esperada is not None and cabeza_esperada not in {a.huella for a in anotaciones}:
         problemas.append(
@@ -247,6 +306,6 @@ def verificar_cadena(
     return Verificacion(
         integra=not problemas,
         anotaciones=len(anotaciones),
-        cabeza=anotaciones[-1].huella if anotaciones else GENESIS,
+        cabezas=cabezas,
         problemas=problemas,
     )

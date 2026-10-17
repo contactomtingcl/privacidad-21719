@@ -47,7 +47,7 @@ from starlette.staticfiles import StaticFiles
 
 from ..canal.confirmacion import ETIQUETAS_DERECHO
 from ..canal.correcciones import medir_correcciones
-from ..canal.delegado import AccionInvalida, CasoAjeno, filtrar_problemas
+from ..canal.delegado import AccionInvalida, CasoAjeno
 from ..canal.evidencia import Anotacion, Verificacion
 from ..canal.modelos import Organizacion
 from ..canal.repositorio import NOMBRE_ARCHIVO, RepositorioCasos
@@ -177,21 +177,24 @@ def _simular_alteracion(canal: CanalReporte, id_org: str) -> tuple[Verificacion,
     with tempfile.TemporaryDirectory() as carpeta:
         destino = Path(carpeta) / NOMBRE_ARCHIVO
         canal._repo.copiar_a(destino)
-        propias = [a for a in canal._repo.evidencia() if a.id_organizacion == id_org]
+        propias = canal._repo.evidencia(id_organizacion=id_org)
         objetivo = propias[-3].n if len(propias) >= 3 else (propias[0].n if propias else None)
         if objetivo is not None:
             con = sqlite3.connect(destino)
             con.execute("DROP TRIGGER IF EXISTS evidencia_sin_cambios")
-            con.execute("UPDATE evidencia SET tipo = 'editado_a_mano' WHERE n = ?", (objetivo,))
+            con.execute(
+                "UPDATE evidencia SET tipo = 'editado_a_mano' WHERE id_organizacion = ? AND n = ?",
+                (id_org, objetivo),
+            )
             con.commit()
             con.close()
         copia = RepositorioCasos(Path(carpeta))
         try:
-            verificacion = copia.verificar_evidencia()
-            anotaciones = [a for a in copia.evidencia() if a.id_organizacion == id_org]
+            verificacion = copia.verificar_evidencia(id_organizacion=id_org)
+            anotaciones = copia.evidencia(id_organizacion=id_org)
         finally:
             copia.cerrar()
-    return filtrar_problemas(verificacion, anotaciones), anotaciones, objetivo
+    return verificacion, anotaciones, objetivo
 
 
 def _hechos_del_formulario(datos: dict[str, list[str]]) -> HechosIncidente:

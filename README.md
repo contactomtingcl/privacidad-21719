@@ -102,15 +102,16 @@ Cada destino y la urgencia traen su porqué en lenguaje simple. Las palabras y l
 
 Todo lo que le pasa a un caso (ingreso, lectura de la IA, confirmación del titular, enrutamiento) queda anotado en un registro donde cada anotación lleva la huella SHA-256 de la anterior (`hashlib`, de la biblioteca estándar de Python). Si alguien cambia o borra una anotación, las huellas dejan de calzar.
 
+- **Una cadena por organización:** cada una numera sus anotaciones desde 1 y cada anotación apunta a la anterior de la misma organización. El delegado verifica solo la suya, no ve cuánta actividad tienen otras y su huella final solo cambia cuando su organización registra algo.
 - El caso y sus anotaciones se guardan en la misma transacción: o quedan ambos o ninguno.
 - La aplicación no permite acortar ni reescribir la historia de un caso, y la base de datos rechaza cambios y borrados en la evidencia.
 - Las anotaciones no llevan datos personales: si un evento trae un RUT, un correo o un teléfono, no se guarda.
-- `python -m privacidad.canal evidencia --carpeta casos-demo` revisa la cadena completa y la compara con la historia de cada caso. Termina con la huella final.
+- `python -m privacidad.canal evidencia --carpeta casos-demo [--org ORGANIZACION]` revisa la cadena de una organización (o la de cada una) y la compara con la historia de cada caso. Termina con la huella final de cada organización.
 
 Límites conocidos:
 
-- Quien tenga acceso directo al archivo puede quitar las protecciones de la base de datos. Lo que no puede es alterar la evidencia sin que la revisión lo detecte, con una excepción: **si borra las últimas anotaciones (y los casos a los que pertenecen), la cadena que queda sigue siendo coherente.** Para detectarlo hay que guardar la huella final fuera del servidor y revisar con `--cabeza HUELLA`. El sello de tiempo previsto en el roadmap automatiza ese paso.
-- La cadena es una sola para todas las organizaciones del prototipo; cada organización con su propia cadena queda para la versión con PostgreSQL.
+- Quien tenga acceso directo al archivo puede quitar las protecciones de la base de datos. Lo que no puede es alterar la evidencia sin que la revisión lo detecte, con una excepción: **si borra las últimas anotaciones (y los casos a los que pertenecen), la cadena que queda sigue siendo coherente.** Para detectarlo hay que guardar la huella final de la organización fuera del servidor y revisar con `--org ORGANIZACION --cabeza HUELLA`. El sello de tiempo previsto en el roadmap automatiza ese paso.
+- Las cadenas de todas las organizaciones viven en la misma base del prototipo (separadas por organización). Una base por organización queda para la versión con PostgreSQL.
 
 ## Panel del delegado
 
@@ -118,7 +119,7 @@ El panel vive en el mismo programa que el canal, en la dirección `/panel`. Tien
 
 - **Bandeja:** los casos ordenados por urgencia, con el plazo más cercano corriendo en vivo. Cada 5 segundos revisa si llegó algo nuevo: un reporte enviado por el código QR aparece solo, con un aviso. Arriba, tres cifras con nombres exactos: «Casos con fecha límite legal» (separa los vencidos de los que vencen en menos de 3 horas), «Por validar» (incluye, con su aviso, los que la IA no pudo leer) y «Validados» (no «resueltos»: el sistema no envía nada a las autoridades). Si el plazo más cercano venció, la pantalla dice que el deber sigue y ofrece el paso siguiente (por ejemplo, el borrador para la ANCI). El estado de la cadena de evidencia va en el botón «Revisar evidencia», y si no calza aparece una alarma.
 - **Ficha del caso:** lo que llegó (tal como lo leyó la IA, con los datos tapados), los hechos que propuso la IA, lo que decidió el motor con su artículo, a quién se envió y por qué, y la línea de tiempo con la huella de cada anotación.
-- **Evidencia:** revisa la cadena completa, muestra las últimas anotaciones de la organización y la cifra de correcciones (ver abajo).
+- **Evidencia:** revisa la cadena de la organización, muestra las últimas anotaciones de la organización y la cifra de correcciones (ver abajo).
 
 Lo que puede hacer el delegado, siempre con la regla "la IA interpreta, el motor decide, la persona valida":
 

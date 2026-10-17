@@ -235,7 +235,8 @@ def comando_identidad(args: argparse.Namespace) -> int:
 
 
 def comando_evidencia(args: argparse.Namespace) -> int:
-    """Revisa la cadena de evidencia completa y, si se pide, muestra la de un caso."""
+    """Revisa la cadena de evidencia de una organización (o la de cada una) y, si se pide,
+    muestra la de un caso."""
     carpeta = Path(args.carpeta)
     if not (carpeta / NOMBRE_ARCHIVO).is_file():
         return _error(f"No hay casos guardados en {carpeta}.")
@@ -247,7 +248,9 @@ def comando_evidencia(args: argparse.Namespace) -> int:
                 return _error("Ese caso no existe o no tiene evidencia.")
             for a in anotaciones:
                 print(a.model_dump_json())
-        resultado = repo.verificar_evidencia(args.cabeza)
+        if args.cabeza and not args.org:
+            return _error("La huella final es de una organización: indíquela con --org.")
+        resultado = repo.verificar_evidencia(args.cabeza, args.org)
     finally:
         repo.cerrar()
     if resultado.integra:
@@ -256,10 +259,11 @@ def comando_evidencia(args: argparse.Namespace) -> int:
         print("ATENCIÓN: la evidencia fue alterada.")
         for problema in resultado.problemas:
             print(f"  - {problema}")
-    print(f"Huella final: {resultado.cabeza}")
+    for org, cabeza in sorted(resultado.cabezas.items()):
+        print(f"Huella final de {org}: {cabeza}")
     print(
         "Guárdela fuera de este computador. Si alguien borra las últimas anotaciones, se "
-        "detecta revisando con --cabeza y esa huella."
+        "detecta revisando con --org, --cabeza y esa huella."
     )
     return 0 if resultado.integra else 1
 
@@ -273,14 +277,14 @@ def comando_correcciones(args: argparse.Namespace) -> int:
         return _error(f"No hay casos guardados en {carpeta}.")
     repo = RepositorioCasos(carpeta)
     try:
-        verificacion = repo.verificar_evidencia(args.cabeza)
-        anotaciones = repo.evidencia()
+        if args.cabeza and not args.org:
+            return _error("La huella final es de una organización: indíquela con --org.")
+        verificacion = repo.verificar_evidencia(args.cabeza, args.org)
+        anotaciones = repo.evidencia(id_organizacion=args.org)
     finally:
         repo.cerrar()
     if not verificacion.integra:
         return _error("La evidencia fue alterada: no se calcula la cifra (no sería confiable).")
-    if args.org:
-        anotaciones = [a for a in anotaciones if a.id_organizacion == args.org]
     cifra = medir_correcciones(anotaciones)
     print(json.dumps(cifra.como_dict(), ensure_ascii=False, indent=2))
     print(f"Calculada sobre {verificacion.anotaciones} anotaciones verificadas.", file=sys.stderr)
@@ -354,6 +358,7 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("evidencia", help="revisa la cadena de evidencia (delegado)")
     p.add_argument("--carpeta", required=True)
     p.add_argument("--caso", help="muestra además la evidencia de este caso")
+    p.add_argument("--org", help="solo la cadena de esta organización")
     p.add_argument("--cabeza", help="huella final guardada antes, para detectar borrados")
     p.set_defaults(funcion=comando_evidencia)
 

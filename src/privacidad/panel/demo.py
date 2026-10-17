@@ -21,6 +21,7 @@ from typing import Any
 import yaml
 
 from ..canal.delegado import por_resolver
+from ..canal.evidencia import VERSION_ESQUEMA
 from ..canal.modelos import ahora_chile
 from ..canal.servicio import CanalReporte
 
@@ -67,10 +68,14 @@ class _RelojAtrasado:
 
 
 def version_demo(ruta: Path | None = None) -> str:
-    """Huella corta de los casos de la demo. Si cambian (por ejemplo, se agregan las frases de
-    respaldo), la demo arranca en una carpeta nueva y se vuelve a sembrar: los casos antiguos no
-    se borran (la evidencia no admite borrados), solo dejan de mostrarse."""
-    return hashlib.sha256((ruta or RAIZ_DEMO / "casos.yaml").read_bytes()).hexdigest()[:8]
+    """Huella corta de los casos de la demo y del formato de la evidencia. Si cambian (por
+    ejemplo, se agregan las frases de respaldo o la evidencia pasa a una cadena por
+    organización), la demo arranca en una carpeta nueva y se vuelve a sembrar: los casos antiguos
+    no se borran (la evidencia no admite borrados), solo dejan de mostrarse."""
+    contenido = (ruta or RAIZ_DEMO / "casos.yaml").read_bytes()
+    if VERSION_ESQUEMA > 1:  # la versión 1 conserva la huella de siempre
+        contenido += f"\nevidencia-v{VERSION_ESQUEMA}".encode()
+    return hashlib.sha256(contenido).hexdigest()[:8]
 
 
 def sembrar(canal: CanalReporte, ruta: Path | None = None) -> int:

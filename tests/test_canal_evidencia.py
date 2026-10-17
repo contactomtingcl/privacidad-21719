@@ -119,6 +119,95 @@ class TestLaHistoriaNoSeReescribe(unittest.TestCase):
         self.assertTrue(self.repo.verificar_evidencia().integra)
 
 
+ROBLES, MUNI = "comercial-los-robles", "municipalidad-piloto"
+
+
+def caso_de(org: str, id_caso: str, eventos=("recibido",)) -> Caso:
+    c = caso(id_caso, eventos)
+    c.id_organizacion = org
+    return c
+
+
+class TestUnaCadenaPorOrganizacion(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.carpeta = Path(self.tmp.name)
+        self.repo = RepositorioCasos(self.carpeta)
+        self.repo.guardar(caso_de(ROBLES, "caso-robles-01", ("recibido", "interpretado")))
+        self.repo.guardar(caso_de(MUNI, "caso-muni-0001", ("recibido",)))
+        self.repo.guardar(caso_de(ROBLES, "caso-robles-02", ("recibido",)))
+
+    def tearDown(self):
+        self.repo.cerrar()
+        self.tmp.cleanup()
+
+    def test_cada_organizacion_numera_y_encadena_por_su_cuenta(self):
+        robles = self.repo.evidencia(id_organizacion=ROBLES)
+        muni = self.repo.evidencia(id_organizacion=MUNI)
+        self.assertEqual([a.n for a in robles], [1, 2, 3])
+        self.assertEqual([a.n for a in muni], [1])
+        self.assertEqual(muni[0].anterior, GENESIS)
+        self.assertEqual(robles[2].anterior, robles[1].huella)  # salta la de la municipalidad
+
+    def test_lo_que_hace_otra_organizacion_no_cambia_mi_huella_final(self):
+        antes = self.repo.verificar_evidencia(id_organizacion=ROBLES).cabeza
+        self.repo.guardar(caso_de(MUNI, "caso-muni-0002", ("recibido", "interpretado")))
+        despues = self.repo.verificar_evidencia(antes, ROBLES)
+        self.assertTrue(despues.integra)
+        self.assertEqual(despues.cabeza, antes)
+        self.assertEqual(despues.anotaciones, 3)
+
+    def test_una_organizacion_sin_anotaciones(self):
+        repo = RepositorioCasos()
+        v = repo.verificar_evidencia(id_organizacion=MUNI)
+        self.assertTrue(v.integra)
+        self.assertEqual((v.anotaciones, v.cabeza), (0, GENESIS))
+
+    def alterar(self, sql: str, *valores) -> None:
+        con = abrir_directo(self.carpeta)
+        con.execute("DROP TRIGGER evidencia_sin_cambios")
+        con.execute(sql, valores)
+        con.commit()
+        con.close()
+
+    def test_la_alteracion_de_otra_organizacion_no_aparece_en_la_mia(self):
+        self.alterar("UPDATE evidencia SET tipo = 'cerrado' WHERE id_organizacion = ?", MUNI)
+        self.assertTrue(self.repo.verificar_evidencia(id_organizacion=ROBLES).integra)
+        v = self.repo.verificar_evidencia(id_organizacion=MUNI)
+        self.assertFalse(v.integra)
+        self.assertFalse(any("robles" in p for p in v.problemas))
+
+    def test_pasar_una_anotacion_a_otra_organizacion_se_nota_en_ambas(self):
+        self.alterar(
+            "UPDATE evidencia SET id_organizacion = ? WHERE id_organizacion = ? AND n = 3",
+            MUNI,
+            ROBLES,
+        )
+        self.assertFalse(self.repo.verificar_evidencia(id_organizacion=ROBLES).integra)
+        self.assertFalse(self.repo.verificar_evidencia(id_organizacion=MUNI).integra)
+
+    def test_revision_de_todas_dice_de_que_organizacion_es_cada_problema(self):
+        self.alterar("UPDATE evidencia SET tipo = 'cerrado' WHERE id_organizacion = ?", MUNI)
+        v = self.repo.verificar_evidencia()
+        self.assertEqual(set(v.cabezas), {ROBLES, MUNI})
+        self.assertTrue(v.problemas)
+        self.assertTrue(all(p.startswith(f"{MUNI}:") for p in v.problemas))
+        with self.assertRaises(ValueError):
+            _ = v.cabeza
+
+    def test_una_base_con_el_formato_anterior_no_se_abre(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            con = sqlite3.connect(Path(tmp) / NOMBRE_ARCHIVO)
+            con.execute(
+                "CREATE TABLE evidencia (n INTEGER PRIMARY KEY, id_caso TEXT, "
+                "id_organizacion TEXT, tipo TEXT, momento TEXT, detalle TEXT, anterior TEXT, "
+                "huella TEXT)"
+            )
+            con.close()
+            with self.assertRaises(ErrorEvidencia):
+                RepositorioCasos(Path(tmp))
+
+
 class TestAlteracionesPorFuera(unittest.TestCase):
     """Alguien con acceso al archivo quita las protecciones y altera la evidencia."""
 
@@ -248,10 +337,21 @@ class TestComando(unittest.TestCase):
             self.assertIn("Cadena íntegra: 1 anotaciones", salida)
             self.assertIn(cabeza, salida)
             codigo, salida = self.ejecutar(
-                "evidencia", "--carpeta", tmp, "--caso", "caso-0001-abc", "--cabeza", cabeza
+                "evidencia",
+                "--carpeta",
+                tmp,
+                "--caso",
+                "caso-0001-abc",
+                "--org",
+                "comercial-los-robles",
+                "--cabeza",
+                cabeza,
             )
             self.assertEqual(codigo, 0)
             self.assertIn('"tipo":"recibido"', salida)
+            # La huella final es de una organización: sin --org no se sabe con cuál comparar.
+            codigo, _ = self.ejecutar("evidencia", "--carpeta", tmp, "--cabeza", cabeza)
+            self.assertEqual(codigo, 2)
 
     def test_alteracion_devuelve_error(self):
         with tempfile.TemporaryDirectory() as tmp:

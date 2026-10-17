@@ -57,7 +57,7 @@ sintéticos, detección y enmascarado, inventario con IA (11 campos del DS 662),
 reglas (Agencia, titulares, ANCI, plazos de solicitudes), interpretación con IA de
 solicitudes e incidentes, set de 150 casos y evaluación en tres niveles (iteración 2:
 IA + motor 76/77 deberes detectados; iteración 3 del 12 oct con frase de respaldo: 76/77, solicitudes
-98%). 428 pruebas (5 omitidas sin segno) en verde.
+98%). 435 pruebas (5 omitidas sin segno) en verde.
 
 Canal de reporte (primera versión, 10 oct): enlace firmado y QR (segno), confirmación al
 titular con menú fijo y, sin respuesta a los 5 días, lectura reversible: oposición + bloqueo
@@ -135,7 +135,13 @@ enviar lo que corresponde) y «Derivar a…» un área (mismo correo que los avi
 identidad). Criterio: un texto o botón de una función planificada para la versión final se
 conserva («Se envió a» se queda porque vienen los avisos); se cambia solo si no llegará.
 
-Pendiente técnico, en orden: (sáb 17) registro de evidencia por organización + textos y diseño de la auditoría; (dom 18) «Ya lo envié», formulario
+Evidencia por organización (17 oct, esquema v2): `evidencia.py` numera y encadena por
+organización (columna `fila` global solo para el orden; `UNIQUE(id_organizacion, n)`).
+`verificar_evidencia(cabeza, id_organizacion)`; `Verificacion.cabezas` por organización y `.cabeza`
+solo si se revisó una. Una base v1 no se abre (ErrorEvidencia); la demo cambia de carpeta porque
+`version_demo` incluye la versión del esquema. CLI: `evidencia --org`, y `--cabeza` exige `--org`.
+
+Pendiente técnico, en orden: (sáb 17) textos y diseño de la auditoría; (dom 18) «Ya lo envié», formulario
 vacío si la IA no leyó, cómo responder a la persona; (19-20) avisos por correo/Telegram a los
 destinos + «Derivar a…»; completar el motor
 (perfiles, operadores de importancia vital, simulador). Si se cumple la puerta de calidad del 23 de octubre:
