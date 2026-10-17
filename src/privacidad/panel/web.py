@@ -45,6 +45,7 @@ from starlette.responses import HTMLResponse, RedirectResponse, Response
 from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
 
+from ..canal.cascada import proveedores_de
 from ..canal.confirmacion import ETIQUETAS_DERECHO
 from ..canal.correcciones import medir_correcciones
 from ..canal.delegado import AccionInvalida, CasoAjeno, caso_abierto
@@ -703,6 +704,35 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
             ctx.canal._repo.guardar_actividad(registro)
         return RedirectResponse(f"{BASE}/inventario/{registro.id}?validado=1", 303)
 
+    async def proveedores(request: Request) -> Response:
+        """Proveedores de la red que tratan datos de esta organización."""
+        ctx = contexto(request)
+        raiz = f"{request.url.scheme}://{request.url.netloc}"
+        sufijo = f"?sala={ctx.sala}" if ctx.sala else ""
+        registros = {r.archivo: r.id for r in ctx.canal._repo.actividades(ctx.org.id)}
+        filas = [
+            {
+                "p": p,
+                "c": c,
+                "enlace": ctx.canal.enlace_proveedor(p.id, raiz) + sufijo if ctx.demo else None,
+                "registro": registros.get(c.planilla) if c.planilla else None,
+                "casos": [
+                    caso
+                    for caso in ctx.canal.casos_de_organizacion(ctx.org.id)
+                    if caso.cascada and caso.cascada.proveedor == p.id
+                ],
+            }
+            for p, c in proveedores_de(ctx.org.id)
+        ]
+        return responder(
+            "proveedores.html",
+            ctx=ctx,
+            organizaciones=organizaciones,
+            seccion="proveedores",
+            filas=filas,
+            CATEGORIAS=vista.CATEGORIAS,
+        )
+
     async def simulador(request: Request) -> Response:
         """Mismo incidente, ley vigente y postergación lado a lado. No guarda nada."""
         ctx = contexto(request)
@@ -964,6 +994,7 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
         Route("/caso/{id}/borrador/{destino}/revisado", marcar_revisado, methods=["POST"]),
         Route("/canal", ver_canal, methods=["GET"]),
         Route("/simulador", simulador, methods=["GET"]),
+        Route("/proveedores", proveedores, methods=["GET"]),
         Route("/inventario", inventario_inicio, methods=["GET"]),
         Route("/inventario/subir", subir_planilla, methods=["POST"]),
         Route("/inventario/ejemplo", usar_ejemplo, methods=["POST"]),

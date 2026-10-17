@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block titulo %}Reporte recibido{% endblock %}
+{% block cuerpo %}
+<h1>Reporte recibido</h1>
+<p>Código del reporte: <code>{{ resultado.codigo }}</code>. Guárdelo para cualquier consulta.</p>
+<p>Llegó a {{ clientes | length }} {{ "organizaciones clientes" if clientes | length != 1 else "organización cliente" }} a las {{ resultado.recibido.strftime("%H:%M") }}:</p>
+<ul>{% for nombre in clientes %}<li>{{ nombre }}</li>{% endfor %}</ul>
+<p>Cada una recibió su propio caso con sus datos y decide sus deberes con la ley que le aplica. Usted no ve esos casos, y ninguna ve el de otra.</p>
+{% endblock %}

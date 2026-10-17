@@ -76,6 +76,15 @@ Validado por {{ c.validacion.por }} a las {{ c.validacion.momento | hora }}</spa
 </section>
 {% endif %}
 
+{% if c.cascada %}
+<section class="tarjeta cascada" aria-labelledby="titulo-cascada">
+<h2 id="titulo-cascada">Llegó por la red de cascada</h2>
+<p><b>{{ c.cascada.nombre_proveedor }}</b> reportó un incidente en: {{ c.cascada.servicios | join(", ") | lower }}. El mismo reporte llegó a cada organización cliente que usa ese servicio; cada una recibió su propio caso y ninguna ve el de otra.</p>
+<p><span class="suave">Datos de {{ ctx.org.nombre }} que trata este proveedor:</span> {{ c.cascada.datos }}.</p>
+<p class="suave">Con esto y lo que informó el proveedor, el motor decidió con el perfil de tu organización. Tu plazo corre desde que te llegó el reporte ({{ c.ingreso | hora }}), no desde que el proveedor supo. Código del reporte del proveedor: <span class="mono">{{ c.cascada.codigo }}</span>.</p>
+</section>
+{% endif %}
+
 <section class="tarjeta" aria-label="Lo que llegó">
 <h2>Lo que llegó</h2>
 <p class="suave">Así lo leyó la IA, con los datos personales tapados.</p>

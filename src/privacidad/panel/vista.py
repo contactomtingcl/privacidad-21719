@@ -120,6 +120,7 @@ EVENTOS = {
     "borrador_revisado": "{por} revisó un borrador de reporte",
     "envio_registrado": "{por} registró un envío",
     "aviso": "Aviso a un destino",
+    "cascada": "Llegó por la red de cascada desde un proveedor",
     "derivado": "{por} derivó el caso a un área",
 }
 ESTADOS_AVISO = {
@@ -529,6 +530,8 @@ def vista_hechos(caso: Caso) -> list[VistaHecho]:
             origen = "completado por ti"
         elif ia.get(campo) != datos[campo]:
             origen = "corregido por ti"
+        elif caso.cascada is not None:
+            origen = "del reporte del proveedor y tu relación con él"
         else:
             origen = "propuesto por la IA"
         de_la_ia = origen == "propuesto por la IA"
@@ -915,13 +918,19 @@ def pasos(caso: Caso) -> list[Paso]:
         if dudas:
             texto += f", {dudas} por decidir"
         envio = Paso("Tú envías", texto, enviados == len(entregas) and not dudas)
-    return [
-        Paso("Llegó por el canal", f"{hora(caso.ingreso)} · enlace o código QR", True),
-        Paso(
+    if caso.cascada is not None:
+        llegada = Paso("Llegó por la red", f"{hora(caso.ingreso)} · reporte del proveedor", True)
+        lectura = Paso("Hechos del proveedor", "Formulario cerrado, sin IA", True)
+    else:
+        llegada = Paso("Llegó por el canal", f"{hora(caso.ingreso)} · enlace o código QR", True)
+        lectura = Paso(
             "La IA propone",
             f"Leyó el texto con los datos tapados ({hora(ia.momento)})" if ia else "No respondió",
             ia is not None or caso.hechos_delegado is not None,
-        ),
+        )
+    return [
+        llegada,
+        lectura,
         Paso(
             "El motor decide",
             "Espera los hechos" if sin_hechos else conteo_deberes(caso),

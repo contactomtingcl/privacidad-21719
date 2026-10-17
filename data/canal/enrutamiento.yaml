@@ -79,3 +79,25 @@ organizaciones:
         datos: Sistemas, correo y equipos (encargado de reporte ante la ANCI)
         palabras: [contrasena, virus, malware, ransomware, phishing, hacke, ciberataque, servidor, pendrive, notebook, computador, acceso indebido, pagina web]
         recibe: [ciberincidente]
+
+  clinica-del-valle:
+    delegado:
+      cargo: Delegado de protección de datos
+      contacto: delegado@clinica-del-valle.example
+    areas:
+      - id: personas
+        nombre: Gestión de Personas
+        contacto: personas@clinica-del-valle.example
+        datos: Remuneraciones, contratos y licencias del personal
+        palabras: [remuneracion, sueldo, liquidacion de sueldo, licencia medica, contrato de trabajo, turnos]
+      - id: fichas
+        nombre: Archivo Clínico
+        contacto: archivo@clinica-del-valle.example
+        datos: Fichas clínicas y resultados de exámenes de pacientes
+        palabras: [ficha clinica, paciente, examen, diagnostico, receta, hospitalizacion]
+      - id: informatica
+        nombre: Informática
+        contacto: informatica@clinica-del-valle.example
+        datos: Sistemas, correo y equipos (encargado de reporte ante la ANCI)
+        palabras: [contrasena, virus, malware, ransomware, phishing, hacke, ciberataque, servidor, pendrive, notebook, computador, acceso indebido]
+        recibe: [ciberincidente, aviso_proveedor]

@@ -11,3 +11,7 @@ organizaciones:
     nombre: Municipalidad Piloto (organismo ficticio)
     perfil: organismo_publico
     version_enlace: 1
+  - id: clinica-del-valle
+    nombre: Clínica del Valle (prestador ficticio)
+    perfil: salud
+    version_enlace: 1

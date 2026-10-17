@@ -1,0 +1,34 @@
+# Red de cascada: proveedores que tratan datos por cuenta de varias organizaciones.
+#
+# Todo es ficticio. Por cada cliente se declara qué datos de esa organización trata el
+# proveedor, qué tipo de datos son y cuántas personas aproximadamente. Cuando el proveedor
+# reporta un incidente, cada cliente recibe su propio caso con SUS datos; ninguno ve el de otro.
+# En el producto, esta relación sale del inventario de cada cliente (destinatarios) y se
+# confirma con el contrato de encargo; aquí está escrita a mano para la demo.
+version: "2026-10-17"
+
+proveedores:
+  remuneraciones-del-sur:
+    nombre: Remuneraciones del Sur SpA (proveedor ficticio)
+    contacto: incidentes@remuneraciones-del-sur.example
+    version_enlace: 1
+    servicios:
+      remuneraciones: Cálculo y pago de remuneraciones
+      portal: Portal de liquidaciones de sueldo para los trabajadores
+    clientes:
+      - org: comercial-los-robles
+        servicios: [remuneraciones, portal]
+        datos: Nómina de los trabajadores (RUT, sueldo, banco y cuenta, previsión, licencias médicas y afiliación sindical)
+        categorias: [financieros, sensibles]
+        titulares_aprox: 120
+        planilla: nomina_trabajadores.xlsx
+      - org: municipalidad-piloto
+        servicios: [remuneraciones]
+        datos: Remuneraciones de funcionarios de planta y contrata (RUT, sueldo, banco y cuenta)
+        categorias: [financieros]
+        titulares_aprox: 340
+      - org: clinica-del-valle
+        servicios: [remuneraciones, portal]
+        datos: Remuneraciones del personal de salud, con días de licencia médica
+        categorias: [financieros, sensibles]
+        titulares_aprox: 85

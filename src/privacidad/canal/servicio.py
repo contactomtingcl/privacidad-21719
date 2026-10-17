@@ -35,6 +35,7 @@ from ..interpretacion.solicitudes import InterpretacionSolicitud
 from ..motor import HechosIncidente, HechosSolicitud, decidir_incidente, decidir_solicitud
 from . import confirmacion as conf
 from .avisos import AvisoConDatosPersonales, Mensajero, armar_aviso
+from .cascada import AccionesCascada
 from .confirmacion import RespuestaInvalida
 from .delegado import AccionesDelegado
 from .enlaces import enlace_canal, firma_valida
@@ -85,7 +86,7 @@ def _nuevo_id() -> str:
             return codigo
 
 
-class CanalReporte(AccionesDelegado):
+class CanalReporte(AccionesDelegado, AccionesCascada):
     def __init__(
         self,
         *,

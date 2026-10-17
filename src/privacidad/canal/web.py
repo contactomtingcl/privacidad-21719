@@ -37,6 +37,12 @@ from ..guardia import DatosNoSinteticosError
 from ..iconos import icono
 from ..motor import cargar_reglas
 from . import qr
+from .cascada import (
+    CIBER_PROVEEDOR,
+    VULNERACIONES_PROVEEDOR,
+    ProveedorDesconocido,
+    ReporteInvalido,
+)
 from .confirmacion import ETIQUETAS_DERECHO, RespuestaInvalida, dias_de_espera
 from .modelos import Caso, Organizacion
 from .repositorio import id_caso_valido
@@ -315,6 +321,72 @@ def crear_app(canal: CanalReporte, base_url: str, panel: Any = None) -> Starlett
             return seguimiento_html(request, caso, str(e), 400)
         return RedirectResponse(f"/seguimiento/{id_caso}{sufijo(request)}", status_code=303)
 
+    # --- red de cascada: el proveedor reporta una vez para todos sus clientes ---------
+
+    def proveedor_de(request: Request):
+        try:
+            return canal_de(request).proveedor_por_enlace(
+                request.path_params["proveedor"], request.path_params["firma"]
+            )
+        except ProveedorDesconocido as e:
+            raise HTTPException(404) from e
+
+    def formulario_proveedor(
+        request: Request, p, valores: dict, error: str | None = None, status: int = 200
+    ) -> HTMLResponse:
+        return pagina(
+            "proveedor.html",
+            status,
+            p=p,
+            valores=valores,
+            error=error,
+            VULNERACIONES=VULNERACIONES_PROVEEDOR,
+            CIBER=CIBER_PROVEEDOR,
+            sufijo=sufijo(request),
+        )
+
+    async def ver_proveedor(request: Request) -> Response:
+        return formulario_proveedor(request, proveedor_de(request), {})
+
+    async def enviar_proveedor(request: Request) -> Response:
+        p = proveedor_de(request)
+        datos = await _leer_formulario(request)
+        valores = {
+            "texto": _uno(datos, "texto"),
+            "servicios": datos.get("servicios", []),
+            "vulneracion": _uno(datos, "vulneracion"),
+            "ciberincidente": _uno(datos, "ciberincidente"),
+            "interrupcion": _uno(datos, "interrupcion"),
+        }
+        if (
+            valores["vulneracion"] not in VULNERACIONES_PROVEEDOR
+            or valores["ciberincidente"] not in CIBER_PROVEEDOR
+            or valores["interrupcion"] not in ("si", "no")
+        ):
+            return formulario_proveedor(
+                request, p, valores, "Responda todas las preguntas del formulario.", 400
+            )
+        try:
+            resultado = await run_in_threadpool(
+                canal_de(request).recibir_reporte_proveedor,
+                p.id,
+                valores["texto"],
+                servicios=valores["servicios"],
+                vulneracion=valores["vulneracion"],
+                ciberincidente=valores["ciberincidente"],
+                interrupcion_servicio=valores["interrupcion"] == "si",
+            )
+        except DatosNoSinteticosError:
+            return formulario_proveedor(request, p, valores, MENSAJE_NO_SINTETICO, 400)
+        except ReporteInvalido as e:
+            return formulario_proveedor(request, p, valores, str(e), 400)
+        return pagina(
+            "proveedor_recibido.html",
+            p=p,
+            resultado=resultado,
+            clientes=[canal._organizaciones[o].nombre for o in resultado.casos],
+        )
+
     async def error_http(_: Request, exc: Exception) -> Response:
         assert isinstance(exc, HTTPException)
         titulos = {
@@ -339,6 +411,8 @@ def crear_app(canal: CanalReporte, base_url: str, panel: Any = None) -> Starlett
         Route("/canal/{org}/{firma}/qr.svg", ver_qr, methods=["GET"]),
         Route("/seguimiento/{id}", ver_seguimiento, methods=["GET"]),
         Route("/seguimiento/{id}/confirmar", confirmar, methods=["POST"]),
+        Route("/proveedor/{proveedor}/{firma}", ver_proveedor, methods=["GET"]),
+        Route("/proveedor/{proveedor}/{firma}", enviar_proveedor, methods=["POST"]),
     ]
     if panel is not None:
         from ..panel.web import BASE, crear_panel  # import tardío: el panel depende del canal

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block titulo %}{{ p.nombre }}{% endblock %}
+{% block cuerpo %}
+<h1>Reporte de incidente del proveedor</h1>
+<p><strong>{{ p.nombre }}</strong>: reporte una sola vez. Cada organización cliente que usa el servicio afectado recibe su propio caso, con sus datos y sus plazos. Ningún cliente ve los casos de otro.</p>
+<div class="aviso" role="note"><strong>Prototipo con datos ficticios.</strong> No escriba nombres, RUT, correos ni teléfonos de personas: el sistema los rechaza, y no hacen falta para el reporte.</div>
+{% if error %}<div class="error" role="alert">{{ error }}</div>{% endif %}
+<form method="post" action="{{ sufijo }}">
+<fieldset><legend>¿Qué servicios se vieron afectados?</legend>
+{% for clave, nombre in p.servicios.items() %}
+<label class="opcion"><input type="checkbox" name="servicios" value="{{ clave }}"{% if clave in valores.get("servicios", []) %} checked{% endif %}> {{ nombre }}</label>
+{% endfor %}
+</fieldset>
+<label for="vulneracion">¿Qué ocurrió?</label>
+<select id="vulneracion" name="vulneracion" required><option value="" disabled{% if not valores.get("vulneracion") %} selected{% endif %}>Elija una opción</option>{% for k, v in VULNERACIONES.items() %}<option value="{{ k }}"{% if valores.get("vulneracion") == k %} selected{% endif %}>{{ v }}</option>{% endfor %}</select>
+<fieldset><legend>¿Afectó redes o sistemas informáticos?</legend>
+{% for k, v in CIBER.items() %}<label class="opcion"><input type="radio" name="ciberincidente" value="{{ k }}" required{% if valores.get("ciberincidente") == k %} checked{% endif %}> {{ v }}</label>{% endfor %}
+</fieldset>
+<fieldset><legend>¿Se interrumpió el servicio que presta a sus clientes?</legend>
+<label class="opcion"><input type="radio" name="interrupcion" value="si" required{% if valores.get("interrupcion") == "si" %} checked{% endif %}> Sí</label>
+<label class="opcion"><input type="radio" name="interrupcion" value="no"{% if valores.get("interrupcion") == "no" %} checked{% endif %}> No</label>
+</fieldset>
+<label for="texto">Describa qué ocurrió y qué medidas tomaron</label>
+<textarea id="texto" name="texto" rows="5" required maxlength="2000">{{ valores.get("texto", "") }}</textarea>
+<section class="despues" aria-labelledby="titulo-despues">
+<h2 id="titulo-despues">Qué pasa después de enviar</h2>
+<ul>
+<li>Cada cliente que usa el servicio afectado recibe un caso con los datos que le entrega a usted, y su motor de reglas calcula sus plazos.</li>
+<li>Para cada cliente, el plazo corre desde que le llega este reporte.</li>
+<li>Usted recibe un código del reporte y ve a qué clientes llegó, no sus decisiones.</li>
+</ul>
+</section>
+<button type="submit">Enviar a todos los clientes afectados</button>
+</form>
+{% endblock %}

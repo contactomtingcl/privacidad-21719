@@ -405,3 +405,5 @@ input[type=file]{min-height:44px;padding:8px 0;color:var(--tx2)}
 .riesgo-grave{background:var(--amb);color:var(--on-amb)}
 .riesgo-gravisima{background:var(--red-tx);color:var(--bg)}
 .deber .cuerpo p .suave{font-size:13px}
+.tarjeta.cascada{border-left:3px solid var(--acc)}
+.tarjeta.cascada p{margin:6px 0;line-height:1.6}

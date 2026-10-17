@@ -164,6 +164,17 @@ class AvisoRegistrado(BaseModel):
     derivado: bool = False
 
 
+class OrigenCascada(BaseModel):
+    """El caso llegó por la red de cascada: un proveedor reportó una vez para todos sus clientes."""
+
+    codigo: str  # código del reporte del proveedor (el mismo en cada cliente)
+    proveedor: str
+    nombre_proveedor: str
+    servicios: list[str]  # servicios afectados que esta organización usa
+    datos: str  # qué datos de ESTA organización trata el proveedor
+    planilla: str | None = None  # la planilla del inventario que corresponde, si se sabe
+
+
 class Envio(BaseModel):
     """El delegado dejó constancia de que envió (o hizo) algo que corresponde. El sistema no
     envía nada: solo registra lo que la persona dice que hizo, con la hora que indica."""
@@ -208,6 +219,7 @@ class Caso(BaseModel):
     envios: dict[str, Envio] = Field(default_factory=dict)  # deber (o paso de la ANCI) → envío
     derivaciones: list[Derivacion] = Field(default_factory=list)
     avisos: list[AvisoRegistrado] = Field(default_factory=list)
+    cascada: OrigenCascada | None = None
     eventos: list[Evento] = Field(default_factory=list)
 
     def registrar(self, tipo: str, momento: datetime, /, **detalle: Any) -> None:

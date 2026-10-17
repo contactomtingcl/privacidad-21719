@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block titulo %}Proveedores{% endblock %}
+{% block cuerpo %}
+<header class="cabecera">
+<div>
+<h1>Proveedores (red de cascada)</h1>
+<p class="quien-decide">{{ icono("info", 16) }}<span>Cuando un proveedor que trata datos de tu organización tiene un incidente, reporta una sola vez y te llega tu propio caso, con tus datos y tus plazos. Ningún cliente del proveedor ve los casos de otro.</span></p>
+</div>
+</header>
+{% for f in filas %}
+<section class="tarjeta" aria-label="{{ f.p.nombre }}">
+<div class="cabecera"><h2>{{ f.p.nombre }}</h2>{% if f.casos %}<span class="pildora marca-d d-si">{{ f.casos | length }} reporte{{ "s" if f.casos | length != 1 else "" }}</span>{% endif %}</div>
+<dl class="campos-ds662">
+<dt>Servicios que usa {{ ctx.org.nombre }}</dt><dd>{% for s in f.c.servicios %}{{ f.p.servicios[s] }}{% if not loop.last %}; {% endif %}{% endfor %}</dd>
+<dt>Datos de tu organización que trata</dt><dd>{{ f.c.datos }}</dd>
+<dt>Tipo de datos</dt><dd>{% for k in f.c.categorias %}{{ CATEGORIAS[k] }}{% if not loop.last %}; {% endif %}{% else %}Sin datos especialmente protegidos{% endfor %}{% if f.c.titulares_aprox %} · cerca de {{ f.c.titulares_aprox }} personas{% endif %}</dd>
+{% if f.c.planilla %}<dt>En tu inventario</dt><dd>{% if f.registro %}<a href="{{ BASE }}/inventario/{{ f.registro }}">{{ f.c.planilla }}</a>{% else %}{{ f.c.planilla }} (aún no está en el inventario){% endif %}</dd>{% endif %}
+</dl>
+{% if f.casos %}
+<h3>Reportes recibidos</h3>
+<ul>{% for caso in f.casos %}<li><a href="{{ BASE }}/caso/{{ caso.id }}">{{ caso.ingreso | fecha }} a las {{ caso.ingreso | hora }}</a> · {{ caso.resumen_ia }}</li>{% endfor %}</ul>
+{% endif %}
+{% if f.enlace %}
+<div class="planilla-mencionada">
+<p><b>Demo:</b> ponte en el lugar del proveedor y reporta un incidente. Le llegará un caso a cada cliente, con plazos distintos según quién es.</p>
+<a class="boton primario" href="{{ f.enlace }}" target="_blank" rel="noopener">Abrir el canal del proveedor</a>
+</div>
+{% endif %}
+</section>
+{% else %}
+<section class="tarjeta"><p class="suave">Ningún proveedor de la red trata datos de {{ ctx.org.nombre }}.</p></section>
+{% endfor %}
+{% endblock %}
