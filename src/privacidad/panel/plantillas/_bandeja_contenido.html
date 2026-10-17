@@ -66,12 +66,12 @@
 <a class="fila {% if f.nueva %}nueva{% endif %}" href="{{ BASE }}/caso/{{ f.id }}">
 {{ pildora(f.urgencia, f.etiqueta_urgencia) }}
 <span class="caso"><b>{{ f.resumen }}</b><small>{{ f.tipo }} · <span class="mono">{{ f.id }}</span></small></span>
-<span>{{ f.destinos }}</span>
-<span class="plazo {% if f.urgencia == 'inmediata' %}rojo{% endif %}">{{ f.plazo }}</span>
-<span class="e-{{ f.clase_estado }}">{{ f.estado }}</span>
+<span data-etiqueta="Se envió a">{{ f.destinos }}</span>
+<span class="plazo {% if f.urgencia == 'inmediata' %}rojo{% endif %}" data-etiqueta="Próximo plazo">{{ f.plazo }}</span>
+<span class="e-{{ f.clase_estado }}" data-etiqueta="Estado">{{ f.estado }}</span>
 </a>
 {% else %}
-<p class="vacio">{% if filtro == "validados" %}Todavía no validas ningún caso.{% else %}No hay casos en esta vista. Cuando alguien reporte por el código QR, aparecerá aquí solo.{% endif %}</p>
+<p class="vacio">{% if filtro == "validados" %}Todavía no validas ningún caso.{% else %}No hay casos en esta vista. Cuando alguien reporte por el código QR, aparecerá aquí solo.{% if ctx.demo and filtro == "abiertos" %} Para probar, envía un reporte desde <a href="{{ BASE }}/canal">Canal y código QR</a> o desde <a href="{{ BASE }}/proveedores">Proveedores (red)</a>.{% endif %}{% endif %}</p>
 {% endfor %}
 </div>
 </div>

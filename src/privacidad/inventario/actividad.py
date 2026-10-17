@@ -427,7 +427,7 @@ def calcular_alertas(perfil: PerfilPlanilla, actividad: ActividadTratamiento) ->
     return alertas
 
 
-def _tipo_datos(perfil: PerfilPlanilla, columnas: list[ColumnaFinal]) -> Campo:
+def tipo_datos(perfil: PerfilPlanilla, columnas: list[ColumnaFinal]) -> Campo:
     etiquetas = cargar_categorias()
     cats = sorted({etiquetas[c.categoria].etiqueta for c in columnas if c.categoria in etiquetas})
     sensibles = [etiquetas[c].etiqueta for c in categorias_sensibles(columnas)]
@@ -552,7 +552,7 @@ def construir_actividad(
     actividad = ActividadTratamiento(
         archivo=perfil.archivo,
         descripcion_usuario=descripcion,
-        tipo_datos=_tipo_datos(perfil, columnas),
+        tipo_datos=tipo_datos(perfil, columnas),
         ambito_territorial=campo_ia("ambito_territorial"),
         bases_de_datos=Campo(valor=[perfil.archivo], origen="calculado"),
         categorias_titulares=campo_ia("categorias_titulares"),

@@ -5,7 +5,7 @@
 <a class="volver" href="{{ BASE }}/inventario">← Volver al inventario</a>
 <header class="cabecera">
 <div>
-<p class="suave">Subida por {{ r.por }} el {{ r.subida | fecha }} a las {{ r.subida | hora }} · {{ r.resumen.filas }} filas</p>
+<p class="suave">Subida por {{ r.por }} el {{ r.subida | fecha }} a las {{ r.subida | hora }} · {{ r.resumen.filas }} filas{% if r.edades_al and r.edades_al != r.subida.date() %} · edades calculadas al {{ r.edades_al | fecha }}, fecha de la planilla de ejemplo{% endif %}</p>
 <h1>{{ r.archivo }}</h1>
 <p class="quien-decide">{{ icono("info", 16) }}<span>{{ ORIGEN_INVENTARIO[r.origen_ia] }} Las edades, los datos de menores y las alertas los calcula el sistema, no la IA.</span></p>
 </div>

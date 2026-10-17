@@ -145,6 +145,12 @@ a.fila:hover{background:var(--sel)}
   .pie-menu .nota-demo,.pie-menu .persona{display:none}
   h1{font-size:26px}
   .urgente{padding:18px}
+  /* Bandeja en el celular: cada caso es una tarjeta, sin desplazamiento lateral. */
+  .tabla .ancho{min-width:0}
+  .fila{grid-template-columns:1fr;gap:6px;padding:14px 16px}
+  .fila.titulos{display:none}
+  .fila .pildora{justify-self:start}
+  .fila [data-etiqueta]::before{content:attr(data-etiqueta) ": ";color:var(--tx3);font-size:12px}
 }
 
 /* --- ficha ------------------------------------------------------------------- */

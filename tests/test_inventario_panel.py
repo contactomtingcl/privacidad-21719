@@ -19,10 +19,10 @@ ROBLES = "comercial-los-robles"
 AHORA = datetime(2026, 10, 17, 12, tzinfo=ZONA_CHILE)
 
 
-def procesar(nombre, contenido=None, descripcion=""):
+def procesar(nombre, contenido=None, descripcion="", ahora=AHORA):
     contenido = contenido if contenido is not None else (servicio.DATOS_DEMO / nombre).read_bytes()
     return servicio.procesar(
-        nombre, contenido, descripcion, id_organizacion=ROBLES, por="x", cliente=None, ahora=AHORA
+        nombre, contenido, descripcion, id_organizacion=ROBLES, por="x", cliente=None, ahora=ahora
     )
 
 
@@ -35,6 +35,33 @@ class TestProcesar(unittest.TestCase):
         textos = " ".join(a.mensaje for a in r.actividad.alertas)
         self.assertNotIn("titular", textos)
         self.assertEqual(r.actividad.costo_ia_usd, 0.0)
+
+    def test_ejemplo_se_calcula_a_su_fecha_y_no_cambia_con_los_dias(self):
+        # Entre el 10 y el 28 de octubre un niño cumple 18: si las edades se calcularan a hoy,
+        # los conteos dejarían de calzar con el texto grabado de la IA.
+        for dia in (10, 17, 28):
+            r = procesar(
+                "paseo_fin_de_anio.xlsx", ahora=datetime(2026, 10, dia, 9, tzinfo=ZONA_CHILE)
+            )
+            self.assertEqual(r.edades_al, servicio.FECHA_EJEMPLOS)
+            self.assertEqual((r.resumen.menores_de_14, r.resumen.menores_de_18), (61, 84))
+            self.assertIn("84 menores de 18", r.actividad.tipo_datos.nota)
+
+    def test_planilla_subida_se_calcula_a_hoy(self):
+        ruta = servicio.DATOS_DEMO / "paseo_fin_de_anio.xlsx"
+        df = pd.read_excel(ruta, dtype=str).fillna("")
+        contenido = df.to_csv(index=False).encode()  # mismo contenido, otro archivo: sin grabada
+        r = servicio.procesar(
+            "paseo.csv",
+            contenido,
+            "Paseo de fin de año con los hijos de los trabajadores.",
+            id_organizacion="comercial-los-robles",
+            por="delegado",
+            cliente=None,
+            ahora=datetime(2026, 10, 28, 9, tzinfo=ZONA_CHILE),
+        )
+        self.assertEqual(r.edades_al.isoformat(), "2026-10-28")
+        self.assertEqual(r.resumen.menores_de_18, 82)
 
     def test_no_guarda_valores_de_la_planilla(self):
         r = procesar("paseo_fin_de_anio.xlsx")

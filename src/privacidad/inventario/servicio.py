@@ -12,6 +12,11 @@ Qué se guarda y qué no:
   `data/demo/inventario_grabado.json` (copia de `resultados/inventario_demo.json`; `resultados/`
   no viaja en la imagen publicada), si el archivo es idéntico (misma huella SHA-256) al del
   repositorio. Así la demo funciona sin conexión y sin costo, y queda dicho en pantalla.
+- Las planillas de ejemplo son una foto de Comercial Los Robles al 10 de octubre de 2026 (la
+  fecha con que se generaron y se grabó la respuesta de la IA). Sus edades se calculan a esa
+  fecha, no a la de hoy: si no, un niño que cumple años entre medio cambia los conteos y deja
+  desalineado el texto grabado de la IA. La pantalla dice a qué fecha se calcularon. Una
+  planilla subida por la persona se calcula siempre a la fecha de hoy.
 
 Versión mínima (rediseño contrafactual): se quitan las columnas que el registro marca como
 innecesarias y el **motor** vuelve a decidir qué habría que hacer si la planilla se filtrara. La
@@ -24,7 +29,7 @@ import hashlib
 import io
 import json
 import secrets
-from datetime import datetime
+from datetime import date, datetime
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Literal
@@ -39,8 +44,12 @@ from .actividad import (
     calcular_alertas,
     categorias_sensibles,
     construir_actividad,
+    tipo_datos,
 )
 from .perfilador import PerfilPlanilla, cargar_categorias, perfilar_dataframe
+
+# Fecha que representan las planillas de ejemplo (la de `sinteticos.comercial_los_robles`).
+FECHA_EJEMPLOS = date(2026, 10, 10)
 
 RAIZ = Path(__file__).resolve().parents[3]
 DATOS_DEMO = RAIZ / "data" / "sinteticos" / "comercial-los-robles"
@@ -85,6 +94,7 @@ class RegistroActividad(BaseModel):
     resumen: ResumenPlanilla
     validada_por: str | None = None
     validada_en: datetime | None = None
+    edades_al: date | None = None  # fecha a la que se calcularon edades y menores
 
 
 # --- lectura -----------------------------------------------------------------------------
@@ -168,14 +178,17 @@ def procesar(
         )
     df = leer_bytes(nombre, contenido)
     archivo = Path(nombre).name
-    # La guardia corre dentro de `perfilar_dataframe` (exigir_sinteticos=True).
-    perfil = perfilar_dataframe(df, archivo, referencia=ahora.date())
     firma = huella(contenido)
     grabada = _grabadas().get(firma)
+    # Planilla de ejemplo: foto al FECHA_EJEMPLOS; planilla subida: edades a hoy.
+    referencia = FECHA_EJEMPLOS if grabada is not None else ahora.date()
+    # La guardia corre dentro de `perfilar_dataframe` (exigir_sinteticos=True).
+    perfil = perfilar_dataframe(df, archivo, referencia=referencia)
     if grabada is not None:
         actividad = ActividadTratamiento.model_validate(grabada)
         actividad.costo_ia_usd = 0.0
-        # Las alertas no dependen de la IA: se recalculan con el código de hoy.
+        # Lo calculado no depende de la IA: se recalcula con el código de hoy.
+        actividad.tipo_datos = tipo_datos(perfil, actividad.columnas)
         actividad.alertas = calcular_alertas(perfil, actividad)
         origen: OrigenIA = "grabada"
     else:
@@ -196,6 +209,7 @@ def procesar(
         origen_ia=origen,
         actividad=actividad,
         resumen=_resumen(perfil),
+        edades_al=referencia,
     )
 
 
