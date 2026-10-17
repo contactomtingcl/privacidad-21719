@@ -81,6 +81,9 @@ class Confirmacion(BaseModel):
     detalle: str | None = None  # lo que el titular agregó con sus palabras
     espera_hasta: datetime | None = None
     respondida_en: datetime | None = None
+    # Se bloquearon sus datos desde el ingreso, por precaución, mientras se esperaba su respuesta
+    # (regla confirmacion_titular). Queda en True como historia aunque después se levante.
+    bloqueo_preventivo: bool = False
 
 
 # --- enrutamiento ------------------------------------------------------------------------

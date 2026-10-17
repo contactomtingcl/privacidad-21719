@@ -40,7 +40,7 @@
 <b>{{ e.titulo }}</b>
 {% if e.envio %}
 <p>{{ e.texto_envio }} · registrado por {{ e.envio.por }}.</p>
-{% if not e.vigente %}<p class="suave">Con los hechos de hoy ya no corresponde, pero el envío queda registrado.</p>{% endif %}
+{% if not e.vigente %}<p class="suave">{{ e.guia or "Con los hechos de hoy ya no corresponde, pero el envío queda registrado." }}</p>{% endif %}
 {% else %}
 <p>{{ e.guia }}</p>
 {% if e.vence %}<p>Plazo: {{ e.vence | fecha }} a las {{ e.vence | hora }}.</p>{% endif %}

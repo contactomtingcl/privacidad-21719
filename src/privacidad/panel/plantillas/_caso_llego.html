@@ -24,8 +24,9 @@
 {% if c.tipo == "solicitud" %}
 <h3>Lo que pide la persona</h3>
 {% if c.confirmacion and c.confirmacion.vigente %}
-<ul class="derechos">{% for d in c.confirmacion.vigente %}<li>{{ ETIQUETAS_DERECHO[d] }}{% if d in c.confirmacion.propuesta %} {{ respaldo(c.respaldos_ia.get(d)) }}{% endif %}</li>{% endfor %}</ul>
+<ul class="derechos">{% for d in c.confirmacion.vigente %}<li>{{ ETIQUETAS_DERECHO[d] }}{% if d in c.confirmacion.propuesta %} {{ respaldo(c.respaldos_ia.get(d)) }}{% elif d == "bloqueo" %} <span class="suave">(preventivo: no lo pidió de forma expresa; se aplica desde que llegó para cumplir el plazo de 2 días hábiles)</span>{% endif %}</li>{% endfor %}</ul>
 <p class="suave">Estado de la confirmación con la persona: {{ {"no_requerida": "no hizo falta", "pendiente": "esperando su respuesta", "confirmada": "confirmó", "corregida": "corrigió la lectura", "por_defecto": "no respondió; se aplicó la lectura reversible"}[c.confirmacion.estado] }}.</p>
+{% if c.confirmacion.bloqueo_preventivo and c.confirmacion.estado in ("confirmada", "corregida") and "bloqueo" not in c.confirmacion.vigente %}<p>La persona aclaró y no pidió el bloqueo: el bloqueo preventivo se levanta. Si lo aplicaste, vuelve a usar sus datos como antes.</p>{% endif %}
 {% else %}
 <p class="suave">Todavía no hay una lectura de lo que pide: confírmala con la persona.</p>
 {% endif %}

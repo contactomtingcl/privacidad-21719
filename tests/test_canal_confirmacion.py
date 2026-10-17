@@ -1,9 +1,10 @@
 import unittest
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
+from unittest import mock
 
 from privacidad.canal import confirmacion as conf
 from privacidad.canal.modelos import ZONA_CHILE, Confirmacion
-from privacidad.motor import HechosSolicitud, cargar_reglas
+from privacidad.motor import HechosSolicitud, cargar_reglas, decidir_solicitud
 
 AHORA = datetime(2026, 12, 2, 10, 0, tzinfo=ZONA_CHILE)
 
@@ -66,7 +67,9 @@ class TestPreparar(unittest.TestCase):
         self.assertEqual(c.estado, "pendiente")
         self.assertEqual(c.pregunta, "¿Publicidad o borrar todo?")
         self.assertEqual(c.propuesta, ["oposicion"])
-        self.assertEqual(c.vigente, ["oposicion"])
+        # Bloqueo preventivo: la lectura por defecto lo incluiría, así que corre desde ya.
+        self.assertEqual(c.vigente, ["oposicion", "bloqueo"])
+        self.assertTrue(c.bloqueo_preventivo)
         self.assertEqual(c.espera_hasta, AHORA + timedelta(days=conf.dias_de_espera()))
 
     def test_sin_pregunta_de_la_ia_usa_la_generica(self):
@@ -180,6 +183,75 @@ class TestSinRespuesta(unittest.TestCase):
         )
         h = conf.hechos_vigentes(c)
         self.assertEqual((h.es_solicitud, h.derechos), (True, ["supresion", "bloqueo"]))
+
+
+class TestBloqueoPreventivo(unittest.TestCase):
+    """Opción B (decisión de Matías, 17 oct): si la lectura por defecto incluiría un bloqueo,
+    se aplica desde el ingreso y se levanta si la persona aclara que no lo pide."""
+
+    def test_si_la_lectura_por_defecto_lo_incluiria_corre_desde_el_ingreso(self):
+        c = conf.preparar(hechos(derechos=["supresion"]), AHORA)
+        self.assertTrue(c.bloqueo_preventivo)
+        self.assertIn("bloqueo", c.vigente)
+        r = decidir_solicitud(conf.hechos_vigentes(c), AHORA.date())
+        self.assertIsNotNone(r.bloqueo)
+        self.assertIn("Bloqueo preventivo", r.bloqueo.porque)
+        # 2 días hábiles desde el ingreso (miércoles 2 → viernes 4 de diciembre de 2026).
+        self.assertEqual(r.bloqueo.vence, date(2026, 12, 4))
+
+    def test_no_se_agrega_si_la_lectura_por_defecto_no_lo_tendria(self):
+        c = conf.preparar(hechos(derechos=["acceso"]), AHORA)
+        self.assertFalse(c.bloqueo_preventivo)
+        self.assertEqual(c.vigente, ["acceso"])
+
+    def test_si_la_persona_ya_lo_pidio_no_es_preventivo(self):
+        c = conf.preparar(hechos(derechos=["oposicion", "bloqueo"]), AHORA)
+        self.assertFalse(c.bloqueo_preventivo)
+        r = decidir_solicitud(conf.hechos_vigentes(c), AHORA.date())
+        self.assertNotIn("preventivo", r.bloqueo.porque)
+
+    def test_no_se_agrega_si_la_espera_no_aplica(self):
+        c = conf.preparar(hechos(requiere_confirmacion=False), AHORA)
+        self.assertFalse(c.bloqueo_preventivo)
+        self.assertEqual(c.vigente, ["oposicion"])
+
+    def test_se_levanta_si_aclara_que_no_lo_pide(self):
+        c = conf.preparar(hechos(), AHORA)
+        c = conf.aplicar_respuesta(c, ["oposicion"], None, AHORA + timedelta(hours=5))
+        self.assertEqual(c.estado, "confirmada")  # confirmó lo que propuso el sistema
+        self.assertTrue(conf.bloqueo_levantado(c))
+        r = decidir_solicitud(conf.hechos_vigentes(c), AHORA.date())
+        self.assertIsNone(r.bloqueo)
+
+    def test_sigue_si_lo_confirma(self):
+        c = conf.preparar(hechos(), AHORA)
+        c = conf.aplicar_respuesta(c, ["oposicion", "bloqueo"], None, AHORA)
+        self.assertFalse(conf.bloqueo_levantado(c))
+        r = decidir_solicitud(conf.hechos_vigentes(c), AHORA.date())
+        self.assertNotIn("preventivo", r.bloqueo.porque)  # ahora lo pidió ella
+
+    def test_sin_respuesta_sigue_y_el_plazo_no_cambia(self):
+        c = conf.preparar(hechos(derechos=["supresion"]), AHORA)
+        antes = decidir_solicitud(conf.hechos_vigentes(c), AHORA.date()).bloqueo
+        c = conf.aplicar_por_defecto(c, AHORA + timedelta(days=conf.dias_de_espera()))
+        self.assertEqual(c.vigente, ["oposicion", "bloqueo"])
+        self.assertFalse(conf.bloqueo_levantado(c))
+        despues = decidir_solicitud(conf.hechos_vigentes(c), AHORA.date()).bloqueo
+        self.assertEqual(despues.vence, antes.vence)
+        self.assertIn("Bloqueo preventivo", despues.porque)
+
+    def test_se_puede_apagar_en_la_regla(self):
+        params = dict(conf._parametros()) | {"bloqueo_preventivo": False}
+        with mock.patch.object(conf, "_parametros", return_value=params):
+            c = conf.preparar(hechos(), AHORA)
+        self.assertFalse(c.bloqueo_preventivo)
+        self.assertEqual(c.vigente, ["oposicion"])
+
+    def test_la_regla_lo_declara_pendiente_de_revision_legal(self):
+        regla = cargar_reglas()["reglas"]["confirmacion_titular"]
+        self.assertTrue(regla["parametros"]["bloqueo_preventivo"])
+        self.assertIn("bloqueo preventivo", regla["criterio"])
+        self.assertIn("revisión legal", regla["criterio"])
 
 
 if __name__ == "__main__":

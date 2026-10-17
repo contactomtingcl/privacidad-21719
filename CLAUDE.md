@@ -57,7 +57,7 @@ sintéticos, detección y enmascarado, inventario con IA (11 campos del DS 662),
 reglas (Agencia, titulares, ANCI, plazos de solicitudes), interpretación con IA de
 solicitudes e incidentes, set de 150 casos y evaluación en tres niveles (iteración 2:
 IA + motor 76/77 deberes detectados; iteración 3 del 12 oct con frase de respaldo: 76/77, solicitudes
-98%). 536 pruebas (5 omitidas sin segno) en verde.
+98%). 548 pruebas (5 omitidas sin segno) en verde.
 
 Canal de reporte (primera versión, 10 oct): enlace firmado y QR (segno), confirmación al
 titular con menú fijo y, sin respuesta a los 5 días, lectura reversible: oposición + bloqueo
@@ -189,10 +189,13 @@ Sábado 17 (tarde, segunda parte):
 Pendiente técnico: sello de tiempo (necesita una autoridad de sellado con red y una librería
 RFC 3161; decidirlo), impacto de proyectos de ley sobre el inventario (más allá del simulador).
 
-Hallazgo del 11 oct, sin resolver: si el titular no responde, la lectura por defecto agrega
-un bloqueo temporal cuyo plazo (2 días hábiles desde el ingreso) normalmente ya venció. El
-enrutamiento lo marca como urgencia inmediata; falta decidir si se acorta la espera o se
-aplica el bloqueo desde el ingreso. Va a la revisión legal.
+Hallazgo del 11 oct, resuelto el 17 oct (opción B, decisión de Matías): bloqueo preventivo
+desde el ingreso. Si la lectura por defecto incluiría un bloqueo, `confirmacion.preparar` lo
+agrega a la lectura vigente (`Confirmacion.bloqueo_preventivo`) y el motor lo explica como
+preventivo (`HechosSolicitud.bloqueo_preventivo`); se levanta si el titular aclara que no lo pide
+(`bloqueo_levantado`, evento `confirmacion_respondida`). El formulario del titular marca la
+propuesta, no el bloqueo. Parámetro `bloqueo_preventivo` en reglas.yaml (versión 2026-10-17c).
+Sigue pendiente de revisión legal si ese plazo corre desde el ingreso cuando no se pidió.
 
 Limitaciones conocidas: etiquetas del set sin revisión del autor ni de un abogado; falta
 un set ciego escrito por otra persona; feriados de `data/reglas/feriados.yaml` sin

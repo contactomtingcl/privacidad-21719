@@ -127,11 +127,13 @@ class TestSolicitudes(unittest.TestCase):
         caso = canal.recibir_solicitud(
             ROBLES, "Ya no quiero sus correos de ofertas.", nombre=NOMBRE, contacto=CORREO
         )
-        self.assertEqual(caso.asignacion.urgencia, "normal")
+        # Bloqueo preventivo: su plazo (2 días hábiles) se avisa desde el ingreso, no recién
+        # cuando termina la espera de la confirmación.
+        self.assertEqual(caso.asignacion.urgencia, "alta")
+        self.assertEqual(caso.asignacion.proximo_plazo, "bloqueo_temporal")
         reloj.avanzar(days=dias_de_espera() + 1)
         caso = canal.seguimiento(caso.id)
-        # Por defecto se agrega el bloqueo temporal, cuyo plazo (2 días hábiles desde el
-        # ingreso) ya pasó: el caso sube a urgencia inmediata.
+        # Si nadie registró que lo hizo, al terminar la espera el bloqueo ya está vencido.
         self.assertEqual(caso.asignacion.urgencia, "inmediata")
         self.assertEqual(caso.asignacion.proximo_plazo, "bloqueo_temporal")
         self.assertIn("ya venció", caso.asignacion.porque_urgencia)
@@ -142,7 +144,8 @@ class TestSolicitudes(unittest.TestCase):
         caso = canal.recibir_solicitud(
             ROBLES, "Ya no quiero sus correos de ofertas.", nombre=NOMBRE, contacto=CORREO
         )
-        caso = canal.responder_confirmacion(caso.id, derechos=["oposicion"])
+        # Confirma también el bloqueo: la lectura vigente no cambia y no se reenruta.
+        caso = canal.responder_confirmacion(caso.id, derechos=["oposicion", "bloqueo"])
         self.assertEqual([e.tipo for e in caso.eventos].count("enrutado"), 1)
 
 

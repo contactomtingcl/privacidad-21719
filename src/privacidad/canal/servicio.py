@@ -250,6 +250,7 @@ class CanalReporte(AccionesDelegado, AccionesCascada):
                     espera_hasta=caso.confirmacion.espera_hasta.isoformat()
                     if caso.confirmacion.espera_hasta
                     else None,
+                    bloqueo_preventivo=caso.confirmacion.bloqueo_preventivo,
                 )
             self._recalcular_plazos(caso)
         self._enrutar(caso, ahora)
@@ -325,6 +326,7 @@ class CanalReporte(AccionesDelegado, AccionesCascada):
             propuesta=propuesta,
             vigente=list(caso.confirmacion.vigente),
             con_detalle=bool(caso.confirmacion.detalle),
+            bloqueo_levantado=conf.bloqueo_levantado(caso.confirmacion),
         )
         self._enrutar(caso, ahora)
         self._repo.guardar(caso)

@@ -266,6 +266,15 @@ class TestConfirmacionPorLaWeb(Base):
         self.assertIn("Este plazo corre desde que llegó su mensaje", html)
         self.assertIn("extenderlo una sola vez, hasta por 30 días más", html)
 
+    def test_avisa_el_bloqueo_preventivo_sin_marcarlo_en_el_formulario(self):
+        destino, _ = self.abrir()
+        html = pedir(self.app, "GET", destino).html
+        self.assertIn("por precaución, no usaremos sus datos", html)
+        # Se marca lo que propuso el sistema, no el bloqueo preventivo: confirmar sin tocar nada
+        # no debe pedir el bloqueo.
+        self.assertIn('value="oposicion" checked', html)
+        self.assertNotIn('value="bloqueo" checked', html)
+
     def test_el_titular_corrige_y_ve_lo_que_se_tramita(self):
         destino, id_caso = self.abrir()
         r = pedir(

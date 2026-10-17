@@ -88,10 +88,12 @@ Cada organización tiene un enlace propio, firmado, que se reparte también como
 
 Cada opción trae un ícono, para quién es y un ejemplo de una línea, sin instrucciones largas. Antes de enviar, la pantalla dice qué pasa después y promete solo lo que el sistema hace: el código de seguimiento, que el mensaje llega de inmediato a la persona encargada de protección de datos y, si se ejerce un derecho, el plazo legal de respuesta (30 días corridos, prorrogables una vez por 30; ambos se leen de `data/reglas/reglas.yaml`, con su fuente verificada en el art. 11).
 
-Cómo funciona, en cuatro reglas:
+Cómo funciona:
 
 - **La IA propone, el motor decide, la persona confirma.** Si el mensaje de un titular puede leerse de más de una forma, la persona elige entre seis opciones en lenguaje simple (sin IA en ese paso). El plazo legal corre desde que ingresó el mensaje, nunca desde la confirmación.
-- **Si no responde**, pasados 5 días se tramita con una lectura reversible: nunca se borran datos por defecto. Una supresión pasa a oposición más bloqueo temporal de esos datos, y se le avisa que puede pedir la supresión cuando quiera. Los 5 días y este criterio son una decisión de diseño, no una exigencia de la ley: están en `data/reglas/reglas.yaml` (regla `confirmacion_titular`) y **pendientes de revisión legal**.
+- **Si no responde**, pasados 5 días se tramita con una lectura reversible: nunca se borran datos por defecto. Una supresión pasa a oposición más bloqueo temporal de esos datos, y se le avisa que puede pedir la supresión cuando quiera.
+- **Bloqueo preventivo desde el ingreso.** El bloqueo temporal tiene 2 días hábiles y la espera dura 5 días: si se aplicara al terminar la espera, nacería vencido. Por eso, cuando la lectura por defecto incluiría un bloqueo, este se aplica apenas llega el mensaje y la persona lo ve en su página de seguimiento. Si aclara que no lo pide, se levanta y el panel le indica al delegado que vuelva a usar esos datos; si no responde, sigue.
+- Los 5 días, la lectura reversible y el bloqueo preventivo son decisiones de diseño, no exigencias de la ley: están en `data/reglas/reglas.yaml` (regla `confirmacion_titular`) y **pendientes de revisión legal** (por ejemplo, si el plazo de un bloqueo que la persona no pidió de forma expresa corre desde el ingreso).
 - **Si la IA falla**, el caso queda "requiere revisión", el reloj corre igual y nada se marca como "sin deber". En un incidente se muestran desde el primer minuto los relojes de la ANCI que correrían si fuera un ciberincidente.
 - **Modo reservado**, solo para avisos de incidente: el nombre y el contacto se guardan cifrados. Si no hay llave configurada, el canal rechaza el reporte en vez de guardarlo sin cifrar. Quien ejerce un derecho debe identificarse (art. 11), por eso ahí no existe.
 

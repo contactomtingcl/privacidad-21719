@@ -12,6 +12,7 @@ from typing import Any
 
 from babel.dates import format_date
 
+from ..canal.confirmacion import bloqueo_levantado, bloqueo_no_pedido
 from ..canal.delegado import (
     caso_abierto,
     deberes_del_caso,
@@ -652,6 +653,13 @@ class VistaEnvio:
 
 
 def _guia(caso: Caso, d: Deber) -> str:
+    if d.id == "bloqueo_temporal" and caso.confirmacion and bloqueo_no_pedido(caso.confirmacion):
+        return (
+            "Por precaución, deja de usar sus datos hasta responderle: la persona no lo pidió de "
+            "forma expresa, pero podría estar pidiendo que no se usen o se borren. Si aclara que "
+            "no lo pide, aquí se indica que lo levantes. Esto no se envía: lo haces en tus "
+            "sistemas."
+        )
     if d.id != "respuesta_solicitud":
         return GUIAS_ENVIO.get(d.id, "")
     contacto = (caso.identidad or {}).get("contacto")
@@ -685,7 +693,12 @@ def vista_envios(caso: Caso) -> list[VistaEnvio]:
                 VistaEnvio(
                     id=id_deber,
                     titulo=NOMBRES_ENVIO.get(id_deber, id_deber),
-                    guia="",
+                    guia=(
+                        "La persona aclaró que no pedía el bloqueo: levántalo y vuelve a usar sus "
+                        "datos como antes. El registro de que lo aplicaste se conserva."
+                        if id_deber == "bloqueo_temporal" and bloqueo_levantado(caso.confirmacion)
+                        else ""
+                    ),
                     vence=None,
                     envio=envio,
                     boton="",

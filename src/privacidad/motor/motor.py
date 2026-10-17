@@ -85,6 +85,9 @@ class HechosSolicitud(BaseModel):
     derechos: list[Derecho] = Field(default_factory=list)
     requiere_confirmacion: bool = False
     pregunta_confirmacion: str | None = None
+    # El bloqueo no lo pidió la persona: se aplica por precaución (mientras aclara qué pidió o
+    # porque no respondió). Lo fija el canal con la regla confirmacion_titular, nunca la IA.
+    bloqueo_preventivo: bool = False
 
 
 class Cita(BaseModel):
@@ -329,11 +332,18 @@ def decidir_solicitud(hechos: HechosSolicitud, ingreso: date) -> ResultadoSolici
     if "bloqueo" in hechos.derechos:
         dias = _regla("bloqueo_temporal")["plazo"]["valor"]
         vence, verificado = sumar_dias_habiles(ingreso, dias)
+        porque = (
+            "Bloqueo preventivo: la persona no lo pidió de forma expresa, pero podría estar "
+            "pidiendo que no se usen o se borren sus datos. Por precaución, esos datos no se "
+            "usan hasta responderle; si aclara que no lo pide, el bloqueo se levanta."
+            if hechos.bloqueo_preventivo
+            else "Pidió suspender el uso de sus datos mientras se resuelve. Hasta responder, "
+            "esos datos no se pueden usar."
+        )
         bloqueo = Deber(
             id="bloqueo_temporal",
             decision="si",
-            porque="Pidió suspender el uso de sus datos mientras se resuelve. Hasta responder, "
-            "esos datos no se pueden usar.",
+            porque=porque,
             plazo=f"{dias} días hábiles",
             vence=vence,
             a_confirmar=not verificado,

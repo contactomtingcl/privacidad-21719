@@ -18,6 +18,7 @@
 <p>Su mensaje no parece pedir algo sobre sus datos personales. Una persona del equipo lo va a leer de todos modos. Si quería avisar de un incidente, use la otra opción del formulario.</p>
 {% elif conf.estado == "pendiente" %}
 <p>Antes de tramitar su solicitud necesitamos confirmar qué nos pide.</p>
+{% if conf.bloqueo_preventivo %}<p>Mientras nos responde, por precaución, no usaremos sus datos. Si nos aclara que no pide eso, volvemos a usarlos como antes.</p>{% endif %}
 {{ formulario_confirmacion(caso, conf.pregunta, sufijo) }}
 <p class="ayuda">Si no responde en {{ dias_espera }} días (hasta el {{ conf.espera_hasta | fecha }}), tramitaremos su solicitud de forma reversible: dejaremos de usar sus datos mientras se resuelve, sin borrarlos. Si quiere que los borremos, puede pedirlo cuando quiera.</p>
 {{ plazos(caso) }}

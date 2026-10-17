@@ -5,6 +5,11 @@ motor aplica una regla fija. La IA nunca elige la lectura por defecto, y la conf
 detiene el reloj: el plazo del artículo 11 corre desde el ingreso (`decidir_solicitud` lo
 calcula con la fecha de ingreso, sin importar cuándo se confirmó).
 
+Bloqueo preventivo: si la lectura por defecto incluiría un bloqueo temporal, ese bloqueo se
+aplica desde el ingreso, mientras se espera la respuesta. El bloqueo tiene 2 días hábiles y la
+espera dura más: si se aplicara recién al terminar la espera, nacería vencido. Si el titular
+aclara que no lo pide, se levanta; si no responde, sigue como parte de la lectura por defecto.
+
 Los parámetros (días de espera y qué lecturas se confunden) están en `data/reglas/reglas.yaml`,
 con su fuente, como el resto de las reglas.
 """
@@ -68,6 +73,13 @@ def lectura_por_defecto(propuesta: list[Derecho]) -> list[Derecho]:
     return resultado
 
 
+def requiere_bloqueo_preventivo(propuesta: list[Derecho]) -> bool:
+    """¿La lectura por defecto agregaría un bloqueo que la persona no pidió?"""
+    if not _parametros().get("bloqueo_preventivo", False):
+        return False
+    return "bloqueo" not in propuesta and "bloqueo" in lectura_por_defecto(propuesta)
+
+
 def preparar(hechos: HechosSolicitud, ahora: datetime) -> Confirmacion:
     """Estado inicial de la confirmación a partir de lo que propuso la IA."""
     if not hechos.es_solicitud:
@@ -75,12 +87,34 @@ def preparar(hechos: HechosSolicitud, ahora: datetime) -> Confirmacion:
     propuesta = list(hechos.derechos)
     if not hechos.requiere_confirmacion:
         return Confirmacion(estado="no_requerida", propuesta=propuesta, vigente=propuesta)
+    preventivo = requiere_bloqueo_preventivo(propuesta)
     return Confirmacion(
         estado="pendiente",
         pregunta=hechos.pregunta_confirmacion or PREGUNTA_GENERICA,
         propuesta=propuesta,
-        vigente=propuesta,
+        vigente=[*propuesta, "bloqueo"] if preventivo else propuesta,
         espera_hasta=ahora + timedelta(days=dias_de_espera()),
+        bloqueo_preventivo=preventivo,
+    )
+
+
+def bloqueo_no_pedido(conf: Confirmacion) -> bool:
+    """El bloqueo vigente lo puso el sistema por precaución (esperando o sin respuesta), no la
+    persona."""
+    return (
+        conf.estado in ("pendiente", "por_defecto")
+        and "bloqueo" in conf.vigente
+        and "bloqueo" not in conf.propuesta
+    )
+
+
+def bloqueo_levantado(conf: Confirmacion | None) -> bool:
+    """La persona aclaró y no pidió el bloqueo: el preventivo se levanta."""
+    return bool(
+        conf
+        and conf.bloqueo_preventivo
+        and conf.estado in ("confirmada", "corregida")
+        and "bloqueo" not in conf.vigente
     )
 
 
@@ -132,4 +166,8 @@ def hechos_vigentes(conf: Confirmacion) -> HechosSolicitud:
     """Hechos con la lectura vigente, para que el motor calcule los plazos."""
     if conf.estado == "por_defecto" and any(es_irreversible(d) for d in conf.vigente):
         raise RespuestaInvalida("Nunca se borran datos sin confirmación expresa del titular")
-    return HechosSolicitud(es_solicitud=True, derechos=list(conf.vigente))
+    return HechosSolicitud(
+        es_solicitud=True,
+        derechos=list(conf.vigente),
+        bloqueo_preventivo=bloqueo_no_pedido(conf),
+    )

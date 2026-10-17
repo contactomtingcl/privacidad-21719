@@ -14,7 +14,7 @@
 <form method="post" action="/seguimiento/{{ caso.id }}/confirmar{{ sufijo }}">
 <fieldset><legend>{{ titulo }}</legend>
 {% for clave, etiqueta in ETIQUETAS_DERECHO.items() %}
-{{ opcion("derechos", clave, etiqueta, clave in caso.confirmacion.vigente) }}
+{{ opcion("derechos", clave, etiqueta, clave in (caso.confirmacion.propuesta if caso.confirmacion.estado == "pendiente" else caso.confirmacion.vigente)) }}
 {% endfor %}
 </fieldset>
 <label for="detalle">Si quiere, agregue un detalle</label>

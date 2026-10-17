@@ -308,6 +308,7 @@ class TestFlujoCompleto(unittest.TestCase):
                 "confirmacion_solicitada",
                 "enrutado",
                 "confirmacion_respondida",
+                "enrutado",  # se levantó el bloqueo preventivo: cambia la urgencia
             ],
         )
         volcado = "".join(a.model_dump_json() for a in repo.evidencia())
