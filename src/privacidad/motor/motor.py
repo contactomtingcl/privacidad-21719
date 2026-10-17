@@ -171,8 +171,13 @@ def decidir_incidente(
     hechos: HechosIncidente,
     perfil: PerfilOrganizacion,
     conocimiento: datetime | None = None,
+    oiv: bool = False,
 ) -> ResultadoIncidente:
-    """Aplica el art. 14 sexies (Agencia y titulares) y los arts. 4, 9 y 27 de la Ley 21.663."""
+    """Aplica el art. 14 sexies (Agencia y titulares) y los arts. 4, 9 y 27 de la Ley 21.663.
+
+    `oiv`: la organización fue calificada como operador de importancia vital (art. 4). Reporta a
+    la ANCI aunque no preste un servicio esencial; si el incidente interrumpe su servicio, la
+    actualización vence a las 24 horas, y además informa su plan de acción (máximo 7 días)."""
     referencia = conocimiento.date() if conocimiento else None
     cats = [NOMBRES_CATEGORIA[c] for c in hechos.categorias_especiales]
 
@@ -230,11 +235,12 @@ def decidir_incidente(
         fragmento=fuente_esenciales["fragmento"],
     )
     significativo = hechos.datos_personales or hechos.interrupcion_servicio
-    if not es_servicio_esencial(perfil):
+    if not es_servicio_esencial(perfil) and not oiv:
         anci = Deber(
             id="reporte_anci",
             decision="no",
-            porque="La organización no presta un servicio esencial según la Ley 21.663.",
+            porque="La organización no presta un servicio esencial ni es operador de importancia "
+            "vital según la Ley 21.663.",
         )
     elif hechos.ciberincidente == "no":
         anci = Deber(
@@ -259,6 +265,9 @@ def decidir_incidente(
             "datos personales.",
         )
     anci.citas = [cita_esencial, _cita("anci_efecto_significativo"), _cita("anci_alerta_temprana")]
+    if oiv:
+        anci.citas.insert(1, _cita("oiv_ambito"))
+    actualizacion_24 = oiv and hechos.interrupcion_servicio
 
     plazos: list[Deber] = []
     if anci.decision != "no":
@@ -268,15 +277,25 @@ def decidir_incidente(
                 hours=_regla("anci_alerta_temprana")["plazo"]["valor"]
             )
             anci.vence = alerta
-            for id_regla in ("anci_alerta_temprana", "anci_actualizacion", "anci_informe_final"):
+            pasos = [
+                ("anci_alerta_temprana", "anci_alerta_temprana"),
+                ("anci_actualizacion", "anci_actualizacion_oiv" if actualizacion_24 else None),
+                ("anci_informe_final", "anci_informe_final"),
+            ]
+            if oiv:
+                pasos.append(("anci_plan_accion", "anci_plan_accion"))
+            for id_paso, id_regla in pasos:
+                id_regla = id_regla or id_paso
                 p = _regla(id_regla)["plazo"]
                 if p["tipo"] == "horas":
                     vence: datetime = conocimiento + timedelta(hours=p["valor"])
+                elif p["tipo"] == "dias_corridos_conocimiento":
+                    vence = conocimiento + timedelta(days=p["valor"])
                 else:  # días corridos desde la alerta temprana (se usa su vencimiento máximo)
                     vence = alerta + timedelta(days=p["valor"])
                 plazos.append(
                     Deber(
-                        id=id_regla,
+                        id=id_paso,
                         decision=anci.decision,
                         porque=_regla(id_regla)["descripcion"],
                         vence=vence,

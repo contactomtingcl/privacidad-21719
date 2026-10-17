@@ -346,6 +346,14 @@ def borrador_anci(caso: Caso, org: Organizacion) -> Borrador:
         p = plazos.get(id_plazo)
         return p.vence if p and isinstance(p.vence, datetime) else None
 
+    actualizacion = plazos.get("anci_actualizacion")
+    horas_actualizacion = (
+        24
+        if actualizacion
+        and actualizacion.citas
+        and "veinticuatro" in actualizacion.citas[0].fragmento
+        else 72
+    )
     afectados = (
         _personas(hechos.titulares_aprox)
         if hechos.titulares_aprox is not None
@@ -368,7 +376,7 @@ def borrador_anci(caso: Caso, org: Organizacion) -> Borrador:
             ],
         ),
         Seccion(
-            titulo="2. Actualización (plazo: 72 horas desde que se supo)",
+            titulo=f"2. Actualización (plazo: {horas_actualizacion} horas desde que se supo)",
             vence=vence("anci_actualizacion"),
             lineas=[
                 f"Personas afectadas: {afectados}",
@@ -392,6 +400,18 @@ def borrador_anci(caso: Caso, org: Organizacion) -> Borrador:
             ],
         ),
     ]
+    if "anci_plan_accion" in plazos:
+        secciones.append(
+            Seccion(
+                titulo="4. Plan de acción (operador de importancia vital: máximo 7 días)",
+                vence=vence("anci_plan_accion"),
+                lineas=[
+                    completar("plan de acción adoptado"),
+                    "Se informa a la ANCI apenas se adopta; el plazo para adoptarlo no puede "
+                    "superar los siete días corridos desde que se supo (art. 9).",
+                ],
+            )
+        )
     avisos = _avisos_comunes(decision, deber)
     avisos += [
         "Sin datos personales (art. 27 de la Ley 21.663): no incluyas nombres, RUT, correos ni "

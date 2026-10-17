@@ -183,7 +183,9 @@ class AccionesDelegado:
             Correccion(cambios=cambios, motivo=motivo, nota=nota, por=por, momento=ahora)
         )
         # El plazo se sigue contando desde que se supo (el ingreso), no desde la corrección.
-        caso.resultado_incidente = decidir_incidente(hechos, org.perfil, caso.ingreso)
+        caso.resultado_incidente = decidir_incidente(
+            hechos, org.perfil, caso.ingreso, org.operador_importancia_vital
+        )
         caso.relojes_anci_posibles = []
         caso.estado = "interpretado"
         r = caso.resultado_incidente

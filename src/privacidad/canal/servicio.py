@@ -410,13 +410,17 @@ class CanalReporte(AccionesDelegado):
         caso.respaldos_ia = extraccion.respaldos
         if extraccion.hechos is None:
             caso.error_ia = extraccion.error
-            posibles = decidir_incidente(_HECHOS_PEOR_CASO, org.perfil, ahora)
+            posibles = decidir_incidente(
+                _HECHOS_PEOR_CASO, org.perfil, ahora, org.operador_importancia_vital
+            )
             if posibles.reporte_anci.decision != "no":
                 caso.relojes_anci_posibles = [posibles.reporte_anci, *posibles.plazos_anci]
             caso.registrar("ia_sin_respuesta", ahora, error=extraccion.error)
         else:
             caso.hechos_incidente = extraccion.hechos
-            caso.resultado_incidente = decidir_incidente(extraccion.hechos, org.perfil, ahora)
+            caso.resultado_incidente = decidir_incidente(
+                extraccion.hechos, org.perfil, ahora, org.operador_importancia_vital
+            )
             caso.estado = "interpretado"
             resultado = caso.resultado_incidente
             caso.registrar(

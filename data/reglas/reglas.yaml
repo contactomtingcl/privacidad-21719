@@ -1,7 +1,7 @@
 # Reglas legales del motor. Cada regla guarda su fuente (artículo y fragmento literal,
 # verificados contra el corpus por las pruebas), su versión y su vigencia.
 # Ningún plazo está escrito a mano en el código: se leen de aquí.
-version: "2026-10-17"
+version: "2026-10-17b"
 
 vigencias:
   ley-21719:
@@ -59,6 +59,23 @@ reglas:
     ley: ley-21663
     plazo: {tipo: dias_corridos, valor: 15, desde: alerta_temprana}
     fuente: {norma: ley-21663, articulo: "9", fragmento: "Dentro del plazo máximo de quince días corridos contado desde el envío de la alerta temprana"}
+
+  oiv_ambito:
+    descripcion: La Ley 21.663 rige también para los operadores de importancia vital, aunque no presten un servicio esencial.
+    ley: ley-21663
+    fuente: {norma: ley-21663, articulo: "4", fragmento: "y a aquellas que sean calificadas como operadores de importancia vital"}
+
+  anci_actualizacion_oiv:
+    descripcion: Si un operador de importancia vital ve afectada la prestación de sus servicios esenciales, la actualización a la ANCI se adelanta a 24 horas.
+    ley: ley-21663
+    plazo: {tipo: horas, valor: 24, desde: conocimiento}
+    fuente: {norma: ley-21663, articulo: "9", fragmento: "la actualización de la información deberá entregarse al CSIRT Nacional en el plazo máximo de veinticuatro horas"}
+
+  anci_plan_accion:
+    descripcion: Un operador de importancia vital informa a la ANCI su plan de acción apenas lo adopta; debe adoptarlo dentro de 7 días corridos desde que se supo. El sistema muestra ese máximo.
+    ley: ley-21663
+    plazo: {tipo: dias_corridos_conocimiento, valor: 7, desde: conocimiento}
+    fuente: {norma: ley-21663, articulo: "9", fragmento: "El plazo para la adopción de un plan de acción en ningún caso podrá ser superior a siete días corridos"}
 
   anci_efecto_significativo:
     descripcion: Un incidente que afecta sistemas con datos personales, o interrumpe un servicio esencial, tiene efecto significativo.

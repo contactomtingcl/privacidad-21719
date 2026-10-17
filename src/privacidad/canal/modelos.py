@@ -60,6 +60,8 @@ class Organizacion(BaseModel):
     id: str
     nombre: str
     perfil: PerfilOrganizacion
+    # Calificada por la ANCI como operador de importancia vital (Ley 21.663, art. 5 y 6).
+    operador_importancia_vital: bool = False
     version_enlace: int = 1
 
 

@@ -49,6 +49,7 @@ TITULOS_DEBER = {
     "anci_alerta_temprana": "Primer aviso a la ANCI",
     "anci_actualizacion": "Actualización a la ANCI",
     "anci_informe_final": "Informe final a la ANCI",
+    "anci_plan_accion": "Plan de acción a la ANCI",
     "respuesta_solicitud": "Responder a la persona",
     "bloqueo_temporal": "Bloquear sus datos mientras se resuelve",
     "comunicar_a_terceros": "Avisar a quienes recibieron sus datos",
@@ -337,7 +338,19 @@ def aclarar_habiles(texto: str | None) -> str | None:
 
 
 TITULO_RELOJ_ANCI = "Primer aviso a la ANCI"
-DESPUES_ALERTA = "Después: actualización a las 72 horas e informe final a los 15 días."
+
+
+def despues_alerta(pasos: list[Deber]) -> str:
+    """«Después: …» con los plazos que de verdad corren (24 o 72 horas; plan de acción)."""
+    ids = {p.id: p for p in pasos}
+    actualizacion = ids.get("anci_actualizacion")
+    horas = 72
+    if actualizacion and actualizacion.citas and "veinticuatro" in actualizacion.citas[0].fragmento:
+        horas = 24
+    texto = f"Después: actualización a las {horas} horas e informe final a los 15 días"
+    if "anci_plan_accion" in ids:
+        texto += "; además, el plan de acción (máximo 7 días)"
+    return texto + "."
 
 
 @dataclass
@@ -380,7 +393,7 @@ def relojes(caso: Caso, ahora: datetime) -> list[Reloj]:
                         titulo=TITULO_RELOJ_ANCI
                         if es_primero
                         else TITULOS_DEBER.get(siguiente.id, siguiente.id),
-                        detalle=DESPUES_ALERTA
+                        detalle=despues_alerta(anci)
                         if es_primero
                         else f"Van {len(anci) - len(pendientes)} de {len(anci)} pasos enviados.",
                         vence=vence,
@@ -581,6 +594,7 @@ NOMBRES_ENVIO = {
     "anci_alerta_temprana": "Primer aviso a la ANCI (alerta temprana)",
     "anci_actualizacion": "Actualización a la ANCI",
     "anci_informe_final": "Informe final a la ANCI",
+    "anci_plan_accion": "Plan de acción a la ANCI",
     "respuesta_solicitud": "Respuesta a la persona",
     "bloqueo_temporal": "Bloqueo de sus datos",
     "comunicar_a_terceros": "Aviso a quienes recibieron sus datos",
@@ -591,6 +605,7 @@ BORRADOR_DE = {
     "anci_alerta_temprana": "anci",
     "anci_actualizacion": "anci",
     "anci_informe_final": "anci",
+    "anci_plan_accion": "anci",
 }
 GUIAS_ENVIO = {
     "aviso_agencia": "Usa el borrador y envíalo por el canal oficial de la Agencia.",
@@ -602,6 +617,10 @@ GUIAS_ENVIO = {
     "anci_alerta_temprana": "Usa el borrador y envíalo por el canal oficial de la ANCI.",
     "anci_actualizacion": "Actualiza a la ANCI con lo que se sabe ahora (usa el mismo borrador).",
     "anci_informe_final": "Envía a la ANCI el informe final del incidente.",
+    "anci_plan_accion": (
+        "Como operador de importancia vital, informa a la ANCI tu plan de acción apenas lo "
+        "adoptes (a más tardar en 7 días desde que se supo)."
+    ),
     "bloqueo_temporal": (
         "Deja de usar sus datos para lo que pidió suspender, hasta responderle. Esto no se "
         "envía: lo haces en tus sistemas."
