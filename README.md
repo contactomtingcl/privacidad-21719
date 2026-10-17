@@ -282,19 +282,23 @@ Límites: el servidor está en Estados Unidos (región Virginia). Para un piloto
 
 El sistema se mide con 150 casos ficticios etiquetados (`data/evaluacion/`): 50 reportes de incidentes, 50 mensajes de titulares y 50 columnas de planillas. Se comparan tres niveles: reglas por palabras clave sin IA, la IA decidiendo sola con el texto legal a la vista, y el sistema propuesto (la IA interpreta y el motor de reglas decide).
 
-Resultado de la iteración 3, del 12 de octubre, ya con la frase de respaldo ([detalle](resultados/evaluacion.md)):
+Resultado de la iteración 4, del 17 de octubre ([detalle](resultados/evaluacion.md)), con la iteración 3 (12 de octubre) entre paréntesis para mostrar cuánto varía de una corrida a otra:
 
 | Métrica | Sin IA | IA sola | IA + motor |
 | --- | --- | --- | --- |
-| Incidentes: deberes de aviso detectados | 62/77 | 69/77 | 76/77 |
-| Incidentes: casos con los tres deberes correctos | 58% | 30% | 96% |
-| Solicitudes: derecho identificado correctamente | 84% | 96% | 98% |
-| Solicitudes: plazo de respuesta correcto | 40/43 | 40/43 | 43/43 |
-| Columnas: sensibles detectadas | 4/11 | 11/11 | 11/11 |
+| Incidentes: deberes de aviso detectados | 62/77 | 69/77 (69/77) | 75/77 (76/77) |
+| Incidentes: casos con los tres deberes correctos | 58% | 36% (30%) | 92% (96%) |
+| Solicitudes: derecho identificado correctamente | 84% | 90% (96%) | 100% (98%) |
+| Solicitudes: plazo de respuesta correcto | 40/43 | 39/43 (40/43) | 43/43 (43/43) |
+| Columnas: sensibles detectadas | 4/11 | 11/11 (11/11) | 11/11 (11/11) |
 
-Costo de IA del sistema propuesto: US$0,008 por incidente (era US$0,006 antes de pedir la frase de respaldo) y menos de US$0,001 por solicitud. Cuando la IA decide sola, deja como "revisar" 27 de los 37 casos en que el aviso a la Agencia es obligatorio: no se equivoca hacia el "no", pero no decide.
+Costo de IA del sistema propuesto: cerca de US$0,009 por incidente y menos de US$0,001 por solicitud (US$1,42 la corrida completa de los 150 casos en los tres niveles).
 
-Límites: las etiquetas fueron redactadas con asistencia de IA y están pendientes de revisión del autor y de un abogado; las instrucciones a la IA y la línea base se escribieron conociendo el set, por lo que se agregará un set ciego escrito por otra persona. Las mediciones anteriores, con sus errores, están en [`resultados/historial/`](resultados/historial/). Entre la iteración 2 y la 3 las cifras de solicitudes subieron un poco (de 96% a 98%), pero con una sola corrida no se puede atribuir ese cambio a la frase de respaldo: la IA no responde siempre igual y la columna «IA sola», que no cambió, también se movió.
+**Qué se escapa:** los 2 deberes omitidos de la iteración 4 son avisos a la Agencia en reportes donde la IA no dio por confirmado un hecho que la etiqueta sí asume: malware en un servidor «desde el que se puede entrar» a bases de clientes (la IA no marcó acceso indebido) y respaldos «de clientes» expuestos por un proveedor de hosting (la IA no marcó datos personales). En ambos el motor decide con lo que la IA afirmó, y el delegado ve los hechos y la frase en que se basan, y puede corregirlos. No se ajustaron las reglas ni las instrucciones para estos casos: hacerlo con el mismo set inflaría la cifra.
+
+**Variación entre corridas:** la IA no responde siempre igual. Entre la iteración 3 y la 4 el sistema pasó de 76 a 75 deberes detectados y de 98% a 100% en solicitudes, y la columna «IA sola», cuyo código no cambió, también se movió (de 30% a 36% y de 96% a 90%). Las cifras deben leerse como un rango, no como un valor exacto.
+
+Límites: las etiquetas fueron redactadas con asistencia de IA y están pendientes de revisión del autor y de un abogado; las instrucciones a la IA y la línea base se escribieron conociendo el set, por lo que se agregará un set ciego escrito por otra persona. Las mediciones anteriores, con sus errores, están en [`resultados/historial/`](resultados/historial/). 
 
 ### Frase de respaldo
 

@@ -1,0 +1,5336 @@
+{
+  "fecha": "2026-10-12 03:10 UTC",
+  "modelos": "`claude-sonnet-5-5` para incidentes; `claude-haiku-5-5` para solicitudes y columnas",
+  "incidentes": {
+    "metricas": {
+      "base": {
+        "casos": 50,
+        "casos_totalmente_correctos_pct": 58.0,
+        "exactitud_por_deber_pct": {
+          "aviso_agencia": 74.0,
+          "aviso_titulares": 80.0,
+          "reporte_anci": 90.0
+        },
+        "deberes_detectados": "62/77",
+        "deberes_detectados_pct": 80.5,
+        "deberes_omitidos": 15,
+        "alarmas_de_mas": 5,
+        "respuestas_fallidas_ia": 0
+      },
+      "ia_sola": {
+        "casos": 50,
+        "casos_totalmente_correctos_pct": 30.0,
+        "exactitud_por_deber_pct": {
+          "aviso_agencia": 38.0,
+          "aviso_titulares": 64.0,
+          "reporte_anci": 80.0
+        },
+        "deberes_detectados": "69/77",
+        "deberes_detectados_pct": 89.6,
+        "deberes_omitidos": 8,
+        "alarmas_de_mas": 10,
+        "respuestas_fallidas_ia": 0
+      },
+      "ia_motor": {
+        "casos": 50,
+        "casos_totalmente_correctos_pct": 96.0,
+        "exactitud_por_deber_pct": {
+          "aviso_agencia": 96.0,
+          "aviso_titulares": 100.0,
+          "reporte_anci": 100.0
+        },
+        "deberes_detectados": "76/77",
+        "deberes_detectados_pct": 98.7,
+        "deberes_omitidos": 1,
+        "alarmas_de_mas": 0,
+        "respuestas_fallidas_ia": 0
+      }
+    },
+    "respaldo": {
+      "frases_entregadas": 179,
+      "frases_verificadas": "179/179",
+      "frases_verificadas_pct": 100.0,
+      "afirmados_con_frase_verificada": "156/161",
+      "afirmados_con_frase_verificada_pct": 96.9
+    },
+    "costo_usd": {
+      "ia_sola": 0.9365,
+      "ia_motor": 0.4224
+    },
+    "casos": [
+      {
+        "id": "inc-01",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "financieros"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "nombre, RUT, monto que deben y días de mora",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "le mandé por error al proveedor de transporte la planilla de clientes",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "clientes con deudas atrasadas",
+            "verificada": true
+          },
+          "titulares_aprox": {
+            "frase": "Eran como 350 clientes",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "le mandé por error al proveedor de transporte la planilla de clientes",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-02",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "correos con nombres, correos y direcciones de clientes",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "Desde su cuenta alguien leyó correos con nombres, correos y direcciones de clientes",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "contestó un correo falso que parecía de soporte y entregó su clave",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "revisar"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-03",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "base": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "las fichas del Registro Social de Hogares y las solicitudes de ayudas sociales de los vecinos",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "el servidor de DIDECO amaneció con todos los archivos cifrados y un mensaje pidiendo rescate",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "las fichas del Registro Social de Hogares y las solicitudes de ayudas sociales",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "un mensaje pidiendo rescate",
+            "verificada": true
+          },
+          "interrupcion_servicio": {
+            "frase": "No podemos atender.",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "si"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-04",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "la nómina con los días de licencia médica de todos los trabajadores",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "Me robaron el notebook del auto en el estacionamiento del supermercado",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "la nómina con los días de licencia médica de todos los trabajadores",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Me robaron el notebook del auto en el estacionamiento del supermercado",
+            "verificada": true
+          },
+          "riesgo_mitigado": {
+            "frase": "El disco no estaba cifrado",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-05",
+        "esperado": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "Tenía la base de clientes.",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "Perdí el notebook de la empresa en el bus.",
+            "verificada": true
+          },
+          "riesgo_mitigado": {
+            "frase": "tiene el disco completo cifrado con BitLocker y una clave larga que solo yo sé",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Perdí el notebook de la empresa en el bus.",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-06",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "postulaciones a subsidios: traen ingresos del hogar, situación de vivienda y copias de carnet",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "Una funcionaria dejó olvidada en la micro una carpeta con postulaciones a subsidios",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "traen ingresos del hogar, situación de vivienda y copias de carnet",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Una funcionaria dejó olvidada en la micro una carpeta",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-07",
+        "esperado": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "ciberincidente": {
+            "frase": "estuvo caída 6 horas por un ataque de denegación de servicio",
+            "verificada": true
+          },
+          "interrupcion_servicio": {
+            "frase": "los vecinos no pudieron hacer trámites en línea",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "No se accedió a ninguna base de datos, solo se saturó el sitio",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-08",
+        "esperado": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "ciberincidente": {
+            "frase": "Nos llegó un correo de phishing a varios trabajadores",
+            "verificada": true
+          },
+          "riesgo_mitigado": {
+            "frase": "el filtro lo marcó como peligroso y nadie hizo clic",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "el filtro lo marcó como peligroso y nadie hizo clic",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-09",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "descargó unas 2.000 fichas clínicas el día antes de irse",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "descargó unas 2.000 fichas clínicas el día antes de irse",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "con diagnósticos y tratamientos",
+            "verificada": true
+          },
+          "titulares_aprox": {
+            "frase": "unas 2.000 fichas clínicas",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-10",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "menores_14"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "Tiene nombres y fechas de nacimiento de los hijos de los trabajadores",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "alguien lo compartió en un grupo de Facebook",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "hijos de los trabajadores, que tienen entre 4 y 12 años",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "quedó como \"cualquier persona con el enlace\"",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-11",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "nombres, colegio y celular de los hijos de trabajadores, todos de 15 a 17 años",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "Mandé al grupo de WhatsApp equivocado la lista de inscritos al campeonato juvenil",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Mandé al grupo de WhatsApp equivocado la lista de inscritos al campeonato juvenil",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-12",
+        "esperado": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "ciberincidente": {
+            "frase": "los servidores se apagaron dos horas",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "no se perdió ni se dañó ningún archivo",
+            "verificada": true
+          },
+          "interrupcion_servicio": {
+            "frase": "los servidores se apagaron dos horas",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-13",
+        "esperado": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "Por error borré la carpeta de clientes del servidor",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "Por error borré la carpeta de clientes del servidor",
+            "verificada": true
+          },
+          "riesgo_mitigado": {
+            "frase": "La restauramos completa desde el respaldo de anoche en media hora y nadie de afuera tuvo acceso",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Por error borré la carpeta de clientes del servidor",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-14",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "financieros"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "la base de socios, con los créditos vigentes, deudas y cuotas atrasadas de cada uno",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "detectó accesos desde una IP extranjera a la base de socios",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "los créditos vigentes, deudas y cuotas atrasadas de cada uno",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "detectó accesos desde una IP extranjera a la base de socios",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-15",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "con todos los correos a la vista en el campo \"Para\"",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "con todos los correos a la vista en el campo \"Para\", en vez de copia oculta",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Un funcionario mandó la invitación a la cuenta pública a 400 vecinos",
+            "verificada": true
+          },
+          "titulares_aprox": {
+            "frase": "a 400 vecinos",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-16",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "cifró el sistema de agenda y las fichas de los pacientes",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "un ransomware cifró el sistema de agenda y las fichas de los pacientes",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "las fichas de los pacientes",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "un ransomware cifró el sistema de agenda",
+            "verificada": true
+          },
+          "interrupcion_servicio": {
+            "frase": "El centro médico no pudo atender en todo el día",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-17",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "quedaron expuestas las liquidaciones de nuestros trabajadores",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "quedaron expuestas las liquidaciones de nuestros trabajadores",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "que incluyen los días de licencia médica",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "sufrió un hackeo",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-18",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "se ve la cara de una clienta",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "Un guardia subió a TikTok un video de las cámaras de la tienda",
+            "verificada": true
+          },
+          "titulares_aprox": {
+            "frase": "la cara de una clienta",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-19",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "base de clientes que se inscribieron para recibir ofertas: nombre, correo y celular",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "Se nos perdió un pendrive en la feria de emprendedores",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Se nos perdió un pendrive en la feria de emprendedores",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-20",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "revisar"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "revisar"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles",
+          "menores_14"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "listado de los niños: nombres, RUT, alergias y medicamentos",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "perdió un pendrive con el listado de los niños",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "nombres, RUT, alergias y medicamentos",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "perdió un pendrive con el listado de los niños",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-21",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "puede ver los mensajes de otros clientes con su nombre y teléfono",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "puede ver los mensajes de otros clientes con su nombre y teléfono",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "en la página de contacto, si uno cambia el número al final de la dirección web",
+            "verificada": true
+          },
+          "riesgo_mitigado": {
+            "frase": "No sabemos desde cuándo pasa ni si alguien más lo usó",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "revisar"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-22",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "la liquidación de sueldo de Pedro",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "Le mandé a Juan la liquidación de sueldo de Pedro por equivocación",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "salen los días de licencia médica de Pedro de este mes",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Le mandé a Juan la liquidación de sueldo de Pedro por equivocación",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-23",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "Desde ahí se puede entrar a sus bases de datos de clientes y trabajadores.",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Encontramos malware en el servidor de soporte remoto",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "si"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-24",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "le dieron su dirección y su teléfono",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "haciéndose pasar por un cliente y le dieron su dirección y su teléfono",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Una persona llamó a la mesa de ayuda haciéndose pasar por un cliente",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-25",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "En ese buzón están las solicitudes de los vecinos con sus RUT y direcciones.",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "Hackearon el correo de la oficina de partes",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Hackearon el correo de la oficina de partes",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-26",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "currículum de los postulantes: nombre, fecha de nacimiento, dirección y experiencia laboral",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "quedó pública por dos días la carpeta con los currículum de los postulantes",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Al actualizar la web quedó pública por dos días la carpeta",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "revisar"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-27",
+        "esperado": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "vulneracion": {
+            "frase": "mantención mensual que está en su contrato. Todo normal",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-28",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "resultados de exámenes de sangre de una paciente",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "al correo de otro paciente con el mismo apellido",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "resultados de exámenes de sangre de una paciente",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Por error enviamos los resultados de exámenes de sangre",
+            "verificada": true
+          },
+          "titulares_aprox": {
+            "frase": "resultados de exámenes de sangre de una paciente",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-29",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "fotos de carnets de clientes que mandan para abrir crédito",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "Al gerente le robaron el celular en el centro",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Al gerente le robaron el celular en el centro",
+            "verificada": true
+          },
+          "riesgo_mitigado": {
+            "frase": "Tenía el WhatsApp abierto, sin clave",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-30",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "financieros"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "los clientes con sus cuentas por cobrar y los montos que nos deben",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "Un ransomware cifró el ERP",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "cuentas por cobrar y los montos que nos deben",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Un ransomware cifró el ERP",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "revisar"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-31",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "listado de pacientes crónicos con sus diagnósticos",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "se mandó a su Gmail personal el listado de pacientes crónicos",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "pacientes crónicos con sus diagnósticos",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "se mandó a su Gmail personal el listado de pacientes crónicos",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-32",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "exportó todos los contactos",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "Los registros muestran que entró la semana pasada y exportó todos los contactos",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "un exvendedor seguía con acceso al CRM dos meses después de irse",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-33",
+        "esperado": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "revisar"
+        },
+        "base": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "revisar"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "financieros"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "Tenía planillas de socios con sus deudas.",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "Le robaron el notebook a un ejecutivo de la cooperativa.",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "planillas de socios con sus deudas",
+            "verificada": true
+          },
+          "riesgo_mitigado": {
+            "frase": "Tiene cifrado completo con clave robusta y ya confirmamos el borrado remoto.",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Le robaron el notebook a un ejecutivo de la cooperativa.",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-34",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "impresiones nuestras con nombres, RUT y descuentos de cuota sindical de varios trabajadores",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "Un vecino encontró en la basura de la calle unas impresiones nuestras",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "descuentos de cuota sindical de varios trabajadores",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-35",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "base con nombres, RUT y patentes de los contribuyentes",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "alguien entró a la base con nombres, RUT y patentes",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Por una falla en la plataforma de pago de permisos de circulación",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-36",
+        "esperado": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "ciberincidente": {
+            "frase": "La tienda online estuvo caída toda la mañana",
+            "verificada": true
+          },
+          "interrupcion_servicio": {
+            "frase": "La tienda online estuvo caída toda la mañana",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "No hubo acceso a datos.",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-37",
+        "esperado": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "la clínica estuvo cinco horas sin acceso al sistema de fichas",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "Los datos no se perdieron ni nadie accedió",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "la clínica estuvo cinco horas sin acceso al sistema de fichas",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Por una caída del proveedor de nube",
+            "verificada": true
+          },
+          "interrupcion_servicio": {
+            "frase": "se suspendieron atenciones",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-38",
+        "esperado": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "la planilla de sueldos de todos",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "Un trabajador vio por error la planilla de sueldos de todos",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "la carpeta compartida estaba mal configurada",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-39",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "Tenía nombres, correos, teléfonos y lo que compra cada uno.",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "un vendedor le vendió nuestra base de clientes a la competencia",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "un vendedor le vendió nuestra base de clientes a la competencia",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "revisar"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-40",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "financieros"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "Capturó datos de clientes que pagan con la tarjeta de la casa",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "Capturó datos de clientes que pagan con la tarjeta de la casa",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "incluido su cupo y lo que deben",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Encontramos un programa espía en el computador de la caja que registraba lo que se escribía",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "revisar"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-41",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "revisar"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "revisar"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "revisar"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "una copia del Registro Social de Hogares",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "Se robaron de la oficina de informática el disco externo con los respaldos",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "una copia del Registro Social de Hogares",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Se robaron de la oficina de informática el disco externo con los respaldos",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "si"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-42",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "se filtraron nombres, direcciones y teléfonos de unos 2.000 clientes nuestros",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "se filtraron nombres, direcciones y teléfonos de unos 2.000 clientes nuestros",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "La empresa de despacho que contratamos sufrió un hackeo",
+            "verificada": true
+          },
+          "titulares_aprox": {
+            "frase": "unos 2.000 clientes nuestros",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-43",
+        "esperado": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "ciberincidente": {
+            "frase": "miles de intentos de entrar a las cuentas del sitio con claves al azar",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "El sistema los bloqueó todos y no hubo ningún ingreso",
+            "verificada": true
+          },
+          "riesgo_mitigado": {
+            "frase": "El sistema los bloqueó todos y no hubo ningún ingreso",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-44",
+        "esperado": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "revisar"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "revisar"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "ciberincidente": {
+            "frase": "El firewall municipal bloqueó durante la noche miles de intentos de ingreso al sistema de permisos de edificación",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "No hubo ningún acceso ni caída del servicio",
+            "verificada": true
+          },
+          "riesgo_mitigado": {
+            "frase": "No hubo ningún acceso ni caída del servicio",
+            "verificada": true
+          },
+          "interrupcion_servicio": {
+            "frase": "No hubo ningún acceso ni caída del servicio",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-45",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "el resultado de un examen de VIH a un número equivocado",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "Se mandó por mensaje de texto el resultado de un examen de VIH a un número equivocado",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "resultado de un examen de VIH",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Se mandó por mensaje de texto el resultado de un examen de VIH a un número equivocado",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-46",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "preguntaba si están sindicalizados y por su salud mental",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "quedó visible para todas las jefaturas, cuando solo debía verla Personas",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "preguntaba si están sindicalizados y por su salud mental",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "quedó visible para todas las jefaturas, cuando solo debía verla Personas",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-47",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "financieros"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "el estado de deuda de otro socio",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "le mandó a un socio el estado de deuda de otro socio por equivocación",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "el estado de deuda de otro socio",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "por equivocación",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-48",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [
+          "sensibles",
+          "menores_14"
+        ],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "la planilla impresa con las alergias de los niños (de 3 a 10 años)",
+            "verificada": true
+          },
+          "vulneracion": {
+            "frase": "Quedó olvidada en el bus del paseo la planilla impresa",
+            "verificada": true
+          },
+          "categorias_especiales": {
+            "frase": "alergias de los niños (de 3 a 10 años)",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-49",
+        "esperado": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "si"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "vulneracion": {
+            "frase": "los respaldos de las bases de datos de varios clientes quedaron públicos en internet durante tres días",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Por un error de configuración, los respaldos de las bases de datos de varios clientes quedaron públicos",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "revisar",
+          "reporte_anci": "si"
+        },
+        "ia_sola_error": null
+      },
+      {
+        "id": "inc-50",
+        "esperado": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "base": {
+          "aviso_agencia": "si",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_motor_error": null,
+        "categorias_ia": [],
+        "respaldos_ia": {
+          "datos_personales": {
+            "frase": "le llegan correos de publicidad que nunca pidió",
+            "verificada": true
+          }
+        },
+        "ia_sola": {
+          "aviso_agencia": "no",
+          "aviso_titulares": "no",
+          "reporte_anci": "no"
+        },
+        "ia_sola_error": null
+      }
+    ]
+  },
+  "solicitudes": {
+    "metricas": {
+      "base": {
+        "casos": 50,
+        "clasificacion_correcta_pct": 84.0,
+        "ambiguos_detectados": "0/10",
+        "confirmaciones_innecesarias": 0,
+        "plazo_respuesta_correcto": "40/43",
+        "plazo_respuesta_correcto_pct": 93.0,
+        "plazo_bloqueo_correcto": "4/4",
+        "respuestas_fallidas_ia": 0
+      },
+      "ia_sola": {
+        "casos": 50,
+        "clasificacion_correcta_pct": 96.0,
+        "ambiguos_detectados": "7/10",
+        "confirmaciones_innecesarias": 10,
+        "plazo_respuesta_correcto": "40/43",
+        "plazo_respuesta_correcto_pct": 93.0,
+        "plazo_bloqueo_correcto": "1/4",
+        "respuestas_fallidas_ia": 0
+      },
+      "ia_motor": {
+        "casos": 50,
+        "clasificacion_correcta_pct": 98.0,
+        "ambiguos_detectados": "8/10",
+        "confirmaciones_innecesarias": 1,
+        "plazo_respuesta_correcto": "43/43",
+        "plazo_respuesta_correcto_pct": 100.0,
+        "plazo_bloqueo_correcto": "4/4",
+        "respuestas_fallidas_ia": 0
+      }
+    },
+    "respaldo": {
+      "frases_entregadas": 52,
+      "frases_verificadas": "52/52",
+      "frases_verificadas_pct": 100.0,
+      "afirmados_con_frase_verificada": "52/52",
+      "afirmados_con_frase_verificada_pct": 100.0
+    },
+    "costo_usd": {
+      "ia_sola": 0.0205,
+      "ia_motor": 0.0155
+    },
+    "casos": [
+      {
+        "id": "sol-01",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-01",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-01",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-01",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "acceso": {
+            "frase": "Quiero saber qué datos míos tienen y para qué los usan.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-01",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-02",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-01",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-01",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-01",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "supresion": {
+            "frase": "Por favor borren todos mis datos, ya no soy cliente de ustedes.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-01",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-03",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "vence_respuesta": "2027-01-02",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-02",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-02",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Quiere que dejemos de usar su correo para enviarle publicidad, o prefiere que borremos todos sus datos?",
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "oposicion": {
+            "frase": "No quiero que me lleguen más correos.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion",
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-02",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-04",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-02",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-02",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-02",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "rectificacion": {
+            "frase": "Mi dirección está mal, ahora vivo en Los Aromos 1234, Cabrero.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-02",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-05",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "portabilidad": {
+            "frase": "Necesito una copia de mis datos en Excel para llevármelos a otra empresa.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-06",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "oposicion": {
+            "frase": "Dejen de llamarme para ofrecerme tarjetas, por favor.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-07",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion",
+            "bloqueo"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": "2026-12-09"
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion",
+            "oposicion",
+            "bloqueo"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": "2026-12-09"
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion",
+            "bloqueo"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": "2026-12-09"
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "supresion": {
+            "frase": "Pedí que borraran mis datos",
+            "verificada": true
+          },
+          "bloqueo": {
+            "frase": "mientras lo revisan no quiero que los sigan usando",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion",
+            "bloqueo"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-03",
+          "vence_bloqueo": "2026-12-08"
+        }
+      },
+      {
+        "id": "sol-08",
+        "esperado": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {},
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-09",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": true,
+          "vence_respuesta": "2027-01-06",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-06",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "acceso": {
+            "frase": "¿Por qué me rechazaron el crédito? ¿Lo decidió un computador?",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-06",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-10",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-06",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-06",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-06",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "supresion": {
+            "frase": "Quiero que borren la foto de él que subieron al Instagram de la empresa",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-06",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-11",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-08",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-08",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "rectificacion": {
+            "frase": "Mi apellido aparece como Gonzales y es González, con zeta.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-08",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-12",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "vence_respuesta": "2027-01-08",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-08",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion",
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-08",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Quiere que dejemos de usar sus datos solo para el envío de comunicaciones, o prefiere que borremos por completo sus datos de nuestras bases?",
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "oposicion": {
+            "frase": "Sáquenme de sus listas.",
+            "verificada": true
+          },
+          "supresion": {
+            "frase": "Sáquenme de sus listas.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-08",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-13",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-08",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-08",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-08",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "acceso": {
+            "frase": "Quiero ver las grabaciones de las cámaras donde salgo",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-08",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-14",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "supresion": {
+            "frase": "quiero que eliminen mi currículum",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-15",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "rectificacion": {
+            "frase": "quiero cambiar mi correo registrado a [CORREO_1]",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-16",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "oposicion": {
+            "frase": "Retiro mi consentimiento para que usen mis datos en publicidad.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-17",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-10",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-10",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-10",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "acceso": {
+            "frase": "¿Me pueden decir a qué empresas les han pasado mis datos?",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-10",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-18",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso",
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-10",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso",
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-10",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso",
+            "portabilidad",
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": "2027-01-10",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "acceso": {
+            "frase": "Quiero que me manden todos mis datos",
+            "verificada": true
+          },
+          "portabilidad": {
+            "frase": "Quiero que me manden todos mis datos",
+            "verificada": true
+          },
+          "supresion": {
+            "frase": "y que después los borren",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso",
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-10",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-19",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "bloqueo"
+          ],
+          "requiere_confirmacion": true,
+          "vence_respuesta": "2027-01-22",
+          "vence_bloqueo": "2026-12-28"
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "oposicion",
+            "bloqueo"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": "2027-01-22",
+          "vence_bloqueo": "2026-12-28"
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "bloqueo"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-22",
+          "vence_bloqueo": "2026-12-28"
+        },
+        "pregunta_confirmacion": "¿Me podría indicar cuál es la fecha de nacimiento correcta, para que la corrijamos?",
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "rectificacion": {
+            "frase": "Exijo que dejen de usar mi información hasta que corrijan mi fecha de nacimiento",
+            "verificada": true
+          },
+          "bloqueo": {
+            "frase": "Exijo que dejen de usar mi información hasta que corrijan mi fecha de nacimiento",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "bloqueo"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-22",
+          "vence_bloqueo": "2026-12-28"
+        }
+      },
+      {
+        "id": "sol-20",
+        "esperado": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {},
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-21",
+        "esperado": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {},
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-22",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-13",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-13",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-13",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "supresion": {
+            "frase": "Quiero que eliminen su cuenta y sus datos.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-13",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-23",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "oposicion": {
+            "frase": "No me manden más WhatsApp con ofertas.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-24",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "supresion": {
+            "frase": "Quiero que borren mi historial de compras, pero que mantengan mi cuenta activa.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-25",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "acceso": {
+            "frase": "Quiero que me expliquen cómo consiguieron mi número, yo nunca se los di.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-14",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-26",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-15",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-15",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-15",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Quiere que borremos todos sus datos que tenemos, o solo alguno en particular?",
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "supresion": {
+            "frase": "Bórrenme de su sistema.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-15",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-27",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "vence_respuesta": "2027-01-15",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-15",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-15",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Quiere que borremos todos sus datos personales de nuestros registros, o solo que dejemos de enviarle comunicaciones o usar sus datos para algún fin en particular?",
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "supresion": {
+            "frase": "Quiero darme de baja.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-28",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-15",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-15",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-15",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "rectificacion": {
+            "frase": "El teléfono que tienen es el antiguo, el nuevo es [TELEFONO_1].",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-15",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-29",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso",
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso",
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "acceso": {
+            "frase": "¿Siguen guardando mis datos después de que cerré la cuenta en 2024?",
+            "verificada": true
+          },
+          "supresion": {
+            "frase": "quiero que los borren",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso",
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-30",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "portabilidad": {
+            "frase": "Envíen directamente mis datos a la nueva empresa de seguros que contraté.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-31",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "oposicion": {
+            "frase": "No autorizo que usen mis fotos del evento en sus redes sociales.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-16",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-32",
+        "esperado": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {},
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-33",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-17",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-17",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-17",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "acceso": {
+            "frase": "Quisiera saber si ustedes tienen datos míos",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-17",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-34",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "bloqueo"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-29",
+          "vence_bloqueo": "2027-01-04"
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "bloqueo"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-29",
+          "vence_bloqueo": "2027-01-04"
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "bloqueo"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-29",
+          "vence_bloqueo": "2027-01-04"
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "rectificacion": {
+            "frase": "ahora es Pasaje El Roble 45",
+            "verificada": true
+          },
+          "bloqueo": {
+            "frase": "Pido la suspensión temporal del uso de mis datos mientras resuelven mi solicitud de rectificación de domicilio",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "bloqueo"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-29",
+          "vence_bloqueo": "2027-01-01"
+        }
+      },
+      {
+        "id": "sol-35",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-20",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-20",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-20",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "oposicion": {
+            "frase": "Les pido que no usen mis compras para hacerme perfiles ni recomendaciones.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-20",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-36",
+        "esperado": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": "2027-01-20",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {},
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-37",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "acceso"
+          ],
+          "requiere_confirmacion": true,
+          "vence_respuesta": "2027-01-20",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso",
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-20",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "acceso"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-20",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Qué dato le gustaría que corrijamos, y cuál debería quedar escrito?",
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "rectificacion": {
+            "frase": "Quiero que corrijan mis datos",
+            "verificada": true
+          },
+          "acceso": {
+            "frase": "que me manden todo lo que tienen de mí",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "acceso"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-20",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-38",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "supresion": {
+            "frase": "sáquenla por favor",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-39",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "oposicion": {
+            "frase": "Ya les dije tres veces que no me llamen más para venderme cosas",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-40",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "portabilidad": {
+            "frase": "Necesito todos mis datos en un formato que pueda abrir en otro sistema.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "portabilidad"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-21",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-41",
+        "esperado": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {},
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-42",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-27",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-27",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-27",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "supresion": {
+            "frase": "Por favor eliminen los datos de mi hija Martina, de 10 años",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-27",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-43",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-27",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-27",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-27",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "acceso": {
+            "frase": "¿Qué hacen con las huellas digitales que nos piden para marcar la asistencia?",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-27",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-44",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "oposicion": {
+            "frase": "Me opongo a que usen mi información para las estadísticas internas de la empresa.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-45",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion",
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "oposicion": {
+            "frase": "Saquen mi correo de la lista de ofertas",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "oposicion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-46",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "acceso",
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "rectificacion": {
+            "frase": "Mi nombre está mal escrito, es Ignacia y no Ignacio.",
+            "verificada": true
+          },
+          "acceso": {
+            "frase": "quiero saber a quién más le mandaron mis datos",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion",
+            "acceso"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-28",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-47",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": true,
+          "vence_respuesta": "2027-02-03",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-02-03",
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "rectificacion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-02-03",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Qué datos quiere actualizar y cuál es el dato correcto que debemos anotar?",
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "rectificacion": {
+            "frase": "¿Cómo puedo actualizar mis datos?",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-48",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "vence_respuesta": "2027-02-03",
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-02-03",
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": "¿Quiere que eliminemos todos sus datos personales de nuestra base de datos?",
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "supresion": {
+            "frase": "No quiero estar en su base de datos.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "supresion"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-02-03",
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-49",
+        "esperado": {
+          "es_solicitud": true,
+          "derechos": [
+            "bloqueo"
+          ],
+          "requiere_confirmacion": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": "2026-12-14"
+        },
+        "base": {
+          "es_solicitud": true,
+          "derechos": [
+            "bloqueo"
+          ],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": "2026-12-14"
+        },
+        "ia_motor": {
+          "es_solicitud": true,
+          "derechos": [
+            "bloqueo"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": "2027-01-09",
+          "vence_bloqueo": "2026-12-14"
+        },
+        "pregunta_confirmacion": "¿Para qué quiere que bloqueemos sus datos? Por ejemplo, mientras corregimos, eliminamos o revisamos un uso específico de sus datos.",
+        "ia_motor_error": null,
+        "respaldos_ia": {
+          "bloqueo": {
+            "frase": "Quiero que bloqueen mis datos.",
+            "verificada": true
+          }
+        },
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": true,
+          "derechos": [
+            "bloqueo"
+          ],
+          "requiere_confirmacion": true,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      },
+      {
+        "id": "sol-50",
+        "esperado": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "base": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "ia_motor": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        },
+        "pregunta_confirmacion": null,
+        "ia_motor_error": null,
+        "respaldos_ia": {},
+        "ia_sola_error": null,
+        "ia_sola": {
+          "es_solicitud": false,
+          "derechos": [],
+          "requiere_confirmacion": false,
+          "clasificacion_correcta": true,
+          "vence_respuesta": null,
+          "vence_bloqueo": null
+        }
+      }
+    ]
+  },
+  "columnas": {
+    "metricas": {
+      "base": {
+        "casos": 50,
+        "exactitud_pct": 44.0,
+        "sensibles_detectadas": "4/11",
+        "sensibles_detectadas_pct": 36.4,
+        "falsos_sensibles": 2,
+        "trampas_acertadas": "0/5",
+        "sin_clasificar": 23,
+        "enviadas_a_revision": 0
+      },
+      "ia_sola": {
+        "casos": 50,
+        "exactitud_pct": 92.0,
+        "sensibles_detectadas": "11/11",
+        "sensibles_detectadas_pct": 100.0,
+        "falsos_sensibles": 1,
+        "trampas_acertadas": "3/5",
+        "sin_clasificar": 0,
+        "enviadas_a_revision": 0
+      },
+      "ia_motor": {
+        "casos": 50,
+        "exactitud_pct": 90.0,
+        "sensibles_detectadas": "11/11",
+        "sensibles_detectadas_pct": 100.0,
+        "falsos_sensibles": 2,
+        "trampas_acertadas": "1/5",
+        "sin_clasificar": 0,
+        "enviadas_a_revision": 1
+      }
+    },
+    "costo_usd": {
+      "ia_sola": 0.0027,
+      "ia_motor": 0.0025
+    },
+    "casos": [
+      {
+        "planilla": "col-a",
+        "columna": "Nombre niño/a",
+        "esperado": "nombre",
+        "trampa": false,
+        "base": "nombre",
+        "ia_sola": "nombre",
+        "ia_motor": "nombre",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-a",
+        "columna": "Obs.",
+        "esperado": "salud",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "salud",
+        "ia_motor": "salud",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-a",
+        "columna": "Dieta",
+        "esperado": "salud",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "salud",
+        "ia_motor": "salud",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-a",
+        "columna": "Seguro",
+        "esperado": "prevision_salud",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "prevision_salud",
+        "ia_motor": "prevision_salud",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-a",
+        "columna": "F. nac.",
+        "esperado": "fecha_nacimiento",
+        "trampa": false,
+        "base": "fecha_nacimiento",
+        "ia_sola": "fecha_nacimiento",
+        "ia_motor": "fecha_nacimiento",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-a",
+        "columna": "Quién retira",
+        "esperado": "parentesco",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "parentesco",
+        "ia_motor": "parentesco",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-a",
+        "columna": "Contacto emergencia",
+        "esperado": "telefono",
+        "trampa": false,
+        "base": "telefono",
+        "ia_sola": "telefono",
+        "ia_motor": "telefono",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-a",
+        "columna": "Comuna",
+        "esperado": "direccion",
+        "trampa": false,
+        "base": "direccion",
+        "ia_sola": "direccion",
+        "ia_motor": "direccion",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-a",
+        "columna": "Pertenece a pueblo originario",
+        "esperado": "origen_etnico",
+        "trampa": false,
+        "base": "origen_etnico",
+        "ia_sola": "origen_etnico",
+        "ia_motor": "origen_etnico",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-a",
+        "columna": "Monto pagado",
+        "esperado": "financiero",
+        "trampa": false,
+        "base": "financiero",
+        "ia_sola": "financiero",
+        "ia_motor": "financiero",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-b",
+        "columna": "Cliente",
+        "esperado": "nombre",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "nombre",
+        "ia_motor": "nombre",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-b",
+        "columna": "Mail",
+        "esperado": "correo",
+        "trampa": false,
+        "base": "correo",
+        "ia_sola": "correo",
+        "ia_motor": "correo",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-b",
+        "columna": "Fono",
+        "esperado": "telefono",
+        "trampa": false,
+        "base": "telefono",
+        "ia_sola": "telefono",
+        "ia_motor": "telefono",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-b",
+        "columna": "Raza",
+        "esperado": "no_personal",
+        "trampa": true,
+        "base": "origen_etnico",
+        "ia_sola": "no_personal",
+        "ia_motor": "origen_etnico",
+        "ia_motor_revisar": true
+      },
+      {
+        "planilla": "col-b",
+        "columna": "Nombre mascota",
+        "esperado": "no_personal",
+        "trampa": true,
+        "base": "nombre",
+        "ia_sola": "no_personal",
+        "ia_motor": "no_personal",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-b",
+        "columna": "Deuda pendiente",
+        "esperado": "financiero",
+        "trampa": false,
+        "base": "financiero",
+        "ia_sola": "financiero",
+        "ia_motor": "financiero",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-b",
+        "columna": "Última visita",
+        "esperado": "preferencias_comerciales",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "no_personal",
+        "ia_motor": "no_personal",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-b",
+        "columna": "Acepta ofertas",
+        "esperado": "preferencias_comerciales",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "preferencias_comerciales",
+        "ia_motor": "preferencias_comerciales",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-b",
+        "columna": "Diagnóstico",
+        "esperado": "no_personal",
+        "trampa": true,
+        "base": "salud",
+        "ia_sola": "salud",
+        "ia_motor": "salud",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-b",
+        "columna": "Dirección despacho",
+        "esperado": "direccion",
+        "trampa": false,
+        "base": "direccion",
+        "ia_sola": "direccion",
+        "ia_motor": "direccion",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-c",
+        "columna": "R.U.N.",
+        "esperado": "identificador_nacional",
+        "trampa": false,
+        "base": "identificador_nacional",
+        "ia_sola": "identificador_nacional",
+        "ia_motor": "identificador_nacional",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-c",
+        "columna": "Postulante",
+        "esperado": "nombre",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "nombre",
+        "ia_motor": "nombre",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-c",
+        "columna": "Pretensión de renta",
+        "esperado": "financiero",
+        "trampa": false,
+        "base": "financiero",
+        "ia_sola": "financiero",
+        "ia_motor": "financiero",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-c",
+        "columna": "Discapacidad (Ley 21.015)",
+        "esperado": "salud",
+        "trampa": false,
+        "base": "salud",
+        "ia_sola": "salud",
+        "ia_motor": "salud",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-c",
+        "columna": "Hijos",
+        "esperado": "parentesco",
+        "trampa": false,
+        "base": "parentesco",
+        "ia_sola": "parentesco",
+        "ia_motor": "parentesco",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-c",
+        "columna": "Sindicalizado en trabajo anterior",
+        "esperado": "afiliacion_sindical",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "afiliacion_sindical",
+        "ia_motor": "afiliacion_sindical",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-c",
+        "columna": "Fecha nacimiento",
+        "esperado": "fecha_nacimiento",
+        "trampa": false,
+        "base": "fecha_nacimiento",
+        "ia_sola": "fecha_nacimiento",
+        "ia_motor": "fecha_nacimiento",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-c",
+        "columna": "Cargo al que postula",
+        "esperado": "laboral",
+        "trampa": false,
+        "base": "laboral",
+        "ia_sola": "laboral",
+        "ia_motor": "laboral",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-c",
+        "columna": "Antecedentes médicos",
+        "esperado": "salud",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "salud",
+        "ia_motor": "salud",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-c",
+        "columna": "Militancia",
+        "esperado": "afiliacion_politica",
+        "trampa": false,
+        "base": "afiliacion_politica",
+        "ia_sola": "afiliacion_politica",
+        "ia_motor": "afiliacion_politica",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-d",
+        "columna": "Razón social",
+        "esperado": "persona_juridica",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "persona_juridica",
+        "ia_motor": "persona_juridica",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-d",
+        "columna": "RUT",
+        "esperado": "persona_juridica",
+        "trampa": true,
+        "base": "identificador_nacional",
+        "ia_sola": "identificador_nacional",
+        "ia_motor": "identificador_nacional",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-d",
+        "columna": "Contacto",
+        "esperado": "nombre",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "nombre",
+        "ia_motor": "nombre",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-d",
+        "columna": "Producto",
+        "esperado": "no_personal",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "no_personal",
+        "ia_motor": "no_personal",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-d",
+        "columna": "Precio unitario",
+        "esperado": "no_personal",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "no_personal",
+        "ia_motor": "no_personal",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-d",
+        "columna": "Bodega",
+        "esperado": "no_personal",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "no_personal",
+        "ia_motor": "no_personal",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-d",
+        "columna": "Ubicación bodega",
+        "esperado": "no_personal",
+        "trampa": true,
+        "base": "geolocalizacion",
+        "ia_sola": "no_personal",
+        "ia_motor": "geolocalizacion",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-d",
+        "columna": "Patente camión",
+        "esperado": "no_personal",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "no_personal",
+        "ia_motor": "no_personal",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-d",
+        "columna": "Chofer",
+        "esperado": "nombre",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "nombre",
+        "ia_motor": "nombre",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-d",
+        "columna": "Celular chofer",
+        "esperado": "telefono",
+        "trampa": false,
+        "base": "telefono",
+        "ia_sola": "telefono",
+        "ia_motor": "telefono",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-e",
+        "columna": "Trabajador",
+        "esperado": "nombre",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "nombre",
+        "ia_motor": "nombre",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-e",
+        "columna": "Huella (plantilla)",
+        "esperado": "biometrico",
+        "trampa": false,
+        "base": "biometrico",
+        "ia_sola": "biometrico",
+        "ia_motor": "biometrico",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-e",
+        "columna": "Hora entrada",
+        "esperado": "laboral",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "no_personal",
+        "ia_motor": "laboral",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-e",
+        "columna": "Coordenadas marcaje",
+        "esperado": "geolocalizacion",
+        "trampa": false,
+        "base": "geolocalizacion",
+        "ia_sola": "geolocalizacion",
+        "ia_motor": "geolocalizacion",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-e",
+        "columna": "Foto marcaje",
+        "esperado": "imagen",
+        "trampa": false,
+        "base": "imagen",
+        "ia_sola": "imagen",
+        "ia_motor": "imagen",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-e",
+        "columna": "Turno",
+        "esperado": "laboral",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "laboral",
+        "ia_motor": "laboral",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-e",
+        "columna": "Motivo ausencia",
+        "esperado": "salud",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "salud",
+        "ia_motor": "salud",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-e",
+        "columna": "Embarazada",
+        "esperado": "salud",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "salud",
+        "ia_motor": "salud",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-e",
+        "columna": "Departamento",
+        "esperado": "laboral",
+        "trampa": false,
+        "base": "laboral",
+        "ia_sola": "laboral",
+        "ia_motor": "laboral",
+        "ia_motor_revisar": false
+      },
+      {
+        "planilla": "col-e",
+        "columna": "Orientación",
+        "esperado": "vida_sexual",
+        "trampa": false,
+        "base": null,
+        "ia_sola": "vida_sexual",
+        "ia_motor": "vida_sexual",
+        "ia_motor_revisar": false
+      }
+    ]
+  },
+  "segundos": 204.1,
+  "costo_total_usd": 1.4001
+}

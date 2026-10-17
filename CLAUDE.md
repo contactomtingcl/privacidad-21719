@@ -57,7 +57,8 @@ sintéticos, detección y enmascarado, inventario con IA (11 campos del DS 662),
 reglas (Agencia, titulares, ANCI, plazos de solicitudes), interpretación con IA de
 solicitudes e incidentes, set de 150 casos y evaluación en tres niveles (iteración 2:
 IA + motor 76/77 deberes detectados; iteración 3 del 12 oct con frase de respaldo: 76/77, solicitudes
-98%). 550 pruebas (5 omitidas sin segno) en verde.
+98%; iteración 4 del 17 oct: 75/77, tres deberes 92%, solicitudes 100%, US$1,42; los 2 omitidos son
+inc-23 e inc-49, hechos que la IA no dio por confirmados; no se ajustó nada al set para no inflar). 550 pruebas (5 omitidas sin segno) en verde.
 
 Canal de reporte (primera versión, 10 oct): enlace firmado y QR (segno), confirmación al
 titular con menú fijo y, sin respuesta a los 5 días, lectura reversible: oposición + bloqueo
