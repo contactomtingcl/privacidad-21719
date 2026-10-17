@@ -13,11 +13,11 @@
 <div class="principal">
 <section class="tarjeta" aria-labelledby="titulo-registros">
 <h2 id="titulo-registros">Planillas registradas</h2>
-{% for r in registros %}
+{% for r, riesgo in registros %}
 {% set altas = r.actividad.alertas | selectattr("nivel", "equalto", "alta") | list %}
 <a class="fila-inventario" href="{{ BASE }}/inventario/{{ r.id }}">
 <span><b>{{ r.archivo }}</b><small>{{ r.resumen.filas }} filas · {{ r.actividad.columnas | selectattr("categoria") | rejectattr("categoria", "in", ["no_personal", "persona_juridica"]) | list | length }} columnas con datos personales · subida a las {{ r.subida | hora }}</small></span>
-<span>{% if altas %}<span class="pildora marca-d d-si">{{ altas | length }} alerta{{ "s" if altas | length != 1 else "" }} alta{{ "s" if altas | length != 1 else "" }}</span>{% endif %}
+<span>{% if riesgo.nivel %}<span class="pildora marca-d riesgo-{{ riesgo.nivel }}">Riesgo {{ {"leve": "leve", "grave": "grave", "gravisima": "gravísimo"}[riesgo.nivel] }}</span>{% endif %}{% if altas %}<span class="pildora marca-d d-si">{{ altas | length }} alerta{{ "s" if altas | length != 1 else "" }} alta{{ "s" if altas | length != 1 else "" }}</span>{% endif %}
 {% if r.validada_por %}<span class="pildora marca-d d-hecho">Validado</span>{% else %}<span class="pildora marca-d d-pendiente">Por validar</span>{% endif %}</span>
 </a>
 {% else %}

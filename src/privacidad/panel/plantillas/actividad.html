@@ -21,6 +21,27 @@
 {% if nuevo %}<div class="aviso" role="status">La planilla se analizó y se descartó: quedó solo este registro. Revísalo y valídalo.</div>{% endif %}
 {% if validado %}<div class="aviso" role="status">Validaste el registro. Si la planilla cambia, súbela de nuevo.</div>{% endif %}
 
+<section class="tarjeta" aria-labelledby="titulo-riesgo">
+<div class="cabecera"><h2 id="titulo-riesgo">Riesgo de infracción si no se corrige</h2>{% if riesgo.nivel %}<span class="pildora marca-d riesgo-{{ riesgo.nivel }}">{{ ETIQUETAS_RIESGO[riesgo.nivel] }}</span>{% endif %}</div>
+{% if riesgo.hallazgos %}
+<p class="suave">Lo calcula el sistema con el registro de la planilla, sin IA. No es una calificación de infracción: muestra qué calificación tendría cada conducta según la ley si se confirma. {{ riesgo.sancion }}</p>
+{% for h in riesgo.hallazgos %}
+<div class="deber">
+<span class="pildora marca-d riesgo-{{ h.nivel }}">{{ ETIQUETAS_RIESGO[h.nivel] }}{% if h.agravante %} o {{ ETIQUETAS_RIESGO[h.agravante] | lower }}{% endif %}</span>
+<div class="cuerpo">
+<b>{{ h.titulo }}</b>
+<p>{{ h.detalle }}</p>
+<p><span class="suave">Sería infracción:</span> {{ h.si }}</p>
+<p><span class="suave">Se corrige:</span> {{ h.corrige }}</p>
+<details class="fuente"><summary>Ver fuente legal</summary><blockquote>{{ h.fuente.norma | norma }}, art. {{ h.fuente.articulo }}: «{{ h.fuente.fragmento }}»</blockquote>{% if h.fuente_agravante %}<blockquote>{{ h.fuente_agravante.norma | norma }}, art. {{ h.fuente_agravante.articulo }}: «{{ h.fuente_agravante.fragmento }}»</blockquote>{% endif %}{% if riesgo.fuente_sancion %}<blockquote>{{ riesgo.fuente_sancion.norma | norma }}, art. {{ riesgo.fuente_sancion.articulo }}: «{{ riesgo.fuente_sancion.fragmento }}»</blockquote>{% endif %}</details>
+</div>
+</div>
+{% endfor %}
+{% else %}
+<p class="suave">Con lo que muestra el registro, no se ve una conducta de riesgo.</p>
+{% endif %}
+</section>
+
 {% if a.alertas %}
 <section class="tarjeta" aria-labelledby="titulo-alertas">
 <h2 id="titulo-alertas">Lo que hay que mirar</h2>
@@ -49,6 +70,8 @@
 <dt>Columnas con datos sensibles</dt><dd>{{ e.columnas_sensibles | length }}</dd>
 <dt>Columnas con datos de menores</dt><dd>{{ e.de_menores | length }}</dd>
 </dl>
+{% set rz = riesgo if titulo == "Hoy" else riesgo_minimo %}
+<p class="suave">Riesgo de infracción: {% if rz.nivel %}{{ ETIQUETAS_RIESGO[rz.nivel] | lower }}, {{ rz.hallazgos | length }} conducta{{ "s" if rz.hallazgos | length != 1 else "" }}{% else %}ninguna conducta de riesgo{% endif %}.</p>
 <p class="suave">Si se filtrara, el motor decide:</p>
 <ul class="si-se-filtra">
 <li><span class="pildora marca-d d-{{ e.si_se_filtra.aviso_agencia.decision }}">{{ DECISION[e.si_se_filtra.aviso_agencia.decision] }}</span> Avisar a la Agencia</li>

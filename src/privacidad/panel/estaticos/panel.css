@@ -400,3 +400,8 @@ input[type=file]{min-height:44px;padding:8px 0;color:var(--tx2)}
 .planilla-mencionada p{margin:0 0 4px;font-size:14px;line-height:1.5}
 .tabla-columnas{overflow-x:auto}
 .fila-col .pildora{align-self:flex-start}
+/* Riesgo de infracción */
+.riesgo-leve{background:var(--line2);color:var(--tx)}
+.riesgo-grave{background:var(--amb);color:var(--on-amb)}
+.riesgo-gravisima{background:var(--red-tx);color:var(--bg)}
+.deber .cuerpo p .suave{font-size:13px}

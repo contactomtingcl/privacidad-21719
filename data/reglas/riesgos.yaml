@@ -1,0 +1,53 @@
+# Riesgo de infracción por actividad de tratamiento (inventario).
+#
+# Cada regla mira el registro de una planilla y, si se cumple su condición, muestra qué
+# calificación tendría la conducta según la Ley 19.628 (texto de la Ley 21.719). No es una
+# calificación de infracción: es el riesgo si no se corrige. Las condiciones están en
+# `src/privacidad/inventario/riesgos.py`; aquí, el texto, el nivel y la fuente (verificada contra
+# el corpus por las pruebas).
+version: "2026-10-17"
+
+sanciones_por_nivel:
+  leve: {texto: "Amonestación escrita o multa de hasta 5.000 UTM.", fuente: {norma: ley-19628, articulo: "35", fragmento: "Las infracciones leves serán sancionadas con amonestación escrita o multa de hasta 5.000 unidades tributarias mensuales"}}
+  grave: {texto: "Multa de hasta 10.000 UTM.", fuente: {norma: ley-19628, articulo: "35", fragmento: "Las infracciones graves serán sancionadas con multa de hasta 10.000 unidades tributarias mensuales"}}
+  gravisima: {texto: "Multa de hasta 20.000 UTM.", fuente: {norma: ley-19628, articulo: "35", fragmento: "Las infracciones gravísimas serán sancionadas con multa de hasta 20.000 unidades tributarias mensuales"}}
+
+reglas:
+  datos_innecesarios:
+    nivel: grave
+    titulo: Datos que no se necesitan para la finalidad
+    si: Mantener columnas que no se necesitan para la finalidad.
+    corrige: Quitar esas columnas (ver la versión mínima).
+    fuente: {norma: ley-19628, articulo: 34 ter, fragmento: "Efectuar tratamiento de datos personales innecesarios en relación con los fines del tratamiento"}
+
+  datos_de_menores:
+    nivel: grave
+    agravante: gravisima
+    titulo: Datos de niños, niñas o adolescentes
+    si: Tratarlos sin cumplir las normas de la ley (por ejemplo, sin el consentimiento de sus padres o representantes cuando corresponde). Si además es a sabiendas, la conducta es gravísima.
+    corrige: Contar con el consentimiento de los padres o representantes y tratar solo lo necesario.
+    fuente: {norma: ley-19628, articulo: 34 ter, fragmento: "Realizar tratamiento de datos personales de niños, niñas y adolescentes con infracción a las normas previstas en esta ley"}
+    fuente_agravante: {norma: ley-19628, articulo: 34 quater, fragmento: "Tratar, comunicar o ceder, a sabiendas, datos personales sensibles o datos personales de niños, niñas y adolescentes, en contravención a las normas de esta ley"}
+
+  sensibles_sin_consentimiento_expreso:
+    nivel: grave
+    agravante: gravisima
+    titulo: Datos sensibles sin consentimiento expreso
+    si: Tratar datos sensibles sin consentimiento expreso ni otra base que la ley permita. Si es a sabiendas, la conducta es gravísima.
+    corrige: Pedir consentimiento expreso o dejar registrada la excepción legal que lo permite.
+    fuente: {norma: ley-19628, articulo: 34 ter, fragmento: "Tratar los datos personales sin contar con el consentimiento del titular de datos o sin un antecedente o fundamento legal que otorgue licitud al tratamiento"}
+    fuente_agravante: {norma: ley-19628, articulo: 34 quater, fragmento: "Tratar, comunicar o ceder, a sabiendas, datos personales sensibles"}
+
+  sin_base_legal:
+    nivel: grave
+    titulo: Sin una base legal identificada
+    si: Tratar los datos sin consentimiento ni otro fundamento legal.
+    corrige: Identificar y registrar la base legal del tratamiento.
+    fuente: {norma: ley-19628, articulo: 34 ter, fragmento: "Tratar los datos personales sin contar con el consentimiento del titular de datos o sin un antecedente o fundamento legal que otorgue licitud al tratamiento"}
+
+  comunicacion_a_terceros:
+    nivel: grave
+    titulo: Se comparten con terceros
+    si: Comunicarlos o cederlos sin el consentimiento de las personas cuando es necesario, o para un fin distinto del autorizado.
+    corrige: Verificar que el consentimiento o la base legal cubra la entrega y firmar un contrato de encargo con quien los recibe.
+    fuente: {norma: ley-19628, articulo: 34 ter, fragmento: "Comunicar o ceder datos personales, sin el consentimiento del titular, en los casos en que dicho consentimiento sea necesario"}

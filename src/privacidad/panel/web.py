@@ -56,6 +56,7 @@ from ..canal.servicio import CanalReporte
 from ..canal.web import _leer_formulario, _uno
 from ..guardia import DatosNoSinteticosError
 from ..iconos import icono
+from ..inventario import riesgos
 from ..inventario import servicio as inventario
 from ..motor import HechosIncidente, escenarios
 from ..reportes import DESTINOS, NOMBRE_DESTINO, Borrador, ultima_revision
@@ -587,7 +588,10 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
             ctx=ctx,
             organizaciones=organizaciones,
             seccion="inventario",
-            registros=list(reversed(ctx.canal._repo.actividades(ctx.org.id))),
+            registros=[
+                (r, riesgos.evaluar(r, perfil=ctx.org.perfil))
+                for r in reversed(ctx.canal._repo.actividades(ctx.org.id))
+            ],
             ejemplos=inventario.ejemplos(),
             error=error,
         )
@@ -668,6 +672,9 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
     async def ver_actividad(request: Request) -> Response:
         ctx = contexto(request)
         registro = registro_o_404(ctx, request.path_params["id"])
+        minima = inventario.version_minima(
+            registro, ctx.org.perfil, ctx.org.operador_importancia_vital
+        )
         return responder(
             "actividad.html",
             ctx=ctx,
@@ -675,9 +682,12 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
             seccion="inventario",
             r=registro,
             campos=vista.campos_ds662(registro.actividad),
-            minima=inventario.version_minima(
-                registro, ctx.org.perfil, ctx.org.operador_importancia_vital
+            minima=minima,
+            riesgo=riesgos.evaluar(registro, perfil=ctx.org.perfil),
+            riesgo_minimo=riesgos.evaluar(
+                registro, {n for n, _ in minima.quitadas}, ctx.org.perfil
             ),
+            ETIQUETAS_RIESGO=riesgos.ETIQUETAS,
             etiquetas=inventario.cargar_categorias(),
             nuevo=request.query_params.get("nuevo") == "1",
             validado=request.query_params.get("validado") == "1",
