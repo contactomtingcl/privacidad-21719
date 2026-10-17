@@ -46,6 +46,7 @@ from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
 
 from ..canal.confirmacion import ETIQUETAS_DERECHO
+from ..canal.correcciones import medir_correcciones
 from ..canal.delegado import AccionInvalida, CasoAjeno, filtrar_problemas
 from ..canal.evidencia import Anotacion, Verificacion
 from ..canal.modelos import Organizacion
@@ -627,6 +628,8 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
             organizaciones=organizaciones,
             seccion="evidencia",
             escaneo=False,
+            # La cifra solo se calcula sobre una cadena que calza: si no, no es confiable.
+            cifra=medir_correcciones(propias) if v.integra else None,
             **datos_evidencia(v, propias),
         )
 

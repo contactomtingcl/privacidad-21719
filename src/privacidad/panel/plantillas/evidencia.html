@@ -14,5 +14,23 @@
 </div>
 </header>
 {% include "_verificacion.html" %}
+<section class="tarjeta correcciones" aria-labelledby="titulo-correcciones">
+<h2 id="titulo-correcciones">{{ icono("file-text", 18) }}Cuánto corriges a la IA</h2>
+{% if cifra is none %}
+<p class="error" role="alert">No se calcula: la cadena de evidencia no calza, así que la cifra no sería confiable.</p>
+{% elif not cifra.incidentes_leidos and not cifra.completados_sin_ia and not (cifra.solicitudes_confirmadas + cifra.solicitudes_corregidas) %}
+<p class="suave">Todavía no hay incidentes leídos por la IA en tu organización.</p>
+{% else %}
+<div class="resumen">
+<div class="cifra"><span class="etiqueta">Validados sin corregir nada</span><span class="numero">{{ cifra.validados_sin_correccion }} <small>de {{ cifra.validados }}</small></span><span class="pie">Incidentes que la IA leyó y tú validaste tal cual</span></div>
+<div class="cifra"><span class="etiqueta">Con algún hecho corregido</span><span class="numero">{{ cifra.corregidos }} <small>de {{ cifra.incidentes_leidos }}</small></span><span class="pie">{{ cifra.por_error_ia }} porque la IA leyó mal el mensaje</span></div>
+<div class="cifra"><span class="etiqueta">Correcciones que cambiaron un deber</span><span class="numero">{{ cifra.cambiaron_deber }}</span><span class="pie">El motor decidió distinto sobre avisar a la Agencia, a las personas o a la ANCI</span></div>
+</div>
+{% if cifra.campos %}<p><b>Hechos corregidos:</b> {% for campo, n in cifra.campos.most_common() %}{{ ETIQUETAS_HECHO.get(campo, campo) }} ({{ n }}){% if not loop.last %}, {% endif %}{% endfor %}.</p>{% endif %}
+{% if cifra.por_motivo %}<p><b>Motivos:</b> {% for motivo, n in cifra.por_motivo.most_common() %}{{ MOTIVOS_CORRECCION.get(motivo, motivo) | lower }} ({{ n }}){% if not loop.last %}, {% endif %}{% endfor %}.</p>{% endif %}
+<p>Además: {{ cifra.completados_sin_ia }} completado{{ "s" if cifra.completados_sin_ia != 1 else "" }} por ti porque la IA no pudo leerlo{{ "s" if cifra.completados_sin_ia != 1 else "" }}, {{ cifra.dudas_resueltas }} duda{{ "s" if cifra.dudas_resueltas != 1 else "" }} del motor resuelta{{ "s" if cifra.dudas_resueltas != 1 else "" }}, y en las solicitudes la persona confirmó {{ cifra.solicitudes_confirmadas }} lectura{{ "s" if cifra.solicitudes_confirmadas != 1 else "" }} de la IA y corrigió {{ cifra.solicitudes_corregidas }}.</p>
+{% endif %}
+<p class="suave">Se cuenta solo desde la cadena de evidencia, después de verificarla. Un hecho que corregiste y luego devolviste a lo que dijo la IA no cuenta como corrección.{% if ctx.demo %} En la demo los casos son ficticios: esto muestra el mecanismo, no cuánto acierta la IA con casos reales.{% endif %}</p>
+</section>
 {% if ctx.demo %}<p class="suave">En la demo, «Simular una alteración» cambia de verdad una copia de la base y corre la misma verificación. La base real no se toca: «Revisar la cadena» vuelve a mostrarla.</p>{% endif %}
 {% endblock %}

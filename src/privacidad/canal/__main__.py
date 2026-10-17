@@ -7,6 +7,7 @@
     python -m privacidad.canal usuario --datos casos-demo --org ORGANIZACION --usuario NOMBRE
     python -m privacidad.canal identidad --carpeta casos-demo --caso CODIGO
     python -m privacidad.canal evidencia --carpeta casos-demo [--caso CODIGO] [--cabeza HUELLA]
+    python -m privacidad.canal correcciones --carpeta casos-demo [--org ORGANIZACION]
 
 Los secretos (de enlaces, de cifrado, de la API de Claude) nunca se imprimen ni se guardan en
 el repositorio: los comandos `secreto` y `llave` los dejan en un archivo que solo lee su dueño
@@ -249,6 +250,29 @@ def comando_evidencia(args: argparse.Namespace) -> int:
     return 0 if resultado.integra else 1
 
 
+def comando_correcciones(args: argparse.Namespace) -> int:
+    """Cuánto corrige la persona lo que leyó la IA, contado desde la evidencia verificada."""
+    from .correcciones import medir_correcciones
+
+    carpeta = Path(args.carpeta)
+    if not (carpeta / NOMBRE_ARCHIVO).is_file():
+        return _error(f"No hay casos guardados en {carpeta}.")
+    repo = RepositorioCasos(carpeta)
+    try:
+        verificacion = repo.verificar_evidencia(args.cabeza)
+        anotaciones = repo.evidencia()
+    finally:
+        repo.cerrar()
+    if not verificacion.integra:
+        return _error("La evidencia fue alterada: no se calcula la cifra (no sería confiable).")
+    if args.org:
+        anotaciones = [a for a in anotaciones if a.id_organizacion == args.org]
+    cifra = medir_correcciones(anotaciones)
+    print(json.dumps(cifra.como_dict(), ensure_ascii=False, indent=2))
+    print(f"Calculada sobre {verificacion.anotaciones} anotaciones verificadas.", file=sys.stderr)
+    return 0
+
+
 def comando_usuario(args: argparse.Namespace) -> int:
     """Crea un usuario del panel. La contraseña se escribe sin que se vea en pantalla."""
     from ..panel import RegistroUsuarios
@@ -318,6 +342,14 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--caso", help="muestra además la evidencia de este caso")
     p.add_argument("--cabeza", help="huella final guardada antes, para detectar borrados")
     p.set_defaults(funcion=comando_evidencia)
+
+    p = sub.add_parser(
+        "correcciones", help="cuánto corrige la persona lo que leyó la IA (desde la evidencia)"
+    )
+    p.add_argument("--carpeta", required=True)
+    p.add_argument("--org", help="solo esta organización")
+    p.add_argument("--cabeza", help="huella final guardada antes, para detectar borrados")
+    p.set_defaults(funcion=comando_correcciones)
 
     args = parser.parse_args(argv)
     return args.funcion(args)

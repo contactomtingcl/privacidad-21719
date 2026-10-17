@@ -323,3 +323,8 @@ mark.completar{background:var(--mark);color:var(--tx);border-radius:4px;padding:
 .filtros{align-items:center}
 .titulo-filtro{font-size:12px;color:var(--tx3);margin-right:4px}
 .tema{justify-content:flex-start}
+.correcciones{display:flex;flex-direction:column;gap:14px}
+.correcciones h2{display:flex;align-items:center;gap:8px;margin:0;font-size:18px}
+.correcciones p{margin:0}
+.correcciones .numero small{font-size:15px;color:var(--tx3)}
+.correcciones .cifra{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
