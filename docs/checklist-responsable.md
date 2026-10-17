@@ -65,7 +65,8 @@ Riesgo principal: que la IA lea peor los mensajes de quienes escriben distinto (
 | Tema claro y oscuro | Hecho | Menú lateral |
 | Lenguaje simple: el texto legal solo en «Ver fuente legal»; el canal explica para quién es cada opción con un ejemplo | Hecho | Auditoría de comprensión del 17 de octubre |
 | Uso en celular (canal por QR y menú compacto del panel) | Hecho | Demo |
-| Contraste de colores medido según WCAG AA | Pendiente | Se revisará en la revisión de punta a punta |
+| Contraste de colores medido según WCAG AA (4,5:1; 3:1 en texto grande) | Hecho | `scripts/revisar_pantallas.py`, 17 oct: todas las pantallas de la demo en computador y celular, temas claro y oscuro; ningún texto bajo el mínimo (salvo un instante durante una animación) |
+| Sin desplazamiento lateral en el celular (390 px) | Hecho | Misma revisión; la bandeja pasa a tarjetas en el celular |
 | Prueba con lector de pantalla | Pendiente | — |
 
 ## Evaluación de impacto (breve)

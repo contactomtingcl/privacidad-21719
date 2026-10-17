@@ -82,7 +82,10 @@ with sync_playwright() as p:
         ctx.add_init_script(f"try{{localStorage.setItem('panel-tema','{tema}')}}catch(e){{}}")
         pg = ctx.new_page()
         mensajes = []
-        pg.on("console", lambda m: mensajes.append(m.text) if m.type == "error" else None)
+        pg.on(
+            "console",
+            lambda m, mensajes=mensajes: mensajes.append(m.text) if m.type == "error" else None,
+        )
         pg.goto(B + "/panel/")
         html = pg.content()
         casos = list(dict.fromkeys(re.findall(r'/panel/caso/([A-Za-z0-9_-]+)"', html)))
@@ -138,7 +141,7 @@ with sync_playwright() as p:
         )
         ctx.close()
     b.close()
-json.dump(informe, open(f"{OUT}/informe.json", "w"), ensure_ascii=False, indent=1)
+Path(f"{OUT}/informe.json").write_text(json.dumps(informe, ensure_ascii=False, indent=1), "utf-8")
 for x in informe:
     if "pagina" in x:
         if x["estado"] != 200 or x["desborde"] or x["fallos"] or x["errores_js"]:
