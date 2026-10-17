@@ -9,7 +9,8 @@ Qué se guarda y qué no:
 - La IA ve solo encabezados y la forma de los valores (`actividad.muestras_seguras`), nunca los
   valores.
 - Las planillas de ejemplo de la demo usan las respuestas de la IA grabadas en
-  `resultados/inventario_demo.json`, si el archivo es idéntico (misma huella SHA-256) al del
+  `data/demo/inventario_grabado.json` (copia de `resultados/inventario_demo.json`; `resultados/`
+  no viaja en la imagen publicada), si el archivo es idéntico (misma huella SHA-256) al del
   repositorio. Así la demo funciona sin conexión y sin costo, y queda dicho en pantalla.
 
 Versión mínima (rediseño contrafactual): se quitan las columnas que el registro marca como
@@ -43,7 +44,7 @@ from .perfilador import PerfilPlanilla, cargar_categorias, perfilar_dataframe
 
 RAIZ = Path(__file__).resolve().parents[3]
 DATOS_DEMO = RAIZ / "data" / "sinteticos" / "comercial-los-robles"
-GRABADAS = RAIZ / "resultados" / "inventario_demo.json"
+GRABADAS = RAIZ / "data" / "demo" / "inventario_grabado.json"
 TAMANO_MAXIMO = 2 * 1024 * 1024  # 2 MB: planillas de una empresa mediana, no bases completas
 EXTENSIONES = (".xlsx", ".csv")
 LARGO_MAXIMO_DESCRIPCION = 600

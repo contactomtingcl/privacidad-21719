@@ -141,15 +141,23 @@ def sembrar_inventario(canal: CanalReporte, ahora: datetime) -> int:
 
     if ORG_INVENTARIO not in canal._organizaciones:
         return 0
+    cargadas = 0
     for i, nombre in enumerate(PRECARGADAS):
-        registro = servicio.procesar(
-            nombre,
-            (servicio.DATOS_DEMO / nombre).read_bytes(),
-            "",
-            id_organizacion=ORG_INVENTARIO,
-            por=USUARIO_SEMILLA,
-            cliente=None,
-            ahora=ahora - timedelta(days=3, minutes=10 * i),
-        )
+        # La precarga es un adorno de la demo: si algo falla, se salta esa planilla y la demo
+        # sigue funcionando (nunca debe impedir que un visitante entre).
+        try:
+            registro = servicio.procesar(
+                nombre,
+                (servicio.DATOS_DEMO / nombre).read_bytes(),
+                "",
+                id_organizacion=ORG_INVENTARIO,
+                por=USUARIO_SEMILLA,
+                cliente=None,
+                ahora=ahora - timedelta(days=3, minutes=10 * i),
+            )
+        except Exception as e:  # noqa: BLE001 - se informa y se sigue
+            print(f"Demo: no se precargó {nombre} ({type(e).__name__}: {e})", flush=True)
+            continue
         canal._repo.guardar_actividad(registro)
-    return len(PRECARGADAS)
+        cargadas += 1
+    return cargadas

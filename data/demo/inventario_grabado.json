@@ -1,0 +1,848 @@
+[
+  {
+    "archivo": "paseo_fin_de_anio.xlsx",
+    "descripcion_usuario": "Planilla que pidió Recursos Humanos a los trabajadores para organizar el paseo de fin de año con sus hijos e hijas. La comparte con el proveedor Eventos Laja SpA.",
+    "tipo_datos": {
+      "valor": [
+        "Correo electrónico",
+        "Datos laborales y previsionales",
+        "Fecha de nacimiento",
+        "Identificador nacional (RUT o RUN)",
+        "Nombre",
+        "Salud",
+        "Teléfono"
+      ],
+      "origen": "calculado",
+      "nota": "Incluye datos sensibles: Salud. Incluye datos de 84 menores de 18 años",
+      "citas": []
+    },
+    "ambito_territorial": {
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "bases_de_datos": {
+      "valor": [
+        "paseo_fin_de_anio.xlsx"
+      ],
+      "origen": "calculado",
+      "nota": null,
+      "citas": []
+    },
+    "categorias_titulares": {
+      "valor": [
+        "Trabajadores de la organización",
+        "Hijos e hijas de los trabajadores (todos menores de 18 años; 61 menores de 14 años)",
+        "Apoderados (personas de contacto)"
+      ],
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "fines": {
+      "valor": [
+        "Organizar el paseo de fin de año para los trabajadores y sus hijos e hijas (inscripción, logística, alimentación, contacto con el apoderado y entrega de polera)"
+      ],
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ds-662-2025",
+          "articulo": "3"
+        }
+      ]
+    },
+    "fuente": {
+      "valor": "Los propios trabajadores, a quienes Recursos Humanos les pidió completar la planilla. Los datos de los hijos e hijas y de los apoderados los entregan los trabajadores.",
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "base_licitud": {
+      "valor": "consentimiento_expreso",
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ley-19628",
+          "articulo": "16"
+        },
+        {
+          "norma": "ley-19628",
+          "articulo": "16"
+        },
+        {
+          "norma": "ley-19628",
+          "articulo": "16 bis"
+        }
+      ]
+    },
+    "destinatarios": {
+      "valor": [
+        "Eventos Laja SpA (proveedor que recibe la planilla)",
+        "Recursos Humanos de la organización (quien organiza la actividad)"
+      ],
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ley-19628",
+          "articulo": "15 bis"
+        }
+      ]
+    },
+    "transferencias_internacionales": {
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "plazo_supresion": {
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "decisiones_automatizadas": {
+      "valor": false,
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "columnas": [
+      {
+        "nombre": "Nombre trabajador",
+        "categoria": "nombre",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «nombre»",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "RUT trabajador",
+        "categoria": "identificador_nacional",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «rut»; 100% de los valores tiene formato de rut",
+        "necesaria": false,
+        "motivo_innecesaria": "Para inscribir y contactar al trabajador basta con su nombre. El RUT es un identificador que no se necesita para la finalidad descrita."
+      },
+      {
+        "nombre": "Área",
+        "categoria": "laboral",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «area»",
+        "necesaria": false,
+        "motivo_innecesaria": "El área de trabajo no es necesaria para organizar un paseo familiar. No aporta a la finalidad y no debería compartirse con el proveedor."
+      },
+      {
+        "nombre": "Nombre hijo/a",
+        "categoria": "nombre",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «nombre»; El encabezado indica datos de hijos o hijas",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "RUT hijo/a",
+        "categoria": "identificador_nacional",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «rut»; 100% de los valores tiene formato de rut; El encabezado indica datos de hijos o hijas",
+        "necesaria": false,
+        "motivo_innecesaria": "No se necesita el RUT de niños y niñas para organizar el paseo. Es un dato de menores que se puede evitar. Solo se justificaría si la descripción indicara, por ejemplo, un seguro, y hoy no lo indica."
+      },
+      {
+        "nombre": "Fecha de nacimiento hijo/a",
+        "categoria": "fecha_nacimiento",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «fecha de nacimiento»; 100% de los valores tiene formato de fecha; El encabezado indica datos de hijos o hijas",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Alergias o condiciones médicas",
+        "categoria": "salud",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «condiciones medicas»",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Celular apoderado",
+        "categoria": "telefono",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «celular»; 100% de los valores tiene formato de telefono",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Correo apoderado",
+        "categoria": "correo",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «correo»; 100% de los valores tiene formato de correo",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Talla polera",
+        "categoria": "no_personal",
+        "origen": "ia",
+        "justificacion": "La talla de polera (valores como 9, 99 o A, equivalentes a tallas S, M, L o numéricas) sirve para logística del paseo y no identifica a una persona natural.",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      }
+    ],
+    "alertas": [
+      {
+        "nivel": "alta",
+        "mensaje": "Hay datos de 61 niños o niñas menores de 14 años: se requiere consentimiento de sus padres o representantes legales, y ante una filtración hay que avisar a cada titular a través de ellos.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "16 quater"
+        }
+      },
+      {
+        "nivel": "alta",
+        "mensaje": "Hay 13 adolescentes menores de 16 años con datos sensibles: requieren consentimiento de sus padres o representantes legales.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "16 quater"
+        }
+      },
+      {
+        "nivel": "media",
+        "mensaje": "La columna «RUT trabajador» parece innecesaria: Para inscribir y contactar al trabajador basta con su nombre. El RUT es un identificador que no se necesita para la finalidad descrita.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "3"
+        }
+      },
+      {
+        "nivel": "media",
+        "mensaje": "La columna «Área» parece innecesaria: El área de trabajo no es necesaria para organizar un paseo familiar. No aporta a la finalidad y no debería compartirse con el proveedor.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "3"
+        }
+      },
+      {
+        "nivel": "media",
+        "mensaje": "La columna «RUT hijo/a» parece innecesaria: No se necesita el RUT de niños y niñas para organizar el paseo. Es un dato de menores que se puede evitar. Solo se justificaría si la descripción indicara, por ejemplo, un seguro, y hoy no lo indica.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "3"
+        }
+      }
+    ],
+    "citas_rechazadas": [],
+    "costo_ia_usd": 0.026079,
+    "validada": false
+  },
+  {
+    "archivo": "nomina_trabajadores.xlsx",
+    "descripcion_usuario": "Nómina para calcular y pagar remuneraciones y cotizaciones. La procesa el proveedor Remuneraciones del Sur SpA.",
+    "tipo_datos": {
+      "valor": [
+        "Afiliación sindical o gremial",
+        "Datos económicos o financieros",
+        "Datos laborales y previsionales",
+        "Identificador nacional (RUT o RUN)",
+        "Nombre",
+        "Previsión de salud (Isapre o Fonasa)",
+        "Salud"
+      ],
+      "origen": "calculado",
+      "nota": "Incluye datos sensibles: Afiliación sindical o gremial, Salud",
+      "citas": []
+    },
+    "ambito_territorial": {
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "bases_de_datos": {
+      "valor": [
+        "nomina_trabajadores.xlsx"
+      ],
+      "origen": "calculado",
+      "nota": null,
+      "citas": []
+    },
+    "categorias_titulares": {
+      "valor": [
+        "Trabajadores de la organización"
+      ],
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "fines": {
+      "valor": [
+        "Calcular y pagar las remuneraciones de los trabajadores",
+        "Calcular y pagar las cotizaciones asociadas a las remuneraciones"
+      ],
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ds-662-2025",
+          "articulo": "3"
+        }
+      ]
+    },
+    "fuente": {
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "base_licitud": {
+      "valor": "contrato",
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ley-19628",
+          "articulo": "13"
+        },
+        {
+          "norma": "ley-19628",
+          "articulo": "13"
+        }
+      ]
+    },
+    "destinatarios": {
+      "valor": [
+        "Remuneraciones del Sur SpA (proveedor que procesa la nómina)"
+      ],
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ley-19628",
+          "articulo": "15 bis"
+        }
+      ]
+    },
+    "transferencias_internacionales": {
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "plazo_supresion": {
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "decisiones_automatizadas": {
+      "valor": false,
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "columnas": [
+      {
+        "nombre": "Nombre completo",
+        "categoria": "nombre",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «nombre completo»",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "RUT",
+        "categoria": "identificador_nacional",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «rut»; 100% de los valores tiene formato de rut",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Cargo",
+        "categoria": "laboral",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «cargo»",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Área",
+        "categoria": "laboral",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «area»",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Fecha de ingreso",
+        "categoria": "laboral",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «fecha de ingreso»; 100% de los valores tiene formato de fecha",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Sueldo base",
+        "categoria": "financiero",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «sueldo base»",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Banco",
+        "categoria": "financiero",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «banco»",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Número de cuenta",
+        "categoria": "financiero",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «numero de cuenta»",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "AFP",
+        "categoria": "laboral",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «afp»",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Previsión de salud",
+        "categoria": "prevision_salud",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «prevision de salud»",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Afiliado sindicato",
+        "categoria": "afiliacion_sindical",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «afiliado sindicato»",
+        "necesaria": false,
+        "motivo_innecesaria": "Es un dato sensible (afiliación sindical) y no se necesita para calcular ni pagar remuneraciones y cotizaciones, según la descripción. Si hubiera descuento de cuota sindical, la organización debería informarlo y justificarlo."
+      },
+      {
+        "nombre": "Días de licencia médica último año",
+        "categoria": "salud",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «licencia medica»",
+        "necesaria": false,
+        "motivo_innecesaria": "Es un dato sensible (salud). Para la nómina solo serían pertinentes los días de licencia del período que se liquida, no el historial de todo el último año."
+      }
+    ],
+    "alertas": [
+      {
+        "nivel": "alta",
+        "mensaje": "La planilla tiene datos sensibles (afiliación sindical o gremial, salud). Requieren consentimiento expreso del titular, salvo excepción legal.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "16"
+        }
+      },
+      {
+        "nivel": "media",
+        "mensaje": "La columna «Afiliado sindicato» parece innecesaria: Es un dato sensible (afiliación sindical) y no se necesita para calcular ni pagar remuneraciones y cotizaciones, según la descripción. Si hubiera descuento de cuota sindical, la organización debería informarlo y justificarlo.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "3"
+        }
+      },
+      {
+        "nivel": "media",
+        "mensaje": "La columna «Días de licencia médica último año» parece innecesaria: Es un dato sensible (salud). Para la nómina solo serían pertinentes los días de licencia del período que se liquida, no el historial de todo el último año.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "3"
+        }
+      },
+      {
+        "nivel": "informativa",
+        "mensaje": "Contiene datos económicos o financieros: ante una filtración hay que avisar también a cada titular.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "14 sexies"
+        }
+      }
+    ],
+    "citas_rechazadas": [],
+    "costo_ia_usd": 0.02176,
+    "validada": false
+  },
+  {
+    "archivo": "clientes_marketing.csv",
+    "descripcion_usuario": "Base de clientes para enviar ofertas y publicidad por correo y celular. Las campañas las envía el proveedor Publicidad Austral SpA.",
+    "tipo_datos": {
+      "valor": [
+        "Correo electrónico",
+        "Datos económicos o financieros",
+        "Dirección o comuna",
+        "Nombre",
+        "Preferencias y comportamiento de compra",
+        "Teléfono"
+      ],
+      "origen": "calculado",
+      "nota": "Sin datos sensibles",
+      "citas": []
+    },
+    "ambito_territorial": {
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "bases_de_datos": {
+      "valor": [
+        "clientes_marketing.csv"
+      ],
+      "origen": "calculado",
+      "nota": null,
+      "citas": []
+    },
+    "categorias_titulares": {
+      "valor": [
+        "Clientes"
+      ],
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "fines": {
+      "valor": [
+        "Enviar ofertas y publicidad a clientes por correo electrónico y celular"
+      ],
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ds-662-2025",
+          "articulo": "3"
+        }
+      ]
+    },
+    "fuente": {
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "base_licitud": {
+      "valor": "consentimiento",
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ley-19628",
+          "articulo": "12"
+        },
+        {
+          "norma": "ley-19628",
+          "articulo": "12"
+        },
+        {
+          "norma": "ley-19628",
+          "articulo": "13"
+        }
+      ]
+    },
+    "destinatarios": {
+      "valor": [
+        "Publicidad Austral SpA (proveedor que envía las campañas)"
+      ],
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ley-19628",
+          "articulo": "15 bis"
+        }
+      ]
+    },
+    "transferencias_internacionales": {
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "plazo_supresion": {
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "decisiones_automatizadas": {
+      "valor": false,
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "columnas": [
+      {
+        "nombre": "Nombre",
+        "categoria": "nombre",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «nombre»",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Correo",
+        "categoria": "correo",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «correo»; 100% de los valores tiene formato de correo",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Celular",
+        "categoria": "telefono",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «celular»; 100% de los valores tiene formato de telefono",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Comuna",
+        "categoria": "direccion",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «comuna»",
+        "necesaria": false,
+        "motivo_innecesaria": "La publicidad se envía por correo y celular, así que la ubicación no es necesaria. Solo sería pertinente si hay ofertas segmentadas por zona, y eso no se informó."
+      },
+      {
+        "nombre": "Fecha última compra",
+        "categoria": "preferencias_comerciales",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «fecha ultima compra»; 100% de los valores tiene formato de fecha",
+        "necesaria": false,
+        "motivo_innecesaria": "No es necesaria para enviar publicidad en general. Solo sería pertinente si la organización segmenta por actividad reciente, y eso no se informó."
+      },
+      {
+        "nombre": "Monto compras 2026",
+        "categoria": "financiero",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «monto compras»",
+        "necesaria": false,
+        "motivo_innecesaria": "Para enviar ofertas y publicidad no hace falta conocer cuánto compró cada cliente. Solo sería pertinente si la organización describe una segmentación por nivel de compra, y eso no se informó."
+      },
+      {
+        "nombre": "Acepta publicidad",
+        "categoria": "preferencias_comerciales",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «acepta publicidad»",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      }
+    ],
+    "alertas": [
+      {
+        "nivel": "media",
+        "mensaje": "La columna «Comuna» parece innecesaria: La publicidad se envía por correo y celular, así que la ubicación no es necesaria. Solo sería pertinente si hay ofertas segmentadas por zona, y eso no se informó.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "3"
+        }
+      },
+      {
+        "nivel": "media",
+        "mensaje": "La columna «Fecha última compra» parece innecesaria: No es necesaria para enviar publicidad en general. Solo sería pertinente si la organización segmenta por actividad reciente, y eso no se informó.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "3"
+        }
+      },
+      {
+        "nivel": "media",
+        "mensaje": "La columna «Monto compras 2026» parece innecesaria: Para enviar ofertas y publicidad no hace falta conocer cuánto compró cada cliente. Solo sería pertinente si la organización describe una segmentación por nivel de compra, y eso no se informó.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "3"
+        }
+      },
+      {
+        "nivel": "informativa",
+        "mensaje": "Contiene datos económicos o financieros: ante una filtración hay que avisar también a cada titular.",
+        "cita": {
+          "norma": "ley-19628",
+          "articulo": "14 sexies"
+        }
+      }
+    ],
+    "citas_rechazadas": [],
+    "costo_ia_usd": 0.011208,
+    "validada": false
+  },
+  {
+    "archivo": "proveedores.csv",
+    "descripcion_usuario": "Registro de proveedores y de sus personas de contacto comerciales.",
+    "tipo_datos": {
+      "valor": [
+        "Correo electrónico",
+        "Nombre",
+        "Teléfono"
+      ],
+      "origen": "calculado",
+      "nota": "Sin datos sensibles",
+      "citas": []
+    },
+    "ambito_territorial": {
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "bases_de_datos": {
+      "valor": [
+        "proveedores.csv"
+      ],
+      "origen": "calculado",
+      "nota": null,
+      "citas": []
+    },
+    "categorias_titulares": {
+      "valor": [
+        "Personas de contacto comerciales de los proveedores"
+      ],
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "fines": {
+      "valor": [
+        "Mantener un registro de proveedores y de sus personas de contacto comerciales para gestionar la relación comercial"
+      ],
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ley-19628",
+          "articulo": "3"
+        }
+      ]
+    },
+    "fuente": {
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "base_licitud": {
+      "valor": "interes_legitimo",
+      "origen": "ia",
+      "nota": "La organización necesita comunicarse con las personas de contacto de sus proveedores para gestionar y mantener la relación comercial. El tratamiento se limita a datos de contacto profesional (nombre, correo y celular), de bajo impacto para los titulares, que razonablemente esperan ser contactados en ese ámbito.",
+      "citas": [
+        {
+          "norma": "ley-19628",
+          "articulo": "13"
+        },
+        {
+          "norma": "ley-19628",
+          "articulo": "13"
+        }
+      ]
+    },
+    "destinatarios": {
+      "valor": [
+        "no informado"
+      ],
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "transferencias_internacionales": {
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "plazo_supresion": {
+      "valor": "no informado",
+      "origen": "ia",
+      "nota": null,
+      "citas": [
+        {
+          "norma": "ley-19628",
+          "articulo": "3"
+        }
+      ]
+    },
+    "decisiones_automatizadas": {
+      "valor": false,
+      "origen": "ia",
+      "nota": null,
+      "citas": []
+    },
+    "columnas": [
+      {
+        "nombre": "Razón social",
+        "categoria": "persona_juridica",
+        "origen": "ia",
+        "justificacion": "Las muestras son nombres de empresas (con sufijos como Ltda. o S.A.), por lo que identifica personas jurídicas.",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "RUT empresa",
+        "categoria": "persona_juridica",
+        "origen": "ia",
+        "justificacion": "Es el RUT de la empresa proveedora; aunque tiene formato de identificador nacional, corresponde a una persona jurídica que no es titular de datos.",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Servicio",
+        "categoria": "no_personal",
+        "origen": "ia",
+        "justificacion": "Describe el servicio o producto que presta el proveedor, sin datos de personas naturales.",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Datos que recibe",
+        "categoria": "no_personal",
+        "origen": "ia",
+        "justificacion": "Describe el tipo de información que el proveedor recibe de la organización, sin identificar a una persona natural.",
+        "necesaria": null,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Contacto",
+        "categoria": "nombre",
+        "origen": "ia",
+        "justificacion": "Las muestras tienen forma de nombre y apellidos de la persona de contacto comercial, que es una persona natural identificable.",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Correo contacto",
+        "categoria": "correo",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «correo»; 100% de los valores tiene formato de correo",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      },
+      {
+        "nombre": "Celular contacto",
+        "categoria": "telefono",
+        "origen": "calculado",
+        "justificacion": "El encabezado contiene «celular»; 100% de los valores tiene formato de telefono",
+        "necesaria": true,
+        "motivo_innecesaria": null
+      }
+    ],
+    "alertas": [],
+    "citas_rechazadas": [],
+    "costo_ia_usd": 0.010484,
+    "validada": false
+  }
+]

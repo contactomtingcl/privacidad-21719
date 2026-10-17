@@ -986,6 +986,17 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
             mensaje=mensajes.get(exc.status_code, "Algo salió mal. Intenta de nuevo."),
         )
 
+    async def error_interno(request: Request, exc: Exception) -> Response:
+        """Falla inesperada: una página clara en vez de «Internal Server Error». El detalle
+        queda en el registro del servidor, nunca en la pantalla."""
+        print(f"Error en {request.url.path}: {type(exc).__name__}: {exc}", flush=True)
+        return responder(
+            "error.html",
+            500,
+            mensaje="Algo salió mal en el servidor. Vuelve a intentarlo en un momento; si sigue, "
+            "abre el panel de nuevo para empezar una sesión de demo limpia.",
+        )
+
     rutas = [
         Route("/", bandeja, methods=["GET"]),
         Route("/bandeja/contenido", bandeja_contenido, methods=["GET"]),
@@ -1031,7 +1042,11 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
                 https_only=config.https,
             )
         ],
-        exception_handlers={NoAutenticado: no_autenticado, HTTPException: error_http},
+        exception_handlers={
+            NoAutenticado: no_autenticado,
+            HTTPException: error_http,
+            Exception: error_interno,
+        },
     )
 
 

@@ -2,7 +2,8 @@
 
     python -m privacidad.inventario.demo_ia
 
-Escribe resultados/inventario_demo.json (completo) y resultados/inventario_demo.md (resumen).
+Escribe resultados/inventario_demo.json (completo) y resultados/inventario_demo.md (resumen), y
+copia el JSON a data/demo/inventario_grabado.json, que es el que usa la demo publicada.
 Requiere ANTHROPIC_API_KEY. Solo procesa datos sintéticos.
 """
 
@@ -87,6 +88,9 @@ def main() -> int:
         actividades.append(actividad.model_dump(mode="json"))
         print(f"{archivo}: {len(actividad.alertas)} alertas, US${actividad.costo_ia_usd:.4f}")
     costo = sum(a["costo_ia_usd"] for a in actividades)
+    (RAIZ / "data" / "demo" / "inventario_grabado.json").write_text(
+        json.dumps(actividades, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
     (RESULTADOS / "inventario_demo.json").write_text(
         json.dumps(actividades, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
