@@ -1,5 +1,5 @@
 {
-  "fecha": "2026-10-12 03:10 UTC",
+  "fecha": "2026-10-17 18:03 UTC",
   "modelos": "`claude-sonnet-5-5` para incidentes; `claude-haiku-5-5` para solicitudes y columnas",
   "incidentes": {
     "metricas": {
@@ -19,43 +19,43 @@
       },
       "ia_sola": {
         "casos": 50,
-        "casos_totalmente_correctos_pct": 30.0,
+        "casos_totalmente_correctos_pct": 36.0,
         "exactitud_por_deber_pct": {
-          "aviso_agencia": 38.0,
-          "aviso_titulares": 64.0,
-          "reporte_anci": 80.0
+          "aviso_agencia": 42.0,
+          "aviso_titulares": 70.0,
+          "reporte_anci": 78.0
         },
         "deberes_detectados": "69/77",
         "deberes_detectados_pct": 89.6,
         "deberes_omitidos": 8,
-        "alarmas_de_mas": 10,
+        "alarmas_de_mas": 11,
         "respuestas_fallidas_ia": 0
       },
       "ia_motor": {
         "casos": 50,
-        "casos_totalmente_correctos_pct": 96.0,
+        "casos_totalmente_correctos_pct": 92.0,
         "exactitud_por_deber_pct": {
-          "aviso_agencia": 96.0,
+          "aviso_agencia": 92.0,
           "aviso_titulares": 100.0,
-          "reporte_anci": 100.0
+          "reporte_anci": 98.0
         },
-        "deberes_detectados": "76/77",
-        "deberes_detectados_pct": 98.7,
-        "deberes_omitidos": 1,
+        "deberes_detectados": "75/77",
+        "deberes_detectados_pct": 97.4,
+        "deberes_omitidos": 2,
         "alarmas_de_mas": 0,
         "respuestas_fallidas_ia": 0
       }
     },
     "respaldo": {
-      "frases_entregadas": 179,
-      "frases_verificadas": "179/179",
+      "frases_entregadas": 176,
+      "frases_verificadas": "176/176",
       "frases_verificadas_pct": 100.0,
-      "afirmados_con_frase_verificada": "156/161",
-      "afirmados_con_frase_verificada_pct": 96.9
+      "afirmados_con_frase_verificada": "151/158",
+      "afirmados_con_frase_verificada_pct": 95.6
     },
     "costo_usd": {
-      "ia_sola": 0.9365,
-      "ia_motor": 0.4224
+      "ia_sola": 0.9489,
+      "ia_motor": 0.4259
     },
     "casos": [
       {
@@ -81,7 +81,7 @@
         ],
         "respaldos_ia": {
           "datos_personales": {
-            "frase": "nombre, RUT, monto que deben y días de mora",
+            "frase": "la planilla de clientes con deudas atrasadas (nombre, RUT, monto que deben y días de mora)",
             "verificada": true
           },
           "vulneracion": {
@@ -89,15 +89,19 @@
             "verificada": true
           },
           "categorias_especiales": {
-            "frase": "clientes con deudas atrasadas",
+            "frase": "clientes con deudas atrasadas (nombre, RUT, monto que deben y días de mora)",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "le mandé por error al proveedor de transporte la planilla de clientes",
             "verificada": true
           },
           "titulares_aprox": {
             "frase": "Eran como 350 clientes",
             "verificada": true
           },
-          "ciberincidente": {
-            "frase": "le mandé por error al proveedor de transporte la planilla de clientes",
+          "riesgo_mitigado": {
+            "frase": "Ya le pedí que la borre pero no me ha contestado",
             "verificada": true
           }
         },
@@ -179,11 +183,11 @@
             "verificada": true
           },
           "categorias_especiales": {
-            "frase": "las fichas del Registro Social de Hogares y las solicitudes de ayudas sociales",
+            "frase": "las fichas del Registro Social de Hogares y las solicitudes de ayudas sociales de los vecinos",
             "verificada": true
           },
           "ciberincidente": {
-            "frase": "un mensaje pidiendo rescate",
+            "frase": "el servidor de DIDECO amaneció con todos los archivos cifrados y un mensaje pidiendo rescate",
             "verificada": true
           },
           "interrupcion_servicio": {
@@ -193,7 +197,7 @@
         },
         "ia_sola": {
           "aviso_agencia": "si",
-          "aviso_titulares": "revisar",
+          "aviso_titulares": "si",
           "reporte_anci": "si"
         },
         "ia_sola_error": null
@@ -237,7 +241,7 @@
             "verificada": true
           },
           "riesgo_mitigado": {
-            "frase": "El disco no estaba cifrado",
+            "frase": "El disco no estaba cifrado.",
             "verificada": true
           }
         },
@@ -326,14 +330,14 @@
             "frase": "traen ingresos del hogar, situación de vivienda y copias de carnet",
             "verificada": true
           },
-          "ciberincidente": {
-            "frase": "Una funcionaria dejó olvidada en la micro una carpeta",
+          "riesgo_mitigado": {
+            "frase": "No la hemos podido recuperar.",
             "verificada": true
           }
         },
         "ia_sola": {
-          "aviso_agencia": "revisar",
-          "aviso_titulares": "revisar",
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
           "reporte_anci": "no"
         },
         "ia_sola_error": null
@@ -367,7 +371,7 @@
             "verificada": true
           },
           "vulneracion": {
-            "frase": "No se accedió a ninguna base de datos, solo se saturó el sitio",
+            "frase": "No se accedió a ninguna base de datos",
             "verificada": true
           }
         },
@@ -495,7 +499,7 @@
             "verificada": true
           },
           "categorias_especiales": {
-            "frase": "hijos de los trabajadores, que tienen entre 4 y 12 años",
+            "frase": "que tienen entre 4 y 12 años",
             "verificada": true
           },
           "ciberincidente": {
@@ -531,7 +535,7 @@
         "categorias_ia": [],
         "respaldos_ia": {
           "datos_personales": {
-            "frase": "nombres, colegio y celular de los hijos de trabajadores, todos de 15 a 17 años",
+            "frase": "nombres, colegio y celular de los hijos de trabajadores",
             "verificada": true
           },
           "vulneracion": {
@@ -577,10 +581,6 @@
           "vulneracion": {
             "frase": "no se perdió ni se dañó ningún archivo",
             "verificada": true
-          },
-          "interrupcion_servicio": {
-            "frase": "los servidores se apagaron dos horas",
-            "verificada": true
           }
         },
         "ia_sola": {
@@ -603,7 +603,7 @@
           "reporte_anci": "no"
         },
         "ia_motor": {
-          "aviso_agencia": "revisar",
+          "aviso_agencia": "si",
           "aviso_titulares": "no",
           "reporte_anci": "no"
         },
@@ -616,10 +616,6 @@
           },
           "vulneracion": {
             "frase": "Por error borré la carpeta de clientes del servidor",
-            "verificada": true
-          },
-          "riesgo_mitigado": {
-            "frase": "La restauramos completa desde el respaldo de anoche en media hora y nadie de afuera tuvo acceso",
             "verificada": true
           },
           "ciberincidente": {
@@ -657,7 +653,7 @@
         ],
         "respaldos_ia": {
           "datos_personales": {
-            "frase": "la base de socios, con los créditos vigentes, deudas y cuotas atrasadas de cada uno",
+            "frase": "base de socios, con los créditos vigentes, deudas y cuotas atrasadas de cada uno",
             "verificada": true
           },
           "vulneracion": {
@@ -709,7 +705,7 @@
             "verificada": true
           },
           "ciberincidente": {
-            "frase": "Un funcionario mandó la invitación a la cuenta pública a 400 vecinos",
+            "frase": "Un funcionario mandó la invitación a la cuenta pública",
             "verificada": true
           },
           "titulares_aprox": {
@@ -841,7 +837,7 @@
         "categorias_ia": [],
         "respaldos_ia": {
           "datos_personales": {
-            "frase": "se ve la cara de una clienta",
+            "frase": "un video de las cámaras de la tienda donde se ve la cara de una clienta",
             "verificada": true
           },
           "vulneracion": {
@@ -854,7 +850,7 @@
           }
         },
         "ia_sola": {
-          "aviso_agencia": "revisar",
+          "aviso_agencia": "si",
           "aviso_titulares": "no",
           "reporte_anci": "no"
         },
@@ -1014,7 +1010,7 @@
         ],
         "respaldos_ia": {
           "datos_personales": {
-            "frase": "la liquidación de sueldo de Pedro",
+            "frase": "Le mandé a Juan la liquidación de sueldo de Pedro por equivocación",
             "verificada": true
           },
           "vulneracion": {
@@ -1022,7 +1018,7 @@
             "verificada": true
           },
           "categorias_especiales": {
-            "frase": "salen los días de licencia médica de Pedro de este mes",
+            "frase": "En la liquidación salen los días de licencia médica de Pedro de este mes",
             "verificada": true
           },
           "ciberincidente": {
@@ -1057,12 +1053,12 @@
         "ia_motor_error": null,
         "categorias_ia": [],
         "respaldos_ia": {
-          "datos_personales": {
-            "frase": "Desde ahí se puede entrar a sus bases de datos de clientes y trabajadores.",
-            "verificada": true
-          },
           "ciberincidente": {
             "frase": "Encontramos malware en el servidor de soporte remoto",
+            "verificada": true
+          },
+          "datos_personales": {
+            "frase": "Desde ahí se puede entrar a sus bases de datos de clientes y trabajadores.",
             "verificada": true
           }
         },
@@ -1109,7 +1105,7 @@
         "ia_sola": {
           "aviso_agencia": "revisar",
           "aviso_titulares": "no",
-          "reporte_anci": "no"
+          "reporte_anci": "revisar"
         },
         "ia_sola_error": null
       },
@@ -1142,7 +1138,7 @@
             "verificada": true
           },
           "ciberincidente": {
-            "frase": "Hackearon el correo de la oficina de partes",
+            "frase": "Hackearon el correo de la oficina de partes y desde ahí mandaron correos falsos a proveedores pidiendo pagos",
             "verificada": true
           }
         },
@@ -1189,7 +1185,7 @@
         "ia_sola": {
           "aviso_agencia": "revisar",
           "aviso_titulares": "no",
-          "reporte_anci": "revisar"
+          "reporte_anci": "no"
         },
         "ia_sola_error": null
       },
@@ -1214,7 +1210,11 @@
         "categorias_ia": [],
         "respaldos_ia": {
           "vulneracion": {
-            "frase": "mantención mensual que está en su contrato. Todo normal",
+            "frase": "para hacer la mantención mensual que está en su contrato",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Todo normal, solo para que quede registro.",
             "verificada": true
           }
         },
@@ -1262,10 +1262,6 @@
           "ciberincidente": {
             "frase": "Por error enviamos los resultados de exámenes de sangre",
             "verificada": true
-          },
-          "titulares_aprox": {
-            "frase": "resultados de exámenes de sangre de una paciente",
-            "verificada": true
           }
         },
         "ia_sola": {
@@ -1303,18 +1299,18 @@
             "frase": "Al gerente le robaron el celular en el centro",
             "verificada": true
           },
-          "ciberincidente": {
-            "frase": "Al gerente le robaron el celular en el centro",
-            "verificada": true
-          },
           "riesgo_mitigado": {
             "frase": "Tenía el WhatsApp abierto, sin clave",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Al gerente le robaron el celular en el centro",
             "verificada": true
           }
         },
         "ia_sola": {
-          "aviso_agencia": "si",
-          "aviso_titulares": "revisar",
+          "aviso_agencia": "revisar",
+          "aviso_titulares": "no",
           "reporte_anci": "no"
         },
         "ia_sola_error": null
@@ -1342,7 +1338,7 @@
         ],
         "respaldos_ia": {
           "datos_personales": {
-            "frase": "los clientes con sus cuentas por cobrar y los montos que nos deben",
+            "frase": "Ahí están los clientes con sus cuentas por cobrar y los montos que nos deben",
             "verificada": true
           },
           "vulneracion": {
@@ -1350,7 +1346,7 @@
             "verificada": true
           },
           "categorias_especiales": {
-            "frase": "cuentas por cobrar y los montos que nos deben",
+            "frase": "los clientes con sus cuentas por cobrar y los montos que nos deben",
             "verificada": true
           },
           "ciberincidente": {
@@ -1359,8 +1355,8 @@
           }
         },
         "ia_sola": {
-          "aviso_agencia": "revisar",
-          "aviso_titulares": "revisar",
+          "aviso_agencia": "si",
+          "aviso_titulares": "si",
           "reporte_anci": "revisar"
         },
         "ia_sola_error": null
@@ -1397,10 +1393,6 @@
           },
           "categorias_especiales": {
             "frase": "pacientes crónicos con sus diagnósticos",
-            "verificada": true
-          },
-          "ciberincidente": {
-            "frase": "se mandó a su Gmail personal el listado de pacientes crónicos",
             "verificada": true
           }
         },
@@ -1446,8 +1438,8 @@
         },
         "ia_sola": {
           "aviso_agencia": "revisar",
-          "aviso_titulares": "no",
-          "reporte_anci": "no"
+          "aviso_titulares": "revisar",
+          "reporte_anci": "revisar"
         },
         "ia_sola_error": null
       },
@@ -1482,7 +1474,7 @@
             "verificada": true
           },
           "categorias_especiales": {
-            "frase": "planillas de socios con sus deudas",
+            "frase": "Tenía planillas de socios con sus deudas.",
             "verificada": true
           },
           "riesgo_mitigado": {
@@ -1604,7 +1596,7 @@
         "categorias_ia": [],
         "respaldos_ia": {
           "ciberincidente": {
-            "frase": "La tienda online estuvo caída toda la mañana",
+            "frase": "La tienda online estuvo caída toda la mañana por un error en la última actualización del código",
             "verificada": true
           },
           "interrupcion_servicio": {
@@ -1651,10 +1643,6 @@
           },
           "vulneracion": {
             "frase": "Los datos no se perdieron ni nadie accedió",
-            "verificada": true
-          },
-          "categorias_especiales": {
-            "frase": "la clínica estuvo cinco horas sin acceso al sistema de fichas",
             "verificada": true
           },
           "ciberincidente": {
@@ -1709,7 +1697,7 @@
         "ia_sola": {
           "aviso_agencia": "no",
           "aviso_titulares": "no",
-          "reporte_anci": "no"
+          "reporte_anci": "revisar"
         },
         "ia_sola_error": null
       },
@@ -1740,16 +1728,12 @@
           "vulneracion": {
             "frase": "un vendedor le vendió nuestra base de clientes a la competencia",
             "verificada": true
-          },
-          "ciberincidente": {
-            "frase": "un vendedor le vendió nuestra base de clientes a la competencia",
-            "verificada": true
           }
         },
         "ia_sola": {
           "aviso_agencia": "revisar",
           "aviso_titulares": "no",
-          "reporte_anci": "revisar"
+          "reporte_anci": "no"
         },
         "ia_sola_error": null
       },
@@ -1780,7 +1764,7 @@
             "verificada": true
           },
           "vulneracion": {
-            "frase": "Capturó datos de clientes que pagan con la tarjeta de la casa",
+            "frase": "Encontramos un programa espía en el computador de la caja que registraba lo que se escribía",
             "verificada": true
           },
           "categorias_especiales": {
@@ -1788,7 +1772,7 @@
             "verificada": true
           },
           "ciberincidente": {
-            "frase": "Encontramos un programa espía en el computador de la caja que registraba lo que se escribía",
+            "frase": "Encontramos un programa espía en el computador de la caja",
             "verificada": true
           }
         },
@@ -1870,11 +1854,11 @@
             "verificada": true
           },
           "vulneracion": {
-            "frase": "se filtraron nombres, direcciones y teléfonos de unos 2.000 clientes nuestros",
+            "frase": "sufrió un hackeo y se filtraron nombres, direcciones y teléfonos",
             "verificada": true
           },
           "ciberincidente": {
-            "frase": "La empresa de despacho que contratamos sufrió un hackeo",
+            "frase": "sufrió un hackeo y se filtraron nombres",
             "verificada": true
           },
           "titulares_aprox": {
@@ -1949,20 +1933,16 @@
         "ia_motor_error": null,
         "categorias_ia": [],
         "respaldos_ia": {
-          "ciberincidente": {
-            "frase": "El firewall municipal bloqueó durante la noche miles de intentos de ingreso al sistema de permisos de edificación",
-            "verificada": true
-          },
           "vulneracion": {
-            "frase": "No hubo ningún acceso ni caída del servicio",
+            "frase": "No hubo ningún acceso ni caída del servicio.",
             "verificada": true
           },
-          "riesgo_mitigado": {
-            "frase": "No hubo ningún acceso ni caída del servicio",
+          "ciberincidente": {
+            "frase": "bloqueó durante la noche miles de intentos de ingreso al sistema de permisos de edificación",
             "verificada": true
           },
           "interrupcion_servicio": {
-            "frase": "No hubo ningún acceso ni caída del servicio",
+            "frase": "No hubo ningún acceso ni caída del servicio.",
             "verificada": true
           }
         },
@@ -2135,7 +2115,7 @@
         ],
         "respaldos_ia": {
           "datos_personales": {
-            "frase": "la planilla impresa con las alergias de los niños (de 3 a 10 años)",
+            "frase": "planilla impresa con las alergias de los niños (de 3 a 10 años)",
             "verificada": true
           },
           "vulneracion": {
@@ -2143,7 +2123,11 @@
             "verificada": true
           },
           "categorias_especiales": {
-            "frase": "alergias de los niños (de 3 a 10 años)",
+            "frase": "planilla impresa con las alergias de los niños (de 3 a 10 años)",
+            "verificada": true
+          },
+          "ciberincidente": {
+            "frase": "Quedó olvidada en el bus del paseo la planilla impresa",
             "verificada": true
           }
         },
@@ -2167,19 +2151,19 @@
           "reporte_anci": "si"
         },
         "ia_motor": {
-          "aviso_agencia": "si",
+          "aviso_agencia": "no",
           "aviso_titulares": "no",
-          "reporte_anci": "si"
+          "reporte_anci": "revisar"
         },
         "ia_motor_error": null,
         "categorias_ia": [],
         "respaldos_ia": {
           "vulneracion": {
-            "frase": "los respaldos de las bases de datos de varios clientes quedaron públicos en internet durante tres días",
+            "frase": "los respaldos de las bases de datos de varios clientes quedaron públicos en internet",
             "verificada": true
           },
           "ciberincidente": {
-            "frase": "Por un error de configuración, los respaldos de las bases de datos de varios clientes quedaron públicos",
+            "frase": "Por un error de configuración, los respaldos de las bases de datos",
             "verificada": true
           }
         },
@@ -2213,6 +2197,10 @@
           "datos_personales": {
             "frase": "le llegan correos de publicidad que nunca pidió",
             "verificada": true
+          },
+          "vulneracion": {
+            "frase": "quiere que dejemos de mandárselos",
+            "verificada": true
           }
         },
         "ia_sola": {
@@ -2238,19 +2226,19 @@
       },
       "ia_sola": {
         "casos": 50,
-        "clasificacion_correcta_pct": 96.0,
+        "clasificacion_correcta_pct": 90.0,
         "ambiguos_detectados": "7/10",
-        "confirmaciones_innecesarias": 10,
-        "plazo_respuesta_correcto": "40/43",
-        "plazo_respuesta_correcto_pct": 93.0,
+        "confirmaciones_innecesarias": 8,
+        "plazo_respuesta_correcto": "39/43",
+        "plazo_respuesta_correcto_pct": 90.7,
         "plazo_bloqueo_correcto": "1/4",
         "respuestas_fallidas_ia": 0
       },
       "ia_motor": {
         "casos": 50,
-        "clasificacion_correcta_pct": 98.0,
+        "clasificacion_correcta_pct": 100.0,
         "ambiguos_detectados": "8/10",
-        "confirmaciones_innecesarias": 1,
+        "confirmaciones_innecesarias": 4,
         "plazo_respuesta_correcto": "43/43",
         "plazo_respuesta_correcto_pct": 100.0,
         "plazo_bloqueo_correcto": "4/4",
@@ -2266,7 +2254,7 @@
     },
     "costo_usd": {
       "ia_sola": 0.0205,
-      "ia_motor": 0.0155
+      "ia_motor": 0.0157
     },
     "casos": [
       {
@@ -2402,7 +2390,7 @@
           "vence_respuesta": "2027-01-02",
           "vence_bloqueo": null
         },
-        "pregunta_confirmacion": "¿Quiere que dejemos de usar su correo para enviarle publicidad, o prefiere que borremos todos sus datos?",
+        "pregunta_confirmacion": "¿Quieres que dejemos de usar tu correo para enviarte publicidad, o prefieres que borremos todos tus datos?",
         "ia_motor_error": null,
         "respaldos_ia": {
           "oposicion": {
@@ -2619,7 +2607,7 @@
             "verificada": true
           },
           "bloqueo": {
-            "frase": "mientras lo revisan no quiero que los sigan usando",
+            "frase": "no quiero que los sigan usando",
             "verificada": true
           }
         },
@@ -2817,7 +2805,7 @@
           "derechos": [
             "rectificacion"
           ],
-          "requiere_confirmacion": false,
+          "requiere_confirmacion": true,
           "clasificacion_correcta": true,
           "vence_respuesta": "2027-01-08",
           "vence_bloqueo": null
@@ -2855,15 +2843,15 @@
           "vence_respuesta": "2027-01-08",
           "vence_bloqueo": null
         },
-        "pregunta_confirmacion": "¿Quiere que dejemos de usar sus datos solo para el envío de comunicaciones, o prefiere que borremos por completo sus datos de nuestras bases?",
+        "pregunta_confirmacion": "¿Quiere que dejemos de usar sus datos para enviarle comunicaciones (oposición), o que borremos sus datos de nuestras listas por completo (supresión)?",
         "ia_motor_error": null,
         "respaldos_ia": {
           "oposicion": {
-            "frase": "Sáquenme de sus listas.",
+            "frase": "Sáquenme de sus listas",
             "verificada": true
           },
           "supresion": {
-            "frase": "Sáquenme de sus listas.",
+            "frase": "Sáquenme de sus listas",
             "verificada": true
           }
         },
@@ -3161,11 +3149,10 @@
           "es_solicitud": true,
           "derechos": [
             "acceso",
-            "portabilidad",
             "supresion"
           ],
           "requiere_confirmacion": false,
-          "clasificacion_correcta": false,
+          "clasificacion_correcta": true,
           "vence_respuesta": "2027-01-10",
           "vence_bloqueo": null
         },
@@ -3176,12 +3163,8 @@
             "frase": "Quiero que me manden todos mis datos",
             "verificada": true
           },
-          "portabilidad": {
-            "frase": "Quiero que me manden todos mis datos",
-            "verificada": true
-          },
           "supresion": {
-            "frase": "y que después los borren",
+            "frase": "que después los borren",
             "verificada": true
           }
         },
@@ -3190,10 +3173,11 @@
           "es_solicitud": true,
           "derechos": [
             "acceso",
+            "portabilidad",
             "supresion"
           ],
           "requiere_confirmacion": false,
-          "clasificacion_correcta": true,
+          "clasificacion_correcta": false,
           "vence_respuesta": "2027-01-10",
           "vence_bloqueo": null
         }
@@ -3233,7 +3217,7 @@
           "vence_respuesta": "2027-01-22",
           "vence_bloqueo": "2026-12-28"
         },
-        "pregunta_confirmacion": "¿Me podría indicar cuál es la fecha de nacimiento correcta, para que la corrijamos?",
+        "pregunta_confirmacion": "¿Podría indicarnos cuál es la fecha de nacimiento correcta, para que la corrijamos?",
         "ia_motor_error": null,
         "respaldos_ia": {
           "rectificacion": {
@@ -3241,7 +3225,7 @@
             "verificada": true
           },
           "bloqueo": {
-            "frase": "Exijo que dejen de usar mi información hasta que corrijan mi fecha de nacimiento",
+            "frase": "Exijo que dejen de usar mi información hasta que corrijan",
             "verificada": true
           }
         },
@@ -3471,7 +3455,7 @@
         "ia_motor_error": null,
         "respaldos_ia": {
           "supresion": {
-            "frase": "Quiero que borren mi historial de compras, pero que mantengan mi cuenta activa.",
+            "frase": "Quiero que borren mi historial de compras",
             "verificada": true
           }
         },
@@ -3569,7 +3553,7 @@
           "vence_respuesta": "2027-01-15",
           "vence_bloqueo": null
         },
-        "pregunta_confirmacion": "¿Quiere que borremos todos sus datos que tenemos, o solo alguno en particular?",
+        "pregunta_confirmacion": "¿Quiere que borremos todos sus datos que tenemos, o solo algunos en particular?",
         "ia_motor_error": null,
         "respaldos_ia": {
           "supresion": {
@@ -3586,7 +3570,7 @@
           "requiere_confirmacion": true,
           "clasificacion_correcta": true,
           "vence_respuesta": "2027-01-15",
-          "vence_bloqueo": null
+          "vence_bloqueo": "2026-12-18"
         }
       },
       {
@@ -3613,17 +3597,22 @@
         "ia_motor": {
           "es_solicitud": true,
           "derechos": [
-            "supresion"
+            "supresion",
+            "oposicion"
           ],
           "requiere_confirmacion": true,
           "clasificacion_correcta": true,
           "vence_respuesta": "2027-01-15",
           "vence_bloqueo": null
         },
-        "pregunta_confirmacion": "¿Quiere que borremos todos sus datos personales de nuestros registros, o solo que dejemos de enviarle comunicaciones o usar sus datos para algún fin en particular?",
+        "pregunta_confirmacion": "¿Quieres que dejemos de enviarte correos y mensajes, o prefieres que borremos todos tus datos de nuestra base?",
         "ia_motor_error": null,
         "respaldos_ia": {
           "supresion": {
+            "frase": "Quiero darme de baja.",
+            "verificada": true
+          },
+          "oposicion": {
             "frase": "Quiero darme de baja.",
             "verificada": true
           }
@@ -3738,11 +3727,10 @@
         "ia_sola": {
           "es_solicitud": true,
           "derechos": [
-            "acceso",
             "supresion"
           ],
           "requiere_confirmacion": false,
-          "clasificacion_correcta": true,
+          "clasificacion_correcta": false,
           "vence_respuesta": "2027-01-16",
           "vence_bloqueo": null
         }
@@ -3792,7 +3780,7 @@
           "derechos": [
             "portabilidad"
           ],
-          "requiere_confirmacion": true,
+          "requiere_confirmacion": false,
           "clasificacion_correcta": true,
           "vence_respuesta": "2027-01-16",
           "vence_bloqueo": null
@@ -3824,12 +3812,12 @@
           "derechos": [
             "oposicion"
           ],
-          "requiere_confirmacion": false,
+          "requiere_confirmacion": true,
           "clasificacion_correcta": true,
           "vence_respuesta": "2027-01-16",
           "vence_bloqueo": null
         },
-        "pregunta_confirmacion": null,
+        "pregunta_confirmacion": "¿Quieres que dejemos de usar tus fotos del evento en nuestras redes sociales, o prefieres que además las borremos de nuestros sistemas?",
         "ia_motor_error": null,
         "respaldos_ia": {
           "oposicion": {
@@ -3922,7 +3910,7 @@
         "ia_motor_error": null,
         "respaldos_ia": {
           "acceso": {
-            "frase": "Quisiera saber si ustedes tienen datos míos",
+            "frase": "Quisiera saber si ustedes tienen datos míos.",
             "verificada": true
           }
         },
@@ -3967,20 +3955,20 @@
             "rectificacion",
             "bloqueo"
           ],
-          "requiere_confirmacion": false,
+          "requiere_confirmacion": true,
           "clasificacion_correcta": true,
           "vence_respuesta": "2027-01-29",
           "vence_bloqueo": "2027-01-04"
         },
-        "pregunta_confirmacion": null,
+        "pregunta_confirmacion": "¿Me confirma cuál es su domicilio correcto para actualizarlo? Por ejemplo: \"Pasaje El Roble 45, comuna de ...\"",
         "ia_motor_error": null,
         "respaldos_ia": {
           "rectificacion": {
-            "frase": "ahora es Pasaje El Roble 45",
+            "frase": "mi solicitud de rectificación de domicilio, que ahora es Pasaje El Roble 45",
             "verificada": true
           },
           "bloqueo": {
-            "frase": "Pido la suspensión temporal del uso de mis datos mientras resuelven mi solicitud de rectificación de domicilio",
+            "frase": "Pido la suspensión temporal del uso de mis datos",
             "verificada": true
           }
         },
@@ -3994,7 +3982,7 @@
           "requiere_confirmacion": false,
           "clasificacion_correcta": true,
           "vence_respuesta": "2027-01-29",
-          "vence_bloqueo": "2027-01-01"
+          "vence_bloqueo": "2031-01-02"
         }
       },
       {
@@ -4122,7 +4110,7 @@
           "vence_respuesta": "2027-01-20",
           "vence_bloqueo": null
         },
-        "pregunta_confirmacion": "¿Qué dato le gustaría que corrijamos, y cuál debería quedar escrito?",
+        "pregunta_confirmacion": "¿Qué dato suyo está incorrecto y cuál es la corrección que quiere hacer?",
         "ia_motor_error": null,
         "respaldos_ia": {
           "rectificacion": {
@@ -4192,7 +4180,7 @@
           "derechos": [
             "supresion"
           ],
-          "requiere_confirmacion": true,
+          "requiere_confirmacion": false,
           "clasificacion_correcta": true,
           "vence_respuesta": "2027-01-21",
           "vence_bloqueo": null
@@ -4224,12 +4212,12 @@
           "derechos": [
             "oposicion"
           ],
-          "requiere_confirmacion": false,
+          "requiere_confirmacion": true,
           "clasificacion_correcta": true,
           "vence_respuesta": "2027-01-21",
           "vence_bloqueo": null
         },
-        "pregunta_confirmacion": null,
+        "pregunta_confirmacion": "¿Quiere que dejemos de usar sus datos de contacto para llamarlo con fines de venta? Si prefiere que además borremos sus datos, avísenos.",
         "ia_motor_error": null,
         "respaldos_ia": {
           "oposicion": {
@@ -4243,7 +4231,7 @@
           "derechos": [
             "oposicion"
           ],
-          "requiere_confirmacion": true,
+          "requiere_confirmacion": false,
           "clasificacion_correcta": true,
           "vence_respuesta": "2027-01-21",
           "vence_bloqueo": null
@@ -4430,13 +4418,11 @@
         },
         "ia_sola_error": null,
         "ia_sola": {
-          "es_solicitud": true,
-          "derechos": [
-            "acceso"
-          ],
+          "es_solicitud": false,
+          "derechos": [],
           "requiere_confirmacion": false,
-          "clasificacion_correcta": true,
-          "vence_respuesta": "2027-01-27",
+          "clasificacion_correcta": false,
+          "vence_respuesta": null,
           "vence_bloqueo": null
         }
       },
@@ -4633,7 +4619,7 @@
           "vence_respuesta": "2027-02-03",
           "vence_bloqueo": null
         },
-        "pregunta_confirmacion": "¿Qué datos quiere actualizar y cuál es el dato correcto que debemos anotar?",
+        "pregunta_confirmacion": "¿Qué datos quiere actualizar y cuál es el dato correcto que debemos registrar?",
         "ia_motor_error": null,
         "respaldos_ia": {
           "rectificacion": {
@@ -4731,7 +4717,7 @@
           "vence_respuesta": "2027-01-09",
           "vence_bloqueo": "2026-12-14"
         },
-        "pregunta_confirmacion": "¿Para qué quiere que bloqueemos sus datos? Por ejemplo, mientras corregimos, eliminamos o revisamos un uso específico de sus datos.",
+        "pregunta_confirmacion": "¿Podría indicarnos a qué solicitud acompaña este bloqueo? Por ejemplo, mientras corregimos, borramos o revisamos el uso de sus datos.",
         "ia_motor_error": null,
         "respaldos_ia": {
           "bloqueo": {
@@ -4815,7 +4801,7 @@
       },
       "ia_motor": {
         "casos": 50,
-        "exactitud_pct": 90.0,
+        "exactitud_pct": 88.0,
         "sensibles_detectadas": "11/11",
         "sensibles_detectadas_pct": 100.0,
         "falsos_sensibles": 2,
@@ -4826,7 +4812,7 @@
     },
     "costo_usd": {
       "ia_sola": 0.0027,
-      "ia_motor": 0.0025
+      "ia_motor": 0.0024
     },
     "casos": [
       {
@@ -5055,7 +5041,7 @@
         "esperado": "financiero",
         "trampa": false,
         "base": "financiero",
-        "ia_sola": "financiero",
+        "ia_sola": "laboral",
         "ia_motor": "financiero",
         "ia_motor_revisar": false
       },
@@ -5166,7 +5152,7 @@
         "trampa": false,
         "base": null,
         "ia_sola": "no_personal",
-        "ia_motor": "no_personal",
+        "ia_motor": "preferencias_comerciales",
         "ia_motor_revisar": false
       },
       {
@@ -5255,7 +5241,7 @@
         "esperado": "laboral",
         "trampa": false,
         "base": null,
-        "ia_sola": "no_personal",
+        "ia_sola": "laboral",
         "ia_motor": "laboral",
         "ia_motor_revisar": false
       },
@@ -5331,6 +5317,6 @@
       }
     ]
   },
-  "segundos": 204.1,
-  "costo_total_usd": 1.4001
+  "segundos": 211.9,
+  "costo_total_usd": 1.4161
 }
