@@ -1,0 +1,68 @@
+{% from "macros.html" import anillo, pildora, respaldo %}
+{% set c = f.caso %}
+<section class="tarjeta" aria-label="Lo que decide el motor de reglas">
+<div class="cabecera"><h2>Lo que decide el motor de reglas</h2>{% if c.tipo != "solicitud" and c.hechos_vigentes %}<a href="{{ BASE }}/simulador?caso={{ c.id }}">Simular este caso con la postergación</a>{% endif %}</div>
+{% if not f.deberes %}<p class="suave">Todavía no hay deberes calculados.</p>{% endif %}
+{% for d in f.deberes %}
+<div class="deber {% if cambio in ('corregido', 'resuelto') %}cambio{% endif %}">
+<span class="pildora marca-d d-{{ d.decision }}">{{ d.etiqueta }}</span>
+<div class="cuerpo">
+<b>{{ d.titulo }}</b>
+<span class="quien">{{ d.de_quien }}</span>
+<p>{{ d.porque }}</p>
+{% if d.plazo and d.decision != "no" %}<p>Plazo: {{ d.plazo }}{% if d.vence %} (vence el {{ d.vence | fecha }}){% endif %}.</p>{% endif %}
+{% if d.pendiente %}
+<form method="post" action="{{ BASE }}/caso/{{ c.id }}/resolver">
+<input type="hidden" name="csrf" value="{{ ctx.csrf }}">
+<input type="hidden" name="deber" value="{{ d.id }}">
+<label for="motivo-{{ d.id }}">¿Por qué?</label>
+<select id="motivo-{{ d.id }}" name="motivo" required><option value="" disabled selected>Elige…</option>{% for k, v in MOTIVOS_DECISION.items() %}<option value="{{ k }}">{{ v }}</option>{% endfor %}</select>
+<button type="submit" name="decision" value="si">Corresponde</button>
+<button type="submit" name="decision" value="no">No corresponde</button>
+</form>
+{% endif %}
+{% if d.citas %}
+<details class="fuente"><summary>Ver fuente legal</summary>{% for cita in d.citas %}<blockquote>{{ cita.norma | norma }}, art. {{ cita.articulo }}: «{{ cita.fragmento }}»</blockquote>{% endfor %}</details>
+{% endif %}
+</div>
+</div>
+{% endfor %}
+</section>
+
+{% if f.envios %}
+<section class="tarjeta" aria-labelledby="titulo-envios">
+<h2 id="titulo-envios">Lo que tienes que enviar</h2>
+<p class="suave">El sistema no envía nada. Cuando lo envíes (o lo hagas), déjalo registrado aquí: el caso sigue abierto hasta que todo quede enviado.</p>
+{% for e in f.envios %}
+<div class="deber envio {% if cambio == 'enviado' and e.envio and loop.last %}cambio{% endif %}">
+<span class="pildora marca-d {% if e.envio %}d-hecho{% else %}d-si{% endif %}">{% if e.envio %}Enviado{% else %}Por enviar{% endif %}</span>
+<div class="cuerpo">
+<b>{{ e.titulo }}</b>
+{% if e.envio %}
+<p>{{ e.texto_envio }} · registrado por {{ e.envio.por }}.</p>
+{% if not e.vigente %}<p class="suave">Con los hechos de hoy ya no corresponde, pero el envío queda registrado.</p>{% endif %}
+{% else %}
+<p>{{ e.guia }}</p>
+{% if e.vence %}<p>Plazo: {{ e.vence | fecha }} a las {{ e.vence | hora }}.</p>{% endif %}
+<details class="plegable">
+<summary class="boton primario">{{ e.boton }}</summary>
+<form class="desplegado envio-form" method="post" action="{{ BASE }}/caso/{{ c.id }}/enviado">
+<input type="hidden" name="csrf" value="{{ ctx.csrf }}">
+<input type="hidden" name="deber" value="{{ e.id }}">
+<div class="rejilla">
+<div class="campo"><label for="canal-{{ e.id }}">{% if e.boton == "Ya lo hice" %}¿Dónde lo hiciste?{% else %}¿Por dónde lo enviaste?{% endif %}</label>
+<select id="canal-{{ e.id }}" name="canal" required><option value="" disabled selected>Elige…</option>{% for k, v in CANALES_ENVIO.items() %}<option value="{{ k }}">{{ v }}</option>{% endfor %}</select></div>
+<div class="campo"><label for="momento-{{ e.id }}">¿Cuándo?</label>
+<input id="momento-{{ e.id }}" name="momento" type="datetime-local" value="{{ ahora_local }}" min="{{ minimo_local }}" max="{{ ahora_local }}" required></div>
+</div>
+<p class="suave">Queda en el registro con tu usuario. No se puede deshacer.</p>
+<button class="primario" type="submit">Registrar {{ "lo hecho" if e.boton == "Ya lo hice" else "el envío" }}</button>
+</form>
+</details>
+{% endif %}
+</div>
+{% if e.borrador and not e.envio %}<a class="boton" href="{{ BASE }}/caso/{{ c.id }}/borrador/{{ e.borrador }}">Ver borrador</a>{% endif %}
+</div>
+{% endfor %}
+</section>
+{% endif %}

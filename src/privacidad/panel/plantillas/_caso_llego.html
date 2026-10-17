@@ -1,0 +1,81 @@
+{% from "macros.html" import anillo, pildora, respaldo %}
+{% set c = f.caso %}
+{% if c.cascada %}
+<section class="tarjeta cascada" aria-labelledby="titulo-cascada">
+<h2 id="titulo-cascada">Llegó por la red de cascada</h2>
+<p><b>{{ c.cascada.nombre_proveedor }}</b> reportó un incidente en: {{ c.cascada.servicios | join(", ") | lower }}. El mismo reporte llegó a cada organización cliente que usa ese servicio; cada una recibió su propio caso y ninguna ve el de otra.</p>
+<p><span class="suave">Datos de {{ ctx.org.nombre }} que trata este proveedor:</span> {{ c.cascada.datos }}.</p>
+<p class="suave">Con esto y lo que informó el proveedor, el motor decidió con el perfil de tu organización. Tu plazo corre desde que te llegó el reporte ({{ c.ingreso | hora }}), no desde que el proveedor supo. Código del reporte del proveedor: <span class="mono">{{ c.cascada.codigo }}</span>.</p>
+</section>
+{% endif %}
+
+<section class="tarjeta" aria-label="Lo que llegó">
+<h2>Lo que llegó</h2>
+<p class="suave">Así lo leyó la IA, con los datos personales tapados.</p>
+<details class="fuente"><summary>Cómo se lee</summary><p class="suave">Los RUT, correos, teléfonos y fechas van tapados antes de llegar a la IA. Cada hecho propuesto por la IA muestra la frase del mensaje en que se basó, y el sistema comprueba que esa frase esté en el mensaje.</p></details>
+<p class="mensaje">{{ f.texto_enmascarado | marcadores }}</p>
+{% for p in planillas %}
+<div class="planilla-mencionada">
+<p><b>¿Es esta planilla?</b> El mensaje parece nombrar <a href="{{ BASE }}/inventario/{{ p.id }}">{{ p.archivo }}</a>, del inventario: {{ p.resumen.filas }} filas{% if p.resumen.menores_de_14 %}, datos de {{ p.resumen.menores_de_14 }} niños o niñas menores de 14{% endif %}{% set sens = p.actividad.tipo_datos.nota %}{% if sens and "sensibles:" in sens %}, {{ sens.split(". ")[0] | lower }}{% endif %}.</p>
+<p class="suave">Es una sugerencia por las palabras del mensaje: si es la planilla, úsala para completar cuántas personas y qué datos se vieron afectados.</p>
+</div>
+{% endfor %}
+
+{% if c.tipo == "solicitud" %}
+<h3>Lo que pide la persona</h3>
+{% if c.confirmacion and c.confirmacion.vigente %}
+<ul class="derechos">{% for d in c.confirmacion.vigente %}<li>{{ ETIQUETAS_DERECHO[d] }}{% if d in c.confirmacion.propuesta %} {{ respaldo(c.respaldos_ia.get(d)) }}{% endif %}</li>{% endfor %}</ul>
+<p class="suave">Estado de la confirmación con la persona: {{ {"no_requerida": "no hizo falta", "pendiente": "esperando su respuesta", "confirmada": "confirmó", "corregida": "corrigió la lectura", "por_defecto": "no respondió; se aplicó la lectura reversible"}[c.confirmacion.estado] }}.</p>
+{% else %}
+<p class="suave">Todavía no hay una lectura de lo que pide: confírmala con la persona.</p>
+{% endif %}
+{% if c.identidad %}<p>Escribió: {{ c.identidad.get("nombre", "") }} · {{ c.identidad.get("contacto", "") }}</p>{% endif %}
+{% else %}
+<h3>Los hechos</h3>
+{% if f.hechos %}
+<div class="hechos">
+{% for h in f.hechos %}
+<div class="hecho {% if h.origen != 'propuesto por la IA' %}corregido{% endif %} {% if cambio == 'corregido' and h.origen != 'propuesto por la IA' %}cambio{% endif %}">
+<small>{{ h.etiqueta }} · <span class="origen">{{ h.origen }}</span></small>
+<b>{{ h.valor }}</b>
+{{ respaldo(h.respaldo) }}{% if h.sin_respaldo %}<span class="respaldo no-verificada">La IA no citó una frase del mensaje para este dato: revísalo.</span>{% endif %}
+</div>
+{% endfor %}
+</div>
+{% else %}
+<div class="error" role="status">La IA no pudo leer este reporte. Completa los hechos y el motor decidirá con ellos. Mientras tanto, los plazos corren igual.</div>
+{% endif %}
+
+<details class="plegable" {% if not f.hechos %}open{% endif %}>
+<summary class="boton">{% if f.hechos %}Corregir hechos{% else %}Completar hechos{% endif %}</summary>
+<form class="desplegado" method="post" action="{{ BASE }}/caso/{{ c.id }}/corregir">
+<input type="hidden" name="csrf" value="{{ ctx.csrf }}">
+{% if f.hechos %}<p>Cambia lo que no corresponda. El motor vuelve a calcular los plazos desde que se supo, no desde ahora.</p>
+{% else %}<p>Completa lo que sepas a partir del mensaje: elige una opción en cada campo. El motor decide con esto y cuenta los plazos desde que se supo, no desde ahora.</p>{% endif %}
+<div class="rejilla">
+<div class="campo"><label for="vulneracion">{{ ETIQUETAS_HECHO.vulneracion }}</label>
+<select id="vulneracion" name="vulneracion" required>{% if f.valores.vulneracion is none %}<option value="" disabled selected>Elige…</option>{% endif %}{% for k, v in VULNERACIONES.items() %}<option value="{{ k }}" {% if f.valores.vulneracion == k %}selected{% endif %}>{{ v }}</option>{% endfor %}</select></div>
+<div class="campo"><label for="ciberincidente">{{ ETIQUETAS_HECHO.ciberincidente }}</label>
+<select id="ciberincidente" name="ciberincidente" required>{% if f.valores.ciberincidente is none %}<option value="" disabled selected>Elige…</option>{% endif %}{% for k, v in CIBER.items() %}<option value="{{ k }}" {% if f.valores.ciberincidente == k %}selected{% endif %}>{{ v }}</option>{% endfor %}</select></div>
+{% for campo in ("datos_personales", "riesgo_mitigado", "interrupcion_servicio") %}
+<div class="campo"><label for="{{ campo }}">{{ ETIQUETAS_HECHO[campo] }}</label>
+<select id="{{ campo }}" name="{{ campo }}" required>{% if f.valores[campo] is none %}<option value="" disabled selected>Elige…</option>{% endif %}<option value="si" {% if f.valores[campo] %}selected{% endif %}>Sí</option><option value="no" {% if f.valores[campo] is false %}selected{% endif %}>No</option></select></div>
+{% endfor %}
+<div class="campo"><label for="titulares_aprox">{{ ETIQUETAS_HECHO.titulares_aprox }}</label>
+<input id="titulares_aprox" name="titulares_aprox" type="number" min="0" max="100000000" inputmode="numeric" value="{{ f.valores.titulares_aprox if f.valores.titulares_aprox is not none else '' }}"></div>
+</div>
+<fieldset><legend>{{ ETIQUETAS_HECHO.categorias_especiales }}</legend>
+{% for k, v in CATEGORIAS.items() %}<label class="opcion"><input type="checkbox" name="categorias_especiales" value="{{ k }}" {% if k in f.valores.categorias_especiales %}checked{% endif %}> {{ v }}</label>{% endfor %}
+</fieldset>
+<div class="rejilla">
+{% if f.hechos %}<div class="campo"><label for="motivo-correccion">Motivo (queda en el registro)</label>
+<select id="motivo-correccion" name="motivo" required><option value="" disabled selected>Elige…</option>{% for k, v in MOTIVOS_CORRECCION.items() %}<option value="{{ k }}">{{ v }}</option>{% endfor %}</select></div>
+{% else %}<div class="campo"><span class="etiqueta-campo">Motivo (queda en el registro)</span><p class="motivo-fijo">{{ MOTIVO_SIN_LECTURA }}</p><input type="hidden" name="motivo" value="ia_no_leyo"></div>{% endif %}
+<div class="campo"><label for="nota">Nota opcional (queda solo en el caso)</label>
+<textarea id="nota" name="nota" maxlength="300"></textarea></div>
+</div>
+<div class="acciones"><button class="primario" type="submit">{% if f.hechos %}Aplicar corrección{% else %}Guardar los hechos{% endif %}</button></div>
+</form>
+</details>
+{% endif %}
+</section>
