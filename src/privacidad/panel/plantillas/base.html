@@ -18,7 +18,9 @@
 <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect x="1" y="1" width="32" height="32" rx="9" fill="none" stroke="#3DD6C3" stroke-width="2"/><path d="M17 8 L25 11 V17 C25 22 21.5 25 17 26.5 C12.5 25 9 22 9 17 V11 Z" fill="none" stroke="#3DD6C3" stroke-width="2" stroke-linejoin="round"/><path d="M13.5 17 L16 19.5 L20.5 14.5" fill="none" stroke="#3DD6C3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
 <span><strong>Privacidad 21.719</strong><span>Panel del delegado</span></span>
 </a>
+<button type="button" class="boton-menu discreto" data-menu aria-expanded="false" aria-controls="menu-enlaces">Menú</button>
 {% set seccion = seccion if seccion is defined else "" %}
+<div class="menu-enlaces" id="menu-enlaces">
 <div class="nav">
 <a href="{{ BASE }}/" {% if seccion == "bandeja" %}aria-current="page"{% endif %}>
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 13h4l2 3h4l2-3h4"/><path d="M4 13l2-8h12l2 8v6H4z"/></svg>Bandeja</a>
@@ -46,6 +48,7 @@
 <input type="hidden" name="csrf" value="{{ ctx.csrf }}">
 <button type="submit" class="discreto">{% if ctx.demo %}Reiniciar la sesión de demo{% else %}Salir{% endif %}</button>
 </form>
+</div>
 </div>
 </nav>
 <main class="contenido" id="contenido">

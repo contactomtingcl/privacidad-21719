@@ -3,6 +3,8 @@
 (function () {
   "use strict";
 
+  document.documentElement.classList.add("js-listo");
+
   function dos(n) { return (n < 10 ? "0" : "") + n; }
 
   // Relojes: elementos con data-vence (ISO 8601). Si además tienen data-total (segundos), el
@@ -46,6 +48,14 @@
   }
 
   document.addEventListener("click", function (evento) {
+    var menu = evento.target.closest("[data-menu]");
+    if (menu) {
+      var nav = menu.closest(".menu");
+      var abierto = nav.classList.toggle("abierto");
+      menu.setAttribute("aria-expanded", abierto ? "true" : "false");
+      menu.textContent = abierto ? "Cerrar menú" : "Menú";
+      return;
+    }
     var objetivo = evento.target.closest("[data-cambiar-tema], [data-copiar], [data-imprimir]");
     if (!objetivo) { return; }
     if (objetivo.hasAttribute("data-cambiar-tema")) { cambiarTema(); return; }

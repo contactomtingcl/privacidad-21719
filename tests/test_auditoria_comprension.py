@@ -205,3 +205,16 @@ class TestFormularioSinLectura(Ficha):
         formulario = html[html.index("/corregir") :]
         self.assertIn('<select id="motivo-correccion" name="motivo" required>', formulario)
         self.assertIn("Aplicar corrección", formulario)
+
+
+class TestMenores(unittest.TestCase):
+    """M1, M3, M5: menú compacto en el celular, enlace sin lenguaje técnico, borrador ANCI."""
+
+    def test_menu_compacto_con_mejora_progresiva(self):
+        app, *_ = crear_panel_de_prueba(None, demo=True)
+        html = Navegador(app).pedir("GET", "/panel/").html
+        self.assertIn('data-menu aria-expanded="false" aria-controls="menu-enlaces"', html)
+        self.assertIn('id="menu-enlaces"', html)
+        canal = Navegador(app).pedir("GET", "/panel/canal").html
+        self.assertNotIn("se sube su versión en la configuración", canal)
+        self.assertIn("Si se filtró, pide uno nuevo", canal)

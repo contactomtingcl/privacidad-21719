@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block titulo %}Borrador para {{ nombre_destino }}{% endblock %}
+{% block titulo %}Borrador para {{ destino_corto }}{% endblock %}
 {% block cuerpo %}
 <a class="volver" href="{{ BASE }}/caso/{{ caso.id }}">← Volver al caso</a>
 <header class="cabecera">
@@ -8,7 +8,8 @@
 <span class="pildora marca-d d-{{ b.decision }}">{{ "Corresponde" if b.decision == "si" else "Decide tú" }}</span>
 <span class="suave codigo-caso">Código del caso: <span class="mono">{{ caso.id }}</span></span>
 </div>
-<h1>Borrador para {{ nombre_destino }}</h1>
+<h1>Borrador para {{ destino_corto }}</h1>
+<p class="suave">{{ nombre_destino }}</p>
 <p class="suave">Armado por el sistema con reglas fijas, sin IA. Tú lo revisas, completas lo marcado y lo envías por el canal oficial: el sistema no envía nada.</p>
 </div>
 <div class="acciones">

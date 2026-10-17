@@ -6,7 +6,9 @@
 <div class="error" role="alert">{{ error }}</div>
 {% endif %}
 <h1>Recibimos su mensaje</h1>
-<p>Su código de seguimiento es <code>{{ caso.id }}</code>. Guárdelo: con él puede volver a esta página.</p>
+<p>Su código de seguimiento:</p>
+<p class="codigo-seguimiento"><code>{{ caso.id }}</code></p>
+<p class="ayuda">Tóquelo para seleccionarlo y copiarlo, o guarde esta página en favoritos o con una captura de pantalla: con el código puede volver a consultar su mensaje.</p>
 {% if caso.tipo == "solicitud" %}
 {% set conf = caso.confirmacion %}
 {% if caso.estado == "requiere_revision" %}

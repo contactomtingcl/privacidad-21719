@@ -407,3 +407,14 @@ input[type=file]{min-height:44px;padding:8px 0;color:var(--tx2)}
 .deber .cuerpo p .suave{font-size:13px}
 .tarjeta.cascada{border-left:3px solid var(--acc)}
 .tarjeta.cascada p{margin:6px 0;line-height:1.6}
+
+/* Menú compacto en el celular (M1). Sin JavaScript, el menú se ve completo. */
+.boton-menu{display:none}
+.menu-enlaces{display:contents}
+@media (max-width:720px){
+  .js-listo .boton-menu{display:inline-flex;margin-left:auto}
+  .js-listo .menu .menu-enlaces{display:none}
+  .js-listo .menu.abierto .menu-enlaces{display:flex;flex-direction:column;gap:12px;width:100%}
+  .js-listo .menu.abierto .nav{flex-direction:column}
+  .js-listo .menu.abierto .pie-menu{margin:0;flex-direction:column;align-items:stretch}
+}

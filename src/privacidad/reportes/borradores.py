@@ -224,8 +224,7 @@ def _registros_posibles(caso: Caso, reglas: ReglasOrganizacion) -> list[str]:
 
 def _avisos_comunes(decision: str, deber: Deber) -> list[str]:
     avisos = [
-        "Borrador para revisión del delegado. El sistema no lo envía: la persona revisa, completa "
-        "y envía por el canal oficial."
+        "El sistema no lo envía: revísalo, complétalo y envíalo por el canal oficial."
     ]
     if decision == "revisar":
         avisos.append(
@@ -397,6 +396,8 @@ def borrador_anci(caso: Caso, org: Organizacion) -> Borrador:
                 completar("tipo de amenaza o causa principal probable"),
                 completar("medidas de mitigación aplicadas y en curso"),
                 completar("repercusiones fuera de Chile, si las hay"),
+                "Si el incidente sigue en curso, este informe se reemplaza por uno sobre la "
+                "situación en ese momento (art. 9, letra d).",
             ],
         ),
     ]
@@ -414,13 +415,9 @@ def borrador_anci(caso: Caso, org: Organizacion) -> Borrador:
         )
     avisos = _avisos_comunes(decision, deber)
     avisos += [
-        "Sin datos personales (art. 27 de la Ley 21.663): no incluyas nombres, RUT, correos ni "
-        "teléfonos de personas al completarlo. El sistema arma este borrador sin el texto del "
-        "reporte y lo revisa antes de mostrarlo.",
-        "El formato oficial lo fija el reglamento de la Ley 21.663, que no está en el corpus de "
-        "este sistema: traspasa el contenido al formulario de la ANCI.",
-        "Si el informe final se entrega con el incidente aún en curso, se reemplaza por uno sobre "
-        "la situación en ese momento (art. 9, letra d).",
+        "Sin datos personales: no agregues nombres, RUT, correos ni teléfonos (art. 27 de la "
+        "Ley 21.663).",
+        "Traspásalo al formulario oficial de la ANCI: el formato lo fija su reglamento.",
     ]
     borrador = Borrador(
         destino="anci",

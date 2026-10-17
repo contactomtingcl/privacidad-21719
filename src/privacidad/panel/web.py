@@ -861,6 +861,7 @@ def crear_panel(canal: CanalReporte, config: ConfigPanel) -> Starlette:
             caso=caso,
             b=b,
             nombre_destino=NOMBRE_DESTINO[b.destino],
+            destino_corto={"agencia": "la Agencia", "anci": "la ANCI"}[b.destino],
             revision=ultima_revision(caso, b),
             error=error,
         )
